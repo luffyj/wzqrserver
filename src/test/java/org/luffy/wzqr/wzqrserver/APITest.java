@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- *
+ * a good example https://github.com/e-ivaldi/easy-bank/blob/dev/src/test/java/com/manuv/test/controller/MvcTest.java
  * @author luffy
  */
 @ActiveProfiles("test")
