@@ -9,11 +9,16 @@ package hello;
 import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
 import static org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,6 +36,8 @@ public class WebTest {
     protected ServletContext servletContext;
     @Autowired
     private Filter springSecurityFilter;
+    @Autowired
+    protected MockHttpServletRequest request;
 //    @Autowired
 //    private FilterChainProxy springSecurityFilter;
     
@@ -47,6 +54,12 @@ public class WebTest {
         mockMvc = webAppContextSetup(context)
                 .addFilters(springSecurityFilter)
                 .build();
+    }
+    
+    protected void saveAuth(HttpSession session){
+        this.request.setSession(session);
+         SecurityContext securityContext = (SecurityContext)   session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+         SecurityContextHolder.setContext(securityContext);
     }
     
 }
