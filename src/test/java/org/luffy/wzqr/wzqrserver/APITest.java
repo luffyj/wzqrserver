@@ -11,6 +11,7 @@ import hello.WebTest;
 import java.security.Principal;
 import javax.inject.Inject;
 import javax.servlet.Filter;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -72,74 +73,36 @@ public class APITest extends WebTest{
     public static void tearDownClass() {
     }
     
-//    @Before
-//    public void setUp() {
-//    }
     
-//    @InjectMocks
-//            @Spy
-//    @Mock
-//    AppService appService;
-    @Inject
-    private UserRepository userRepository;
-    @Inject
-    private RoleRepository roleRepository;
-    @Inject
-    private PasswordEncoder passwordEncoder;
-    private final String tempUsername = "oonoway";
-    private final String tempPassword = "1";
-    private final String tempPassword2 = "2";
-    
-    
-    
-    @Before
-    public void ss1(){       
-        MockitoAnnotations.initMocks(this);
-        
-         User user = new User();
-        user.setLoginName(tempUsername);
-        user.setPassword(passwordEncoder.encode(tempPassword));
-        user.setRole(roleRepository.findByName(Role.RoleAdmin));
-        userRepository.save(user);
-//        MockitoAnnotations.initMocks(this);        
-//        when(userRepository.findByLoginName(same("mocku"))).thenReturn(null);
-//        when(appService.loadUserByUsername(same(tempUsername))).thenReturn(user);        
-    }
-    
-    
-    @After
-    public void tearDown() {
-        userRepository.delete(userRepository.findByLoginName(tempUsername));
-    }
-
      @Test
-//     @Rollback
-     public void security() throws Exception {
+     public void login() throws Exception {
                 
          
          assertTrue(true);
          MockHttpSession session = (MockHttpSession) this.mockMvc.perform(get("/api/user"))
-                 .andDo(print())
+//                 .andDo(print())
                  .andExpect(status().isFound())
-                 .andExpect(redirectedUrl("http://localhost/login"))
+                 .andExpect(redirectedUrl("http://localhost/loginPage"))
                  .andReturn().getRequest().getSession();
 //         Redirected URL = http://localhost/login
          
          //bad password
          MockHttpServletRequest request = this.mockMvc.perform(post("/login").session(session)
                  .param("username", tempUsername).param("password", tempPassword2))
-                 .andDo(print())
-                 .andExpect(status().isForbidden())
+//                 .andDo(print())
+                 .andExpect(status().isFound())
+                 .andExpect(redirectedUrl("/loginPage?error"))
+//                 .andExpect(status().isUnauthorized())
                  .andReturn().getRequest();
-//                 .andExpect(redirectedUrl("/login?error"));
+//                 ;
          
-         CsrfToken token = new HttpSessionCsrfTokenRepository().loadToken(request);
+//         CsrfToken token = new HttpSessionCsrfTokenRepository().loadToken(request);
          
          session = (MockHttpSession) this.mockMvc.perform(post("/login").session(session)
                  .param("username", tempUsername).param("password", tempPassword)
-                 .param(token.getParameterName(), token.getToken())
+//                 .param(token.getParameterName(), token.getToken())
                     )
-                 .andDo(print())
+//                 .andDo(print())
                  .andExpect(status().isFound())
                  .andExpect(redirectedUrl("http://localhost/api/user"))
                  .andReturn().getRequest().getSession();
@@ -147,7 +110,7 @@ public class APITest extends WebTest{
          saveAuth(session);
          
          this.mockMvc.perform(get("/api/user").session(session))
-                 .andDo(print())
+//                 .andDo(print())
                  .andExpect(status().isOk());
          
                  

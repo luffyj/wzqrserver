@@ -6,6 +6,7 @@
 
 package org.luffy.wzqr.wzqrserver.entity;
 
+import java.io.Serializable;
 import javax.persistence.Embeddable;
 
 /**
@@ -13,7 +14,7 @@ import javax.persistence.Embeddable;
  * @author luffy
  */
 @Embeddable
-public class ContactWay {
+public class ContactWay implements Serializable{
     
     public ContactWay(){
         super();

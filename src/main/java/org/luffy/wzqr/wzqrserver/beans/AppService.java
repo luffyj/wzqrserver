@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * 辅助app的各种service
  * @author luffy
  */
-@Service
+@Service("appService")
 public class AppService implements UserDetailsService{
     
     @Autowired

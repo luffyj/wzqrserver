@@ -34,6 +34,14 @@ public class RootConfig {
     }
     
 //    @Bean
+//    public LuffyAuthenticationFilter luffyAuthenticationFilter(){
+//        LuffyAuthenticationFilter filter = new LuffyAuthenticationFilter();
+//        filter.setUsernameParameter("username");
+//        filter.setPasswordParameter("password");
+//        return filter;
+//    }
+//    
+//    @Bean
 //    public ViewResolver viewResolver(){
 //        InternalResourceViewResolver bean = new InternalResourceViewResolver();
 //        bean.setPrefix("/WEB-INF/classes/templates/");

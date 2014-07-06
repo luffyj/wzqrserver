@@ -142,6 +142,14 @@ public class App implements ApplicationListener<ContextRefreshedEvent>{
             user.setPassword(this.passwordEncoder.encode("123"));
             userRepository.save(user);
             
+            user = new User();
+            user.setContact(new ContactWay("057788888888"));
+            user.setLoginName("test");
+            user.setOrg(org);
+            user.setRealName("测试账号");
+            user.setRole(roleRepository.findByName(Role.RoleAdmin));
+            user.setPassword(this.passwordEncoder.encode("123456"));
+            userRepository.save(user);
         }
     }
 }
