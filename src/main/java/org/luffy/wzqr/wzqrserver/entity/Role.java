@@ -6,6 +6,7 @@
 
 package org.luffy.wzqr.wzqrserver.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  */
 @Entity
 @Table(name = "pRole", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
-public class Role {
+public class Role implements Serializable{
     
     /**
      * admin
@@ -185,6 +186,14 @@ public class Role {
             list.add(Role.grantedAuthorityByRole(s));
         }
         return list;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

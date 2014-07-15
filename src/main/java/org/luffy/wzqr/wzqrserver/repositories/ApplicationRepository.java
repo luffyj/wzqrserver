@@ -6,11 +6,9 @@
 
 package org.luffy.wzqr.wzqrserver.repositories;
 
-import java.util.List;
-import org.luffy.wzqr.wzqrserver.entity.Organization;
+import org.luffy.wzqr.wzqrserver.entity.Application;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,11 +18,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  *
  * @author luffy
  */
-@RepositoryRestResource(collectionResourceRel = "org", path = "org")
-public interface OrgRepository extends PagingAndSortingRepository<Organization, Long> {
-
-    Organization findByName(String name);
-    
+@RepositoryRestResource(collectionResourceRel = "application", path = "application")
+public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     
     /**
      * 以上级部门检索
@@ -32,6 +27,7 @@ public interface OrgRepository extends PagingAndSortingRepository<Organization, 
      * @return list
      * @param superid id of org
      */
-    @Query("select u from Organization u where u.superOrg.id = :superid")
-    Page<Organization> findBySuperOrg(@Param("superid") Long superid,Pageable pageable);    
+    @Query("select u from Application u where u.owner.org.id = :superid or u.owner.org.superOrg.id = :superid")
+    Page<Application> findBySuperOrg(@Param("superid") Long superid,Pageable pageable); 
+
 }

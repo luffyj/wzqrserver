@@ -16,14 +16,23 @@ public class JsonResponse {
     public static final int FAILED = 400;
     public static final int ERROR = 500;
     
-    private int responseCode;
+    private int code;
+    private String originalMessage;
 
-    public int getResponseCode() {
-        return responseCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setResponseCode(int responseCode) {
-        this.responseCode = responseCode;
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getOriginalMessage() {
+        return originalMessage;
+    }
+
+    public void setOriginalMessage(String originalMessage) {
+        this.originalMessage = originalMessage;
     }
     
 }

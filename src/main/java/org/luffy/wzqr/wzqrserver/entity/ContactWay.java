@@ -32,7 +32,11 @@ public class ContactWay implements Serializable{
     
     private String email;
     private String address;
-    private String phone;    
+    private String mobile;
+    private String phone;
+    private String fax;
+    private String zip;    
+    private String people;
 
     public String getEmail() {
         return email;
@@ -57,4 +61,37 @@ public class ContactWay implements Serializable{
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getPeople() {
+        return people;
+    }
+
+    public void setPeople(String people) {
+        this.people = people;
+    }
+    
 }

@@ -6,11 +6,13 @@
 
 package org.luffy.wzqr.wzqrserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,15 +36,36 @@ public class Organization implements Serializable {
     private Long id;
     
     private String name;
-    private String description;    
+    private String description;
+    /**
+     * 部门类型
+     * 比如部门 县市区 高校 科研院所 国有企业
+     */
+    private String type;    
+    private String subType;
     @Embedded
     private ContactWay contact;
     @ManyToOne
     private Organization superOrg;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "superOrg")
-    private Set<Organization> subOrgs;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "org")
-    private Set<User> users;
+    
+    @ManyToOne
+    private User manager;
+    
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "superOrg")
+//    @JsonIgnore
+//    private Set<Organization> subOrgs;
+    
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "org",fetch=FetchType.EAGER)
+//    @JsonIgnore
+//    private Set<User> users;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -76,20 +99,44 @@ public class Organization implements Serializable {
         this.superOrg = superOrg;
     }
 
-    public Set<Organization> getSubOrgs() {
-        return subOrgs;
+//
+//    public Set<Organization> getSubOrgs() {
+//        return subOrgs;
+//    }
+//
+//    public void setSubOrgs(Set<Organization> subOrgs) {
+//        this.subOrgs = subOrgs;
+//    }
+//
+//    public Set<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Set<User> users) {
+//        this.users = users;
+//    }
+    public User getManager() {
+        return manager;
     }
 
-    public void setSubOrgs(Set<Organization> subOrgs) {
-        this.subOrgs = subOrgs;
+    public void setManager(User manager) {
+        this.manager = manager;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public String getType() {
+        return type;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
     
 }

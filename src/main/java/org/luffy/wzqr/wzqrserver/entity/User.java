@@ -6,8 +6,11 @@
 
 package org.luffy.wzqr.wzqrserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Entity
 @Table(name = "pUser", uniqueConstraints = @UniqueConstraint(columnNames = {"loginName"}))
-public class User implements UserDetails{
+public class User implements UserDetails,Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,11 +38,22 @@ public class User implements UserDetails{
     
     private String loginName;
     private String realName;
+    //职务
+    private String position;
+    private String realEnglishName;
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     private boolean accountNonExpired=true;
+    @JsonIgnore
     private boolean accountNonLocked=true;
-    private boolean credentialsNonExpired=true;
+    @JsonIgnore
+    private boolean credentialsNonExpired=true;        
     private boolean enabled=true;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
+    
     @ManyToOne
     private Role role;
     @ManyToOne
@@ -53,8 +69,17 @@ public class User implements UserDetails{
     }
     
     @Override
+    @JsonIgnore
     public String getUsername(){
         return this.loginName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getLoginName() {
@@ -140,6 +165,30 @@ public class User implements UserDetails{
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getRealEnglishName() {
+        return realEnglishName;
+    }
+
+    public void setRealEnglishName(String realEnglishName) {
+        this.realEnglishName = realEnglishName;
     }
 
 }

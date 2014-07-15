@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.luffy.wzqr.wzqrserver.beans;
+package org.luffy.wzqr.wzqrserver.web;
 
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.LoginRequest;
 import org.luffy.wzqr.wzqrserver.beans.bean.LoginResponse;
+import org.luffy.wzqr.wzqrserver.entity.User;
+import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +36,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Order(90)
 //@DependsOn("authenticationManager")
 public class Security {
+    
+    @Autowired
+    private UserRepository userRepository;
 
     public Security() {
         super();
@@ -46,6 +51,18 @@ public class Security {
         if (auth == null) {
             return null;
         }
+
+        if (auth.getPrincipal() instanceof User) {
+            User user = (User) auth.getPrincipal();
+            user.setLastLogin(new Date());
+            userRepository.save(user);
+            if(user.getOrg()!=null){
+                user.getOrg().setManager(null);
+                user.getOrg().setSuperOrg(null);
+            }
+            return user;
+        }
+
         return auth.getPrincipal();
     }
 
@@ -70,18 +87,18 @@ public class Security {
                 session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
                 LoginResponse loginResponse = new LoginResponse();
-                loginResponse.setResponseCode(JsonResponse.SUCCESS);
+                loginResponse.setCode(JsonResponse.SUCCESS);
                 response = loginResponse;
             } else {
                 SecurityContextHolder.getContext().setAuthentication(null);
 
                 ErrorResponse errorResponse = new ErrorResponse();
-                errorResponse.setResponseCode(JsonResponse.FAILED);
+                errorResponse.setCode(JsonResponse.FAILED);
                 response = errorResponse;
             }
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setResponseCode(JsonResponse.ERROR);
+            errorResponse.setCode(JsonResponse.ERROR);
             response = errorResponse;
         }
         return response;

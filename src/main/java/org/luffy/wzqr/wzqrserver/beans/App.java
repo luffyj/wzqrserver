@@ -119,6 +119,7 @@ public class App implements ApplicationListener<ContextRefreshedEvent>{
             ///now for orgs
             Organization org = new Organization();
             org.setName(Organization.NameRoot);
+            org.setContact(new ContactWay("18606509616"));            
             org.setDescription("负责本项目的主要部门");
             
             org=orgRepository.save(org);
@@ -131,7 +132,16 @@ public class App implements ApplicationListener<ContextRefreshedEvent>{
             user.setRealName("蒋才");
             user.setRole(roleRepository.findByName(Role.RoleAdmin));
             user.setPassword(this.passwordEncoder.encode("123"));
-            userRepository.save(user);
+            user = userRepository.save(user);
+            
+            // 建立一个测试用的旗下部门
+            Organization suborg = new Organization();
+            suborg.setName("某一个旗下部门");
+            suborg.setContact(new ContactWay("19999616"));            
+            suborg.setDescription("负责本项目的次要部门");
+            suborg.setSuperOrg(org);
+            suborg.setManager(user);
+            orgRepository.save(suborg);
             
             user = new User();
             user.setContact(new ContactWay("18606509616"));
