@@ -20,7 +20,26 @@
             <name>Sourceforge Releases</name>
             <url>https://oss.sonatype.org/content/repositories/sourceforge-releases</url>
         </repository>
+        <repository>
+            <id>repo-jc</id>
+            <name>JiangCai Repository</name>
+            <url>http://115.29.228.62:8082/nexus/content/groups/public/</url>
+        </repository>
     </repositories>
+    
+    <distributionManagement>          
+        <repository>  
+            <id>jc-nexus</id>  
+            <name>Nexus Release Repository</name>  
+            <url>http://115.29.228.62:8082/nexus/content/repositories/releases/</url>  
+        </repository>  
+        <snapshotRepository>  
+            <id>jc-nexus</id>   
+            <name>Nexus Snapshot Repository</name>  
+            <url>http://115.29.228.62:8082/nexus/content/repositories/snapshots/</url>  
+        </snapshotRepository>  
+    </distributionManagement>
+    
     
     <dependencies>        
         <dependency>
@@ -67,6 +86,81 @@
 
     <build>
         <plugins>
+            <plugin>
+                <!--                将client code 自动打包到目标包里去-->
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package-client</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>                                
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+                                <property environment="SystemVariable" />
+                                <property name="path.ext.workspace" value="${SystemVariable.path.ext.workspace}" />
+                                <if>
+                                    <isset property="path.ext.workspace"/>
+                                    <then>                                        
+                                        <if>
+                                            <available file="${path.ext.workspace}" type="dir"/>
+                                            <then>
+                                                <!--                                                看看是否已经build                                                -->
+                                                <property name="path.ext.client" value="${path.ext.workspace}${file.separator}build${file.separator}production${file.separator}wzqr"/>
+                                                <if>
+                                                    <available file="${path.ext.client}" type="dir"/>
+                                                    <then>                                                        
+                                                        <!--<echoproperties />-->
+                                                        <copy todir="${project.build.directory}${file.separator}${project.build.finalName}">
+                                                            <fileset dir="${path.ext.client}"/>
+                                                        </copy>
+                                                    </then>
+                                                    <else>
+                                                        <echo level="error" message="${path.ext.client} not found,build client first"></echo>                                                                                                                  
+                                                    </else>
+                                                </if>                                                                                                
+                                            </then>
+                                            <else>
+                                                <echo level="error" message="require path.ext.workspace"></echo>                                                  
+                                            </else>
+                                        </if>
+                                        <!--                                        <mkdir dir="${my.jboss.server}/deploy/${build.finalName}.war"/>
+                                                           <unzip src="${project.build.directory}/${build.finalName}.war"
+                                        dest="${wsm.jboss.server}/deploy/${build.finalName}.war"/>-->
+                                    </then>
+                                    <else>
+                                        <echo level="error" message="require path.ext.workspace"></echo>  
+                                        <!--                                        <copy todir="${my.jboss.server}/deploy">
+                                            <fileset dir="${project.build.directory}" includes="${build.finalName}.war"/>
+                                        </copy>-->
+                                    </else>
+                                </if>
+                                                                                      
+                            </tasks>
+                        </configuration>
+                    </execution>                    
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.6.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

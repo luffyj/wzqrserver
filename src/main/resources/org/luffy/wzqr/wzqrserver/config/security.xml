@@ -24,6 +24,9 @@
     </beans:bean>
             
     <http use-expressions="true">
+        <intercept-url pattern="/index.html" access="permitAll()" />
+        <intercept-url pattern="/app.js" access="permitAll()" />
+        <intercept-url pattern="/resources/**" access="permitAll()" />
         <intercept-url pattern="/jcaptcha.jpg" access="permitAll()" />
         <intercept-url pattern="/api/*" access="isAuthenticated()" />
         <intercept-url pattern="/" access="permitAll()" />
@@ -104,9 +107,9 @@
         </security:authentication-provider>  
     </security:authentication-manager>  
         
-<bean id="loginUrlAuthenticationEntryPoint"
-      class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">        
-    <property name="loginFormUrl" value="/login"/>
-</bean>-->
+    <bean id="loginUrlAuthenticationEntryPoint"
+          class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">        
+        <property name="loginFormUrl" value="/login"/>
+    </bean>-->
 
 </beans:beans>
