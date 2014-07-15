@@ -13,6 +13,8 @@ import org.luffy.wzqr.wzqrserver.entity.User;
 import org.luffy.wzqr.wzqrserver.repositories.RoleRepository;
 import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,12 +35,38 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @RequestMapping("/cpassword")
+    @ResponseBody
+    public JsonResponse changePassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("password") String password) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return new ErrorResponse(400, "尚未登录");
+        }
+        if (auth.getPrincipal() instanceof User) {
+            User ap = (User) auth.getPrincipal();
+            User user = userRepository.findOne(ap.getId());
+
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                return new ErrorResponse(540, "密码不正确");
+            }
+
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return new JsonResponse(200);
+        } else {
+            return new ErrorResponse(400, "尚未登录");
+        }
+    }
+
     @RequestMapping("/initUserPassword")
     @ResponseBody
     public JsonResponse initUserPassword(
             @RequestParam("userid") Long userid,
             @RequestParam("password") String password) {
 
+        //TODO 权限检查
         User user = userRepository.findOne(userid);
 
         Organization org = user.getOrg();
@@ -62,7 +90,7 @@ public class UserService {
                 || "科研院所".equals(org.getType())
                 || "国有企业".equals(org.getType())) {
             user.setRole(roleRepository.findByName(Role.RoleSubManager));
-        } else {            
+        } else {
             user.setRole(roleRepository.findByName(Role.RolePeople));
         }
 

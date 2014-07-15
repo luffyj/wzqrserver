@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.luffy.wzqr.wzqrserver.beans.bean;
 
 /**
@@ -11,13 +10,25 @@ package org.luffy.wzqr.wzqrserver.beans.bean;
  * @author luffy
  */
 public class JsonResponse {
-    
+
     public static final int SUCCESS = 200;
     public static final int FAILED = 400;
     public static final int ERROR = 500;
-    
+
     private int code;
     private String originalMessage;
+
+    public JsonResponse(int code) {
+        this.code = code;
+    }
+
+    public JsonResponse(int code, String originalMessage) {
+        this.code = code;
+        this.originalMessage = originalMessage;
+    }
+
+    public JsonResponse() {
+    }
 
     public int getCode() {
         return code;
@@ -34,5 +45,5 @@ public class JsonResponse {
     public void setOriginalMessage(String originalMessage) {
         this.originalMessage = originalMessage;
     }
-    
+
 }
