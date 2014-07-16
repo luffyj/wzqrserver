@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class App implements ApplicationListener<ContextRefreshedEvent> {
 
-    private int version = 10000;
+    private final int version = 10000;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -146,13 +146,13 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
             user = userRepository.save(user);
 
             // 建立一个测试用的旗下部门
-            Organization suborg = new Organization();
-            suborg.setName("某一个旗下部门");
-            suborg.setContact(new ContactWay("19999616"));
-            suborg.setDescription("负责本项目的次要部门");
-            suborg.setSuperOrg(org);
-            suborg.setManager(user);
-            orgRepository.save(suborg);
+//            Organization suborg = new Organization();
+//            suborg.setName("某一个旗下部门");
+//            suborg.setContact(new ContactWay("19999616"));
+//            suborg.setDescription("负责本项目的次要部门");
+//            suborg.setSuperOrg(org);
+//            suborg.setManager(user);
+//            orgRepository.save(suborg);
 
             user = new User();
             user.setContact(new ContactWay("18606509616"));

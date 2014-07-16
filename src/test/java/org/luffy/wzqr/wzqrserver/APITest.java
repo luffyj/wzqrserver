@@ -23,8 +23,10 @@ import org.junit.runner.RunWith;
 import org.luffy.wzqr.wzqrserver.beans.AppService;
 import org.luffy.wzqr.wzqrserver.config.RestDataConfig;
 import org.luffy.wzqr.wzqrserver.config.RootConfig;
+import org.luffy.wzqr.wzqrserver.entity.Application;
 import org.luffy.wzqr.wzqrserver.entity.Role;
 import org.luffy.wzqr.wzqrserver.entity.User;
+import org.luffy.wzqr.wzqrserver.repositories.ApplicationRepository;
 import org.luffy.wzqr.wzqrserver.repositories.RoleRepository;
 import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
 import org.mockito.InjectMocks;
@@ -65,6 +67,9 @@ public class APITest extends WebTest{
     public APITest() {
     }
     
+    @Inject
+    protected ApplicationRepository applicationRepository;
+    
     @BeforeClass
     public static void setUpClass() {
     }
@@ -73,6 +78,16 @@ public class APITest extends WebTest{
     public static void tearDownClass() {
     }
     
+    @Test
+    public void application(){
+        Application app = new Application();
+        app.setAddress("随意");
+        long count = applicationRepository.count();
+        applicationRepository.save(app);        
+        assertEquals(count+1,applicationRepository.count());
+        applicationRepository.delete(app);
+        assertEquals(count,applicationRepository.count());
+    }
     
      @Test
      public void login() throws Exception {

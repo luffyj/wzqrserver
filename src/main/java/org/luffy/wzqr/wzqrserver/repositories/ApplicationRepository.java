@@ -27,7 +27,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
      * @return list
      * @param superid id of org
      */
-    @Query("select u from Application u where u.owner.org.id = :superid or u.owner.org.superOrg.id = :superid")
+    @Query("select u from Application u where u.org.id = :superid or u.org.superOrg.id = :superid")
     Page<Application> findBySuperOrg(@Param("superid") Long superid,Pageable pageable); 
 
 }
