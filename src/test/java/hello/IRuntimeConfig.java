@@ -33,7 +33,7 @@ public class IRuntimeConfig implements RuntimeConfig{
     @Bean
     public EntityManagerFactoryInfo entityManagerFactory() {
         LocalEntityManagerFactoryBean bean = new LocalEntityManagerFactoryBean();
-        bean.setPersistenceUnitName("wzqrpu_life");
+        bean.setPersistenceUnitName("wzqrpu_deve");
         bean.setJpaDialect(jpaDialect);
         return bean;
     }

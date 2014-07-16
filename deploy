@@ -1,0 +1,37 @@
+mysql
+
+create database wzqr;
+grant all on wzqr.* to wzqruser@localhost identified by 'wzqr';
+
+backup
+
+mysqldump -u user_name -p123456 database_name > outfile_name.sql
+
+
+iDB Cloud
+http://idb.rds.aliyun.com/
+
+http://www.mysql.com/products/connector-j
+ JDBC Driver's jar into $CATALINA_HOME/lib.
+
+context.xml
+
+<Resource name="jdbc/wzqrds" auth="Container" type="javax.sql.DataSource"
+               maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+               username="wzqr" password="wzqr" driverClassName="org.apache.derby.jdbc.ClientDriver"
+               url="jdbc:derby://localhost:1527/wzqr"/>
+
+inf config in server.xml
+<Context>
+  <ResourceLink
+    name="bean/MyBeanFactory"
+    global="bean/MyBeanFactory"
+    type="com.mycompany.MyBean"
+  />
+</Context> 
+in context.xml
+
+http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Defining_a_context
+
+In the $CATALINA_BASE/conf/[enginename]/[hostname]/context.xml.default file: the Context element information will be loaded by all web applications of that host.
+

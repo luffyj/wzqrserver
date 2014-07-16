@@ -98,12 +98,13 @@
                         </goals>
                         <configuration>
                             <tasks>                                
+                                <!--<echoproperties />-->
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
-                                <property environment="SystemVariable" />
-                                <property name="path.ext.workspace" value="${SystemVariable.path.ext.workspace}" />
+                                <!--<property environment="SystemVariable" />-->
+                                <!--<property name="path.ext.workspace" value="${SystemVariable.EXT_WORKSPACE}" />-->                                
                                 <if>
                                     <isset property="path.ext.workspace"/>
-                                    <then>                                        
+                                    <then>                                
                                         <if>
                                             <available file="${path.ext.workspace}" type="dir"/>
                                             <then>
@@ -111,8 +112,7 @@
                                                 <property name="path.ext.client" value="${path.ext.workspace}${file.separator}build${file.separator}production${file.separator}wzqr"/>
                                                 <if>
                                                     <available file="${path.ext.client}" type="dir"/>
-                                                    <then>                                                        
-                                                        <!--<echoproperties />-->
+                                                    <then>                                                                                                                
                                                         <copy todir="${project.build.directory}${file.separator}${project.build.finalName}">
                                                             <fileset dir="${path.ext.client}"/>
                                                         </copy>
