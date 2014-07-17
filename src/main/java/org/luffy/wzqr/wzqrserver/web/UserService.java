@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -60,11 +61,12 @@ public class UserService {
         }
     }
 
-    @RequestMapping("/initUserPassword")
+    @RequestMapping(value = "/initUserPassword", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse initUserPassword(
             @RequestParam("userid") Long userid,
-            @RequestParam("password") String password) {
+            @RequestParam("password") String password,
+            @RequestParam("people") boolean people) {
 
         //TODO 权限检查
         User user = userRepository.findOne(userid);
@@ -83,7 +85,11 @@ public class UserService {
         } else if ("部门".equals(org.getType())) {
             user.setRole(roleRepository.findByName(Role.RoleManager));
         } else if ("申报单位".equals(org.getType())) {
-            user.setRole(roleRepository.findByName(Role.RoleUnit));
+            if (people) {
+                user.setRole(roleRepository.findByName(Role.RolePeople));
+            } else {
+                user.setRole(roleRepository.findByName(Role.RoleUnit));
+            }
             //'县市区', '高校', '科研院所', '国有企业'
         } else if ("县市区".equals(org.getType())
                 || "高校".equals(org.getType())

@@ -7,12 +7,14 @@
 package org.luffy.wzqr.wzqrserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.LAZY;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -25,7 +27,11 @@ public class Application extends Application5 implements java.io.Serializable{
     @ManyToOne
     private User owner;
     @ManyToOne
-    private Organization org;
+    private Organization myorg;
+    
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date submitDate;
     
     //专利情况
     private String patentDesc;
@@ -52,7 +58,7 @@ public class Application extends Application5 implements java.io.Serializable{
     private String returnOrg;//退回
     private String returnReason;
 
-    public String getPatentDesc() {
+    public String getPatentDesc() {        
         return patentDesc;
     }
 
@@ -204,13 +210,20 @@ public class Application extends Application5 implements java.io.Serializable{
         this.owner = owner;
     }
 
-    public Organization getOrg() {
-        return org;
+    public Organization getMyorg() {
+        return myorg;
     }
 
-    public void setOrg(Organization org) {
-        this.org = org;
+    public void setMyorg(Organization myorg) {
+        this.myorg = myorg;
     }
-    
+
+    public Date getSubmitDate() {
+        return submitDate;
+    }
+
+    public void setSubmitDate(Date submitDate) {
+        this.submitDate = submitDate;
+    }    
     
 }

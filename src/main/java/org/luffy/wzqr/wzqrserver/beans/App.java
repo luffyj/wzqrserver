@@ -43,10 +43,10 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if(event.getApplicationContext().getParent()==null){
+        if (event.getApplicationContext().getParent() == null) {
             System.out.println("init App");
             databaseInit();
-        }        
+        }
     }
 
     /**
@@ -153,24 +153,22 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
 //            suborg.setSuperOrg(org);
 //            suborg.setManager(user);
 //            orgRepository.save(suborg);
-
             user = new User();
-            user.setContact(new ContactWay("18606509616"));
-            user.setLoginName("luffy2");
+            user.setLoginName("admin");
             user.setOrg(org);
-            user.setRealName("蒋才");
+            user.setRealName("系统管理员");
             user.setRole(roleRepository.findByName(Role.RoleRoot));
-            user.setPassword(this.passwordEncoder.encode("123"));
+            user.setPassword(this.passwordEncoder.encode("admin"));
             userRepository.save(user);
 
-            user = new User();
-            user.setContact(new ContactWay("057788888888"));
-            user.setLoginName("test");
-            user.setOrg(org);
-            user.setRealName("测试账号");
-            user.setRole(roleRepository.findByName(Role.RoleAdmin));
-            user.setPassword(this.passwordEncoder.encode("123456"));
-            userRepository.save(user);
+//            user = new User();
+//            user.setContact(new ContactWay("057788888888"));
+//            user.setLoginName("test");
+//            user.setOrg(org);
+//            user.setRealName("测试账号");
+//            user.setRole(roleRepository.findByName(Role.RoleAdmin));
+//            user.setPassword(this.passwordEncoder.encode("123456"));
+//            userRepository.save(user);
         } else {
             SystemValue sv = systemValueRepository.findByName("dbversion");
             System.out.println("current DB version:" + sv.getIntValue());

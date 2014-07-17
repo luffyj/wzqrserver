@@ -24,9 +24,11 @@ import org.luffy.wzqr.wzqrserver.beans.AppService;
 import org.luffy.wzqr.wzqrserver.config.RestDataConfig;
 import org.luffy.wzqr.wzqrserver.config.RootConfig;
 import org.luffy.wzqr.wzqrserver.entity.Application;
+import org.luffy.wzqr.wzqrserver.entity.Organization;
 import org.luffy.wzqr.wzqrserver.entity.Role;
 import org.luffy.wzqr.wzqrserver.entity.User;
 import org.luffy.wzqr.wzqrserver.repositories.ApplicationRepository;
+import org.luffy.wzqr.wzqrserver.repositories.OrgRepository;
 import org.luffy.wzqr.wzqrserver.repositories.RoleRepository;
 import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
 import org.mockito.InjectMocks;
@@ -69,6 +71,11 @@ public class APITest extends WebTest{
     
     @Inject
     protected ApplicationRepository applicationRepository;
+    @Inject
+    protected OrgRepository orgRepository;
+    
+    @Inject
+    protected UserRepository userRepository;
     
     @BeforeClass
     public static void setUpClass() {
@@ -87,7 +94,49 @@ public class APITest extends WebTest{
         assertEquals(count+1,applicationRepository.count());
         applicationRepository.delete(app);
         assertEquals(count,applicationRepository.count());
+        
+        
+        Organization root = orgRepository.findByName(Organization.NameRoot);
+        count = applicationRepository.findBySuperOrg(root.getId(), null).getTotalElements();
+        
+        app = new Application();
+        app.setAddress("随意");   
+        app.setMyorg(root);
+        applicationRepository.save(app);
+        try{
+            assertEquals(count+1,applicationRepository.findBySuperOrg(root.getId(), null).getTotalElements());
+        }finally{
+            applicationRepository.delete(app);
+        }
+        
+        User user = userRepository.findAll().iterator().next();
+        
+        
+        count = applicationRepository.findByOwner(user.getId(), null).getTotalElements();
+        
+        app = new Application();
+        app.setAddress("随意");   
+        app.setOwner(user);
+//        app.setMyorg(root);
+       
+        applicationRepository.save(app);
+        try{
+            assertEquals(count+1,applicationRepository.findByOwner(user.getId(), null).getTotalElements());
+        }finally{
+            applicationRepository.delete(app);
+        }
     }
+    
+    @Test
+     public void adminLogin() throws Exception {
+         this.mockMvc.perform(post("/login")
+                 .param("username", "admin").param("password", "admin"))
+                 .andDo(print())
+                 .andExpect(status().isFound())
+                 .andExpect(redirectedUrl("/"))
+//                 .andExpect(status().isUnauthorized())
+                 .andReturn().getRequest();
+     }
     
      @Test
      public void login() throws Exception {
