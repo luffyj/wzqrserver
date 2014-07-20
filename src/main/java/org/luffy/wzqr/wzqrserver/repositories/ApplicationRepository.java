@@ -27,10 +27,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
      * @return list
      * @param superid id of org
      */
-    @Query("select u from Application u where u.myorg.id = :superid or u.myorg.superOrg.id = :superid")
+    @Query("select u from Application u where u.status <> '已删除' and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)")
     Page<Application> findBySuperOrg(@Param("superid") Long superid,Pageable pageable); 
     
-    @Query("select u from Application u where u.owner.id = :userid")
+    @Query("select u from Application u where u.status <> '已删除' and ( u.owner.id = :userid )")
     Page<Application> findByOwner(@Param("userid") Long userid,Pageable pageable); 
+    
+    @Query("select u from Application u where u.status <> '已删除'")
+    @Override
+    Page<Application> findAll(Pageable pageable); 
+    
+    
 
 }
