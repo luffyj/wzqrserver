@@ -23,6 +23,11 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "pApplication")
 public class Application extends Application5 implements java.io.Serializable{
+
+    public Application() {
+        super();
+        this.setStatus("未上报");
+    }
     
     @ManyToOne
     private User owner;
