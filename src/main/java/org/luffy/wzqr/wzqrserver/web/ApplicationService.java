@@ -6,6 +6,7 @@
 package org.luffy.wzqr.wzqrserver.web;
 
 import java.io.IOException;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
@@ -210,14 +211,17 @@ public class ApplicationService {
             this.logRepository.save(ol);
 
             app.setStatus("等待形审");
+            app.setSubmitDate(new Date());
 
-            app.setReturnOrg(null);
-            app.setReturnReason(null);
-            app.setUnitApproveReason(null);
-            app.setUnitApproveSupport(null);
-            app.setOrgApproveReason(null);
-            app.setOrgApproveSupport(null);
-            app.setManagerReason(null);
+//            app.setReturnOrg(null);
+//            app.setReturnReason(null);
+//            app.setUnitApproveReason(null);
+//            app.setUnitApproveSupport(null);
+//            app.setOrgApproveReason(null);
+//            app.setOrgApproveSupport(null);
+//            app.setManagerReason(null);
+//            app.setPogeReason(null);
+//            app.setPoge(false);
             this.applicationRepository.save(app);
 
             return new JsonResponse(200, "成功");
@@ -345,11 +349,12 @@ public class ApplicationService {
         if(oper.getOrg()!=null)
             app.setReturnOrg(oper.getOrg().getName());
         else
-            app.setReturnOrg("未知");;
+            app.setReturnOrg("未知");
         String newStatus = type + "退回";
         switch (type) {
             case "形审":
                 app.setUnitApproveReason(reason);
+                break;
             default:
                 app.setOrgApproveReason(reason);
         }
@@ -379,8 +384,10 @@ public class ApplicationService {
         switch (type) {
             case "形审":
                 app.setUnitApproveReason(reason);
+                break;
             case "评审":
                 app.setManagerReason(reason);
+                break;
             default:
                 app.setOrgApproveReason(reason);
         }
@@ -410,8 +417,10 @@ public class ApplicationService {
         switch (type) {
             case "形审":
                 app.setUnitApproveReason(reason);
+                break;
             case "评审":
                 app.setManagerReason(reason);
+                break;
             default:
                 app.setOrgApproveReason(reason);
         }
