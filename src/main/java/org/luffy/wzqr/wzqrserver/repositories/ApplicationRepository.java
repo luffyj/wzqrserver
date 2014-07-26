@@ -37,6 +37,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Override
     Page<Application> findAll(Pageable pageable); 
     
+    @Query("select u from Application u where u.status <> '已删除' and ( u.realName = :name )")
+    Page<Application> findByName(@Param("name") String name,Pageable pageable); 
+    
     
 
 }

@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class App implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final int version = 10000;
+    private final int version = 10001;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -171,7 +171,9 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
 //            userRepository.save(user);
         } else {
             SystemValue sv = systemValueRepository.findByName("dbversion");
-            System.out.println("current DB version:" + sv.getIntValue());
+            if (sv.getIntValue() != version) {
+                throw new java.lang.IllegalStateException("当前数据库版本为" + sv.getValue() + "，应该为" + version);
+            }
         }
     }
 }

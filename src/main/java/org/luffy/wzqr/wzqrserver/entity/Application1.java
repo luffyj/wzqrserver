@@ -83,6 +83,9 @@ public class Application1 implements Serializable {
         this.id = id;
     }
     
+    /**
+     * @return 未上报、等待形审、形审通过、形审未过、形审退回、复审通过、复审未过、复审退回、评审通过、评审未过几个状态
+     */
     public String getStatus() {
         return status;
     }

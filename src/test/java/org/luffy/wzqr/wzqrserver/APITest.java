@@ -84,7 +84,7 @@ public class APITest extends WebTest{
     @AfterClass
     public static void tearDownClass() {
     }
-    
+        
     @Test
     public void application(){
         Application app = new Application();

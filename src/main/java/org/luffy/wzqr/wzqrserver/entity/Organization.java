@@ -39,7 +39,7 @@ public class Organization implements Serializable {
     private String description;
     /**
      * 部门类型
-     * 比如部门 县市区 高校 科研院所 国有企业
+     * 比如部门 县市区 高校 科研院所 国有企业 或者下级的 申报单位
      */
     private String type;    
     private String subType;
@@ -127,6 +127,10 @@ public class Organization implements Serializable {
         return type;
     }
 
+    /**     
+     * 部门类型
+     * 比如部门 县市区 高校 科研院所 国有企业 或者下级的 申报单位
+     */
     public void setType(String type) {
         this.type = type;
     }

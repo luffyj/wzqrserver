@@ -74,6 +74,11 @@ public class User implements UserDetails,Serializable{
         return this.loginName;
     }
 
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", loginName=" + loginName + ", realName=" + realName + ", position=" + position + ", realEnglishName=" + realEnglishName + ", password=" + password + ", accountNonExpired=" + accountNonExpired + ", accountNonLocked=" + accountNonLocked + ", credentialsNonExpired=" + credentialsNonExpired + ", enabled=" + enabled + ", lastLogin=" + lastLogin + ", role=" + role + ", org=" + org + ", contact=" + contact + '}';
+    }
+
     public Long getId() {
         return id;
     }

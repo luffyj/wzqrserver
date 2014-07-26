@@ -62,8 +62,13 @@ public class Application extends Application5 implements java.io.Serializable{
     private String managerReason;//市委意见
     private String returnOrg;//退回
     private String returnReason;
+    
+    @Lob
+    @Basic(fetch=LAZY)
+    @JsonIgnore
+    private byte[] picture;
 
-    public String getPatentDesc() {        
+    public String getPatentDesc() {
         return patentDesc;
     }
 
@@ -230,5 +235,13 @@ public class Application extends Application5 implements java.io.Serializable{
     public void setSubmitDate(Date submitDate) {
         this.submitDate = submitDate;
     }    
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
     
 }

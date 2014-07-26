@@ -187,9 +187,14 @@ public class EntityToModel {
         if (type == null) {
             buffer.append("},\n");
         } else {
+            //type: 'date',dateFormat:'time'},
+            //type: 'date'},
             buffer.append(", type: '")
-                    .append(type)
-                    .append("'},\n");
+                    .append(type);
+            if ("date".equals(type)){
+                buffer.append("',dateFormat:'time'},\n");
+            }else
+                buffer.append("'},\n");
         }
     }
 
