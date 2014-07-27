@@ -28,6 +28,17 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
      * @param superid id of org
      */
     @Query("select u from Application u where u.status <> '已删除' and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)"
+    )
+    Page<Application> findBySuperOrgSimple(@Param("superid") Long superid,
+            Pageable pageable); 
+    
+    /**
+     * 以上级部门检索
+     * @param pageable
+     * @return list
+     * @param superid id of org
+     */
+    @Query("select u from Application u where u.status <> '已删除' and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)"
             + " and u.batch like %:batch%"
             + " and u.realName like %:realName%"
             + " and u.appOrgName like %:appOrgName%"
@@ -44,6 +55,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             @Param("specialty") String specialty,
             @Param("appOrgType") String appOrgType,
             @Param("status") String status,
+            Pageable pageable); 
+    
+    @Query("select u from Application u where u.status <> '已删除' and ( u.owner.id = :userid )"
+    )
+    Page<Application> findByOwnerSimple(@Param("userid") Long userid,
             Pageable pageable); 
     
     @Query("select u from Application u where u.status <> '已删除' and ( u.owner.id = :userid )"
