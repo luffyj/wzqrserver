@@ -27,19 +27,65 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
      * @return list
      * @param superid id of org
      */
-    @Query("select u from Application u where u.status <> '已删除' and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)")
-    Page<Application> findBySuperOrg(@Param("superid") Long superid,Pageable pageable); 
+    @Query("select u from Application u where u.status <> '已删除' and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)"
+            + " and u.batch like %:batch%"
+            + " and u.realName like %:realName%"
+            + " and u.appOrgName like %:appOrgName%"
+            + " and u.type like %:type%"
+            + " and u.specialty like %:specialty%"
+            + " and u.myorg.superOrg.type like %:appOrgType%"
+            + " and u.status like %:status%"
+    )
+    Page<Application> findBySuperOrg(@Param("superid") Long superid,
+            @Param("batch") String batch,
+            @Param("realName") String realName,
+            @Param("appOrgName") String appOrgName,
+            @Param("type") String type,
+            @Param("specialty") String specialty,
+            @Param("appOrgType") String appOrgType,
+            @Param("status") String status,
+            Pageable pageable); 
     
-    @Query("select u from Application u where u.status <> '已删除' and ( u.owner.id = :userid )")
-    Page<Application> findByOwner(@Param("userid") Long userid,Pageable pageable); 
+    @Query("select u from Application u where u.status <> '已删除' and ( u.owner.id = :userid )"
+            + " and u.batch like %:batch%"
+            + " and u.realName like %:realName%"
+            + " and u.appOrgName like %:appOrgName%"
+            + " and u.type like %:type%"
+            + " and u.specialty like %:specialty%"
+            + " and u.myorg.superOrg.type like %:appOrgType%"
+            + " and u.status like %:status%"
+    )
+    Page<Application> findByOwner(@Param("userid") Long userid,
+            @Param("batch") String batch,
+            @Param("realName") String realName,
+            @Param("appOrgName") String appOrgName,
+            @Param("type") String type,
+            @Param("specialty") String specialty,
+            @Param("appOrgType") String appOrgType,
+            @Param("status") String status,
+            Pageable pageable); 
     
-    @Query("select u from Application u where u.status <> '已删除'")
-    @Override
-    Page<Application> findAll(Pageable pageable); 
+    @Query("select u from Application u where u.status <> '已删除'"
+            + " and u.batch like %:batch%"
+            + " and u.realName like %:realName%"
+            + " and u.appOrgName like %:appOrgName%"
+            + " and u.type like %:type%"
+            + " and u.specialty like %:specialty%"
+            + " and u.myorg.superOrg.type like %:appOrgType%"
+            + " and u.status like %:status%"
+    )
+//    @Override
+    Page<Application> findWhole(
+            @Param("batch") String batch,
+            @Param("realName") String realName,
+            @Param("appOrgName") String appOrgName,
+            @Param("type") String type,
+            @Param("specialty") String specialty,
+            @Param("appOrgType") String appOrgType,
+            @Param("status") String status,
+            Pageable pageable); 
     
     @Query("select u from Application u where u.status <> '已删除' and ( u.realName = :name )")
     Page<Application> findByName(@Param("name") String name,Pageable pageable); 
     
-    
-
 }

@@ -6,10 +6,17 @@
 package org.luffy.wzqr.wzqrserver.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
+import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponseWithMapdata;
 import org.luffy.wzqr.wzqrserver.entity.Application;
 import org.luffy.wzqr.wzqrserver.entity.OLog;
 import org.luffy.wzqr.wzqrserver.entity.Role;
@@ -47,6 +54,111 @@ public class ApplicationService {
     private UserService userService;
     @Autowired
     private LogRepository logRepository;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+
+    //counting
+    /**
+     * 返回的结果应该是包含所有信息的结果 { count:? status:[ { name:.. count:.. } ] }
+     *
+     * @return
+     */
+    @RequestMapping(value = "/countapplication", method = RequestMethod.GET)
+    public @ResponseBody
+    JsonResponse count() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return new ErrorResponse(400, "尚未登录");
+        }
+        if (!(auth.getPrincipal() instanceof User)) {
+            return new ErrorResponse(400, "尚未登录");
+        }
+
+        User user = (User) auth.getPrincipal();
+
+        String[] conditions = null;
+        if (null != user.getRole().getName()) {
+            switch (user.getRole().getName()) {
+                case Role.RolePeople:
+                    conditions = new String[]{
+                        "status",
+                        "specialty",
+                        "type",
+                        "batch"
+                    };
+                    break;
+                case Role.RoleUnit:
+                    conditions = new String[]{
+                        "status",
+                        "specialty",
+                        "type",
+                        "batch"
+                    };
+                    break;
+                case Role.RoleSubManager:
+                    conditions = new String[]{
+                        "status",
+                        "specialty",
+                        "type",
+                        "batch",
+                        "myorg.name"
+                    };
+                    break;
+                case Role.RoleAdmin:
+                case Role.RoleRoot:
+                case Role.RoleManager:
+                    conditions = new String[]{
+                        "status",
+                        "specialty",
+                        "type",
+                        "myorg.superOrg.type",//只有超管
+                        "batch",
+                        //            "realName",
+                        //            "appOrgName",
+                        "myorg.superOrg.name"//非超管的应该是myorg.name
+                    };
+                    break;
+                default:
+                    return new ErrorResponse(400, "尚未登录");
+            }
+        }
+
+        HashMap result = new HashMap();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            StringBuilder jql = new StringBuilder("select count(u) from Application u");
+            handleResponseableApplicationJQL(jql);
+            result.put("count", handleResponseableApplicationQuery(entityManager.createQuery(jql.toString()))
+                    .getSingleResult());
+
+            for (String condition : conditions) {
+                jql = new StringBuilder();
+                jql.append("select count(u.")
+                        .append(condition)
+                        .append("),u.")
+                        .append(condition)
+                        .append(" from Application u");
+                handleResponseableApplicationJQL(jql).append(" group by u.")
+                        .append(condition);
+
+                System.out.println(jql);
+
+                List dataResult = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString())).getResultList();
+                ArrayList list = new ArrayList();
+                for (Object cr : dataResult) {
+                    Object[] countResult = (Object[]) cr;
+                    HashMap toJson = new HashMap();
+                    toJson.put("name", countResult[1]);
+                    toJson.put("count", countResult[0]);
+                    list.add(toJson);
+                }
+                result.put(condition, list);
+            }
+            return new JsonResponseWithMapdata(result);
+        } finally {
+            entityManager.close();
+        }
+    }
 
     // 附件上传和下载
     // @ModelAttribute( "uploadForm" ) FileUploadForm uploadForm
@@ -57,11 +169,11 @@ public class ApplicationService {
         int errorBase = 590;
 
         if (appid == null) {
-            return new ErrorResponse(errorBase+0, "上传附件必须指定申报信息");
+            return new ErrorResponse(errorBase + 0, "上传附件必须指定申报信息");
         }
         Application app = applicationRepository.findOne(appid);
         if (app == null) {
-            return new ErrorResponse(errorBase+1, "找不到指定的申报信息");
+            return new ErrorResponse(errorBase + 1, "找不到指定的申报信息");
         }
 
         app.setAttachment(pdf.getBytes());
@@ -107,43 +219,43 @@ public class ApplicationService {
         if (auth == null) {
             return new ErrorResponse(400, "尚未登录");
         }
-        
+
         int errorBase = 580;
 
         if (appid == null || username == null) {
-            return new ErrorResponse(errorBase+0, "更改所有者必须使用更多的参数");
+            return new ErrorResponse(errorBase + 0, "更改所有者必须使用更多的参数");
         }
 
         if (auth.getPrincipal() instanceof User) {
             User cuser = (User) auth.getPrincipal();
             if (!Role.RoleUnit.equals(cuser.getRole().getName())) {
-                return new ErrorResponse(errorBase+2, "你必须是一个申报单位");
+                return new ErrorResponse(errorBase + 2, "你必须是一个申报单位");
             }
             Application app = this.applicationRepository.findOne(appid);
             if (app == null) {
-                return new ErrorResponse(errorBase+1, "找不到指定的申报信息");
+                return new ErrorResponse(errorBase + 1, "找不到指定的申报信息");
             }
 
             if (!app.getMyorg().getId().equals(cuser.getOrg().getId())) {
-                return new ErrorResponse(errorBase+2, "不在你的管辖范围");
+                return new ErrorResponse(errorBase + 2, "不在你的管辖范围");
             }
 
             User user = this.userRepository.findByLoginName(username);
 
             if (user == null) {
                 if (password.length() == 0) {
-                    return new ErrorResponse(errorBase+3, "新增用户需要提供密码");
+                    return new ErrorResponse(errorBase + 3, "新增用户需要提供密码");
                 }
                 user = new User();
                 user.setLoginName(username);
                 user.setOrg(cuser.getOrg());
                 user = this.userRepository.save(user);
                 if (userService.initUserPassword(user.getId(), password, true).getCode() != 200) {
-                    return new ErrorResponse(errorBase+4, "初始化用户失败");
+                    return new ErrorResponse(errorBase + 4, "初始化用户失败");
                 }
             } else {
                 if (!user.getOrg().getId().equals(cuser.getOrg().getId())) {
-                    return new ErrorResponse(errorBase+5, "用户已存在，且非" + cuser.getOrg().getName() + "申报人");
+                    return new ErrorResponse(errorBase + 5, "用户已存在，且非" + cuser.getOrg().getName() + "申报人");
                 }
             }
 
@@ -170,7 +282,7 @@ public class ApplicationService {
         if (auth == null) {
             return new ErrorResponse(400, "尚未登录");
         }
-        
+
         int errorBase = 560;
 
         if (appid == null) {
@@ -180,22 +292,22 @@ public class ApplicationService {
         if (auth.getPrincipal() instanceof User) {
             Application app = this.applicationRepository.findOne(appid);
             if (app == null) {
-                return new ErrorResponse(errorBase+1, "找不到指定的申报信息");
+                return new ErrorResponse(errorBase + 1, "找不到指定的申报信息");
             }
             User cuser = (User) auth.getPrincipal();
 
             //只有单位才可以上报
             if (!Role.RoleUnit.equals(cuser.getRole().getName())) {
-                return new ErrorResponse(errorBase+2, "你必须是一个申报单位");
+                return new ErrorResponse(errorBase + 2, "你必须是一个申报单位");
             }
-            
-            if(!app.getMyorg().getId().equals(cuser.getOrg().getId())){
-                return new ErrorResponse(errorBase+3, "你无法越权上报");
+
+            if (!app.getMyorg().getId().equals(cuser.getOrg().getId())) {
+                return new ErrorResponse(errorBase + 3, "你无法越权上报");
             }
 
             if (!app.getStatus().equals("未上报")
                     && !app.getStatus().contains("退回")) {
-                return new ErrorResponse(errorBase+4, "错误的状态");
+                return new ErrorResponse(errorBase + 4, "错误的状态");
             }
 
             OLog ol = new OLog(cuser, request, "上报");
@@ -249,7 +361,7 @@ public class ApplicationService {
         if (auth == null) {
             return new ErrorResponse(400, "尚未登录");
         }
-        
+
         int errorBase = 570;
 
         if (appid == null || reason == null) {
@@ -257,7 +369,7 @@ public class ApplicationService {
         }
 
         if (result != 0 && result != 1 && result != -1) {
-            return new ErrorResponse(errorBase+1, "错误的参数");
+            return new ErrorResponse(errorBase + 1, "错误的参数");
         }
 
         //照片？？
@@ -265,7 +377,7 @@ public class ApplicationService {
         if (auth.getPrincipal() instanceof User) {
             Application app = this.applicationRepository.findOne(appid);
             if (app == null) {
-                return new ErrorResponse(errorBase+2, "找不到指定的申报信息");
+                return new ErrorResponse(errorBase + 2, "找不到指定的申报信息");
             }
 
             User cuser = (User) auth.getPrincipal();
@@ -278,10 +390,10 @@ public class ApplicationService {
                     //形审通过
                     //执行的人为 次级机构管理员                    
                     if (!Role.RoleSubManager.equals(cuser.getRole().getName())) {
-                        return new ErrorResponse(errorBase+3, "你必须是一个次级机构管理员");
+                        return new ErrorResponse(errorBase + 3, "你必须是一个次级机构管理员");
                     }
                     if (!app.getMyorg().getSuperOrg().getId().equals(cuser.getOrg().getId())) {
-                        return new ErrorResponse(errorBase+4, "你无权进行这个操作");
+                        return new ErrorResponse(errorBase + 4, "你无权进行这个操作");
                     }
                     switch (result) {
                         case -1:
@@ -303,19 +415,19 @@ public class ApplicationService {
                             if (!Role.RoleManager.equals(cuser.getRole().getName())
                                     && !Role.RoleRoot.equals(cuser.getRole().getName())
                                     && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase+3, "你必须是一个部门管理员或者市委组织部管理员");
+                                return new ErrorResponse(errorBase + 3, "你必须是一个部门管理员或者市委组织部管理员");
                             }
                             return returnApp(app, cuser, reason, "复审", "", request);
                         case 1:
                             if (!Role.RoleRoot.equals(cuser.getRole().getName())
                                     && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase+3, "你必须是一个市委组织部管理员");
+                                return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
                             }
                             return yesApp(app, cuser, reason, "复审", "", request);
                         default:
                             if (!Role.RoleRoot.equals(cuser.getRole().getName())
                                     && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase+3, "你必须是一个市委组织部管理员");
+                                return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
                             }
                             return noApp(app, cuser, reason, "复审", "", request);
                     }
@@ -323,7 +435,7 @@ public class ApplicationService {
                 case "评审通过":
                 case "评审未过":
                     if (!Role.RoleRoot.equals(cuser.getRole().getName())) {
-                        return new ErrorResponse(errorBase+3, "你必须是一个市委组织部管理员");
+                        return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
                     }
                     switch (result) {
 //                        case -1:
@@ -334,7 +446,7 @@ public class ApplicationService {
                             return noApp(app, cuser, reason, "评审", "", request);
                     }
                 default:
-                    return new ErrorResponse(errorBase+5, "当前状态无法操作");
+                    return new ErrorResponse(errorBase + 5, "当前状态无法操作");
             }
         } else {
             return new ErrorResponse(400, "尚未登录");
@@ -346,10 +458,11 @@ public class ApplicationService {
      */
     private JsonResponse returnApp(Application app, User oper, String reason, String type, String other, HttpServletRequest request) {
         app.setReturnReason(reason);
-        if(oper.getOrg()!=null)
+        if (oper.getOrg() != null) {
             app.setReturnOrg(oper.getOrg().getName());
-        else
+        } else {
             app.setReturnOrg("未知");
+        }
         String newStatus = type + "退回";
         switch (type) {
             case "形审":
@@ -443,5 +556,49 @@ public class ApplicationService {
         ol.setMessage(sb.toString());
         this.logRepository.save(ol);
         return new JsonResponse(200, "成功");
+    }
+
+    private StringBuilder handleResponseableApplicationJQL(StringBuilder jql) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        jql.append(" where u.status <> '已删除'");
+        
+        if (null != user.getRole().getName()) {
+            switch (user.getRole().getName()) {
+                case Role.RolePeople:
+                    jql.append("  and ( u.owner.id = :userid )");
+                    break;
+                case Role.RoleUnit:                    
+                case Role.RoleSubManager:
+                    jql.append(" and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)");
+                    break;
+                case Role.RoleAdmin:
+                case Role.RoleRoot:
+                case Role.RoleManager:
+                    break;
+            }
+        }
+        return jql;
+    }
+
+    private Query handleResponseableApplicationQuery(Query query) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        if (null != user.getRole().getName()) {
+            switch (user.getRole().getName()) {
+                case Role.RolePeople:
+                    query.setParameter("userid", user.getId());
+                    break;
+                case Role.RoleUnit:                    
+                case Role.RoleSubManager:
+                    query.setParameter("superid", user.getOrg().getId());
+                    break;
+                case Role.RoleAdmin:
+                case Role.RoleRoot:
+                case Role.RoleManager:
+                    break;
+            }
+        }
+        return query;
     }
 }

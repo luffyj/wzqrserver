@@ -141,7 +141,7 @@ public class ApplicationServiceTest extends WebTest {
     public void testUpload() throws Exception {
         //上传还不知道怎么弄
         Organization org = this.userRepository.findByLoginName(this.userUnit1).getOrg();
-        System.out.println(this.applicationRepository.findBySuperOrg(org.getId(), null).getTotalElements());
+        System.out.println(this.applicationRepository.findBySuperOrg(org.getId(),"","","","","","","", null).getTotalElements());
         
     }
 

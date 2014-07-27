@@ -97,14 +97,14 @@ public class APITest extends WebTest{
         
         
         Organization root = orgRepository.findByName(Organization.NameRoot);
-        count = applicationRepository.findBySuperOrg(root.getId(), null).getTotalElements();
+        count = applicationRepository.findBySuperOrg(root.getId(),"","","","","","","", null).getTotalElements();
         
         app = new Application();
         app.setAddress("随意");   
         app.setMyorg(root);
         applicationRepository.save(app);
         try{
-            assertEquals(count+1,applicationRepository.findBySuperOrg(root.getId(), null).getTotalElements());
+            assertEquals(count+1,applicationRepository.findBySuperOrg(root.getId(),"","","","","","","", null).getTotalElements());
         }finally{
             applicationRepository.delete(app);
         }
@@ -112,7 +112,7 @@ public class APITest extends WebTest{
         User user = userRepository.findAll().iterator().next();
         
         
-        count = applicationRepository.findByOwner(user.getId(), null).getTotalElements();
+        count = applicationRepository.findByOwner(user.getId(),"","","","","","","", null).getTotalElements();
         
         app = new Application();
         app.setAddress("随意");   
@@ -121,7 +121,7 @@ public class APITest extends WebTest{
        
         applicationRepository.save(app);
         try{
-            assertEquals(count+1,applicationRepository.findByOwner(user.getId(), null).getTotalElements());
+            assertEquals(count+1,applicationRepository.findByOwner(user.getId(),"","","","","","","", null).getTotalElements());
         }finally{
             applicationRepository.delete(app);
         }
