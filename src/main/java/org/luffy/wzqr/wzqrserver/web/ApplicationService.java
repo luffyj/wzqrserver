@@ -569,12 +569,15 @@ public class ApplicationService {
                     jql.append("  and ( u.owner.id = :userid )");
                     break;
                 case Role.RoleUnit:                    
+                    jql.append(" and ( u.myorg.id = :superid)");
+                    break;
                 case Role.RoleSubManager:
-                    jql.append(" and ( u.myorg.id = :superid or u.myorg.superOrg.id = :superid)");
+                    jql.append(" and u.status <> '未上报' and (u.myorg.superOrg.id = :superid)");
                     break;
                 case Role.RoleAdmin:
                 case Role.RoleRoot:
                 case Role.RoleManager:
+                    jql.append(" and u.status <> '未上报'");
                     break;
             }
         }
