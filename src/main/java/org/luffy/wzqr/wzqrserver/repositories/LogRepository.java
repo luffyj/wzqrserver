@@ -6,6 +6,7 @@
 
 package org.luffy.wzqr.wzqrserver.repositories;
 
+import java.util.Date;
 import org.luffy.wzqr.wzqrserver.entity.OLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

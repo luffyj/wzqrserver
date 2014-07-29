@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
@@ -25,6 +26,10 @@ import org.luffy.wzqr.wzqrserver.repositories.ApplicationRepository;
 import org.luffy.wzqr.wzqrserver.repositories.LogRepository;
 import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -45,6 +50,19 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 public class ApplicationService {
+    
+//    @PersistenceContext
+//    private EntityManager entityManager;
+    
+    @RequestMapping(value = "/customMethod", method = RequestMethod.GET)
+    public Page<OLog> customMethod(@Param("superid")Long superid, String type, String roleName, Date time, String loginName, Pageable pageable) {
+        StringBuilder jql = new StringBuilder("select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)");
+                
+        Query query = entityManagerFactory.createEntityManager().createQuery(jql.toString());
+        query.setParameter("superid", superid);
+        
+        return new PageImpl(query.getResultList(),pageable,query.getMaxResults());
+    }
 
     @Autowired
     private UserRepository userRepository;
