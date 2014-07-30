@@ -80,10 +80,11 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         Connection con = em.unwrap(Connection.class);
-        if (con.getClass().getName().startsWith("org.apache")) {
-            this.dbtype = DBType.derby;
-        } else {
+        System.out.println(con.getClass().getName()+con);
+        if (con.toString().contains("mysql")) {
             this.dbtype = DBType.mysql;
+        } else {
+            this.dbtype = DBType.derby;
         }
         try {
             if (roleRepository.count() == 0) {

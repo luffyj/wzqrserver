@@ -130,7 +130,7 @@ public class LogService {
             if(app.getDbtype()==DBType.derby){
                 jql.append(" SQL('abs(cmpdate(?,?)) < 86400000',u.optime,:optime)");
             }else{
-                jql.append(" SQL('abs(TIMESTAMPDIFF(MICROSECOND,?,?)) < 86400000',u.optime,:optime)");
+                jql.append(" SQL('abs(TIMESTAMPDIFF(SECOND,?,?)) < 86400',u.optime,:optime)");
             }
             
 //            jql.append(" SQL('UNIX_TIMESTAMP(?)=UNIX_TIMESTAMP(?)',u.optime,:optime)");
