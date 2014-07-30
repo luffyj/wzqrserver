@@ -11,10 +11,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * 这个配置将是所有spring 公用的配置
@@ -26,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableJpaRepositories("org.luffy.wzqr.wzqrserver.repositories")
 @Import({JpaConfig.class,WebSecurityConfig.class})
 @ComponentScan("org.luffy.wzqr.wzqrserver.beans")
+@ImportResource("classpath:org/luffy/wzqr/wzqrserver/config/root.xml")
 public class RootConfig {
     
     @Bean

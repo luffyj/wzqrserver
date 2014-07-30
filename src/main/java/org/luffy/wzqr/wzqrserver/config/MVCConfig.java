@@ -9,8 +9,10 @@ package org.luffy.wzqr.wzqrserver.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.thymeleaf.spring3.SpringTemplateEngine;
@@ -24,6 +26,8 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @Configuration
 @EnableGlobalAuthentication
 @ComponentScan("org.luffy.wzqr.wzqrserver.web")
+@EnableWebMvc
+@EnableSpringDataWebSupport
 public class MVCConfig extends  WebMvcConfigurationSupport{
     
 //    @Inject

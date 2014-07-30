@@ -5,6 +5,7 @@
  */
 package org.luffy.wzqr.wzqrserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -29,6 +30,7 @@ public class OLog implements Serializable{
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private User who;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date optime;
