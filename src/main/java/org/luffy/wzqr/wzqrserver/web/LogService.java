@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author luffy
  */
-@Controller
-@RequestMapping("log")
+//@Controller
+//@RequestMapping("log")
 public class LogService {
     
     @Autowired
@@ -33,7 +33,6 @@ public class LogService {
 
     @RequestMapping("/findCustom")
     public HttpEntity<PagedResources<Resource<OLog>>> showUsers(Pageable pageable,PagedResourcesAssembler<OLog> assembler) {
-        System.out.println("????????????????????????????????????????");
 //        model.addAttribute("log", logRepository.findAll(pageable));
 //        return "log";        
         //ResourceAssembler Page<OLog>, PagedResources<Resource<OLog>>
