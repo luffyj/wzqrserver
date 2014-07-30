@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
@@ -76,9 +77,15 @@ public class LogServiceTest extends WebTest {
     
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    @Autowired
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     @Test
     public void hello() throws Exception {
+        
+        for(Object obj:requestMappingHandlerAdapter.getMessageConverters()){
+            System.out.println(obj);
+        }
         
         Set<RequestMappingInfo> keys = requestMappingHandlerMapping.getHandlerMethods().keySet();
         
@@ -89,8 +96,18 @@ public class LogServiceTest extends WebTest {
         
         User subUser = this.userRepository.findByLoginName("logtestsub");
         MockHttpSession session = this.loginAs("logtestsub");
+        
+//        this.mockMvc.perform(get("/log/357")
+//                .session(session)
+//        )
+//                .andDo(print());
+        
+        // log id == 357
+        
+        
+        org.springframework.http.converter.HttpMessageNotWritableException a ;
 
-        this.mockMvc.perform(get("/log/findCustom")
+        this.mockMvc.perform(get("/log/persons")
                 .param("superid", "" + subUser.getOrg().getId())
                 .param("optime", "0")
                 .session(session))

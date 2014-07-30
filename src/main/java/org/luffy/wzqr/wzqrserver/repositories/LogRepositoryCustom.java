@@ -10,8 +10,8 @@ import java.util.Date;
 import org.luffy.wzqr.wzqrserver.entity.OLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  *
@@ -27,7 +27,11 @@ public interface LogRepositoryCustom {
 ////            + " and ( EXTRACT(YEAR,u.optime)=EXTRACT(YEAR,:optime) and EXTRACT(MONTH,u.optime)=EXTRACT(MONTH,:optime) and EXTRACT(DAY,u.optime)=EXTRACT(DAY,:optime))"
 ////            + " and u.who.loginName like %:loginName%"
 //    )
-    Page<OLog> customMethod(@Param("superid") Long superid,
+    
+    /**
+     * 查找当前机构以及下级日志
+     */
+    Page<OLog> findDown(
             @Param("type") String type,
             @Param("roleName") String roleName,
             @Param("optime") Date time,

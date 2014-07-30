@@ -20,24 +20,24 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author luffy
  */
 @RepositoryRestResource(collectionResourceRel = "log", path = "log")
-public interface LogRepository extends PagingAndSortingRepository<OLog, Long> {
+public interface LogRepository extends PagingAndSortingRepository<OLog, Long>,LogRepositoryCustom {
     
     @Query("select u from OLog u where u.who.id = :userid")
     Page<OLog> findByWho(@Param("userid") Long userid,Pageable pageable); 
     
-    @Query("select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)"
-//            + " and u.type like %:type%"
-//            + " and u.who.role.name like %:roleName%"
-//            + " and OPERATOR(DateDifference, u.optime, :optime) < 4000"
-            + " and SQL('abs(cmptime(?,?))', u.optime,:optime) <= 0"
-//            + " and ( EXTRACT(YEAR,u.optime)=EXTRACT(YEAR,:optime) and EXTRACT(MONTH,u.optime)=EXTRACT(MONTH,:optime) and EXTRACT(DAY,u.optime)=EXTRACT(DAY,:optime))"
-//            + " and u.who.loginName like %:loginName%"
-    )
-    Page<OLog> findBySuborgId(@Param("superid") Long superid,
-//            @Param("type") String type,
-//            @Param("roleName") String roleName,
-            @Param("optime") Date optime,
-//            @Param("loginName") String loginName,
-            Pageable pageable); 
+//    @Query("select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)"
+////            + " and u.type like %:type%"
+////            + " and u.who.role.name like %:roleName%"
+////            + " and OPERATOR(DateDifference, u.optime, :optime) < 4000"
+//            + " and SQL('abs(cmptime(?,?))', u.optime,:optime) <= 0"
+////            + " and ( EXTRACT(YEAR,u.optime)=EXTRACT(YEAR,:optime) and EXTRACT(MONTH,u.optime)=EXTRACT(MONTH,:optime) and EXTRACT(DAY,u.optime)=EXTRACT(DAY,:optime))"
+////            + " and u.who.loginName like %:loginName%"
+//    )
+//    Page<OLog> findBySuborgId(@Param("superid") Long superid,
+////            @Param("type") String type,
+////            @Param("roleName") String roleName,
+//            @Param("optime") Date optime,
+////            @Param("loginName") String loginName,
+//            Pageable pageable); 
     
 }

@@ -41,6 +41,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.convert.UriListHttpMessageConverter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
@@ -60,6 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
@@ -148,9 +150,17 @@ public class APITest extends WebTest {
     
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    @Autowired
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     @Test
     public void logs() throws Exception {
+        
+//        UriListHttpMessageConverter a;        
+//        org.springframework.data.rest.webmvc.RepositorySearchController b;
+        for(Object obj:requestMappingHandlerAdapter.getMessageConverters()){
+            System.out.println(obj);
+        }
         
         Set<RequestMappingInfo> keys = requestMappingHandlerMapping.getHandlerMethods().keySet();
         
@@ -171,16 +181,26 @@ public class APITest extends WebTest {
             User subUser = this.userRepository.findByLoginName("logtestsub");
             MockHttpSession session = this.loginAs("logtestsub");
             
-            this.mockMvc
-                    .perform(get("/log/findCustom")
-//                    .perform(get("/api/log/search/findBySuborgId")
-                .param("superid", "" + subUser.getOrg().getId())
-                    .param("optime", "0")
-                .session(session))
-                .andDo(print())
-                .andExpect(status().isOk())
-//                .andExpect(jsonPath("code", is(562)))
-                    ;
+            this.mockMvc.perform(get("/api/log/search/findByWho")
+                    .param("userid", ""+user.getId())
+            .session(session))
+                    .andDo(print()
+           );
+            
+            this.mockMvc.perform(get("/mypath")
+            .session(session))
+                    .andDo(print()
+           );
+            
+//            this.mockMvc
+//                    .perform(get("/api/log/search/findDown")
+//                .param("superid", "" + subUser.getOrg().getId())
+//                    .param("optime", "0")
+//                .session(session))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+////                .andExpect(jsonPath("code", is(562)))
+//                    ;
             
         } finally {
             this.logRepository.delete(ol);
