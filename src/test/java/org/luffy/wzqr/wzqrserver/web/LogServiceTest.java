@@ -30,9 +30,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import static org.hamcrest.Matchers.*;
 
 /**
  *
@@ -107,12 +109,16 @@ public class LogServiceTest extends WebTest {
         
         org.springframework.http.converter.HttpMessageNotWritableException a ;
 
-        this.mockMvc.perform(get("/log/persons")
-                .param("superid", "" + subUser.getOrg().getId())
-                .param("optime", "0")
+        this.mockMvc.perform(get("/log/underlogs")
+                .param("type", "测")
+                .param("roleName", "报人")
+                .param("time", ""+System.currentTimeMillis())
+                .param("loginName", "gtestpeop")
                 .session(session))
                 .andDo(print())
-                .andExpect(status().isOk()) //                .andExpect(jsonPath("code", is(562)))
+                .andExpect(status().isOk()) 
+                .andExpect(jsonPath("$.content[0].message",is("测试msg")))
+//                .andExpect(jsonPath("code", is(562)))
                 ;
     }
 }

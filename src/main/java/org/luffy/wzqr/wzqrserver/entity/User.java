@@ -32,6 +32,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "pUser", uniqueConstraints = @UniqueConstraint(columnNames = {"loginName"}))
 public class User implements UserDetails,Serializable{
     
+    private static final long serialVersionUID = -349012453592429794L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -66,6 +68,20 @@ public class User implements UserDetails,Serializable{
         if(role==null)
             return Collections.EMPTY_LIST;
         return role.getGrantedAuthority();
+    }
+    
+    /**
+     * 是否可以进行管理
+     * 比如系统管理员 市委 或者 管理部门
+     */
+    @JsonIgnore
+    public boolean isAbleManage() {
+        Role r = this.getRole();
+        if(r==null)
+            return false;
+        return r.getName().equals(Role.RoleAdmin)
+                || r.getName().equals(Role.RoleRoot)
+                || r.getName().equals(Role.RoleManager);
     }
     
     @Override

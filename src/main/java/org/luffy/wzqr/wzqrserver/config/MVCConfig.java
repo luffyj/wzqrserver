@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.geo.GeoModule;
 import org.springframework.data.repository.support.DomainClassConverter;
+import org.springframework.data.rest.webmvc.convert.UriListHttpMessageConverter;
 import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.HateoasSortHandlerMethodArgumentResolver;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -125,6 +126,7 @@ public class MVCConfig extends WebMvcConfigurationSupport {
                 && ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", WebMvcConfigurationSupport.class.getClassLoader())) {
             converters.add(new MappingJacksonHttpMessageConverter());
         }
+        converters.add(new UriListHttpMessageConverter());
     }
 
     @Autowired

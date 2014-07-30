@@ -40,6 +40,21 @@ public class OLog implements Serializable{
     private String targetType;//对象类别 有user有application
     private Long targetpk;
     private String message;
+    
+    public String getLoginName(){
+        User u = this.getWho();
+        if(u==null)
+            return null;
+        return u.getLoginName();
+    }
+    
+    public String getRoleInfo(){
+        User u = this.getWho();
+        if(u==null)
+            return null;
+        return new StringBuilder(u.getOrg().getName())
+                .append(u.getRole().getName()).toString();        
+    }
 
     public OLog() {
     }
