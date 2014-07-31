@@ -30,7 +30,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Import({JpaConfig.class,WebSecurityConfig.class})
 @ComponentScan("org.luffy.wzqr.wzqrserver.beans")
 @ImportResource(
-        {"classpath:org/luffy/wzqr/wzqrserver/config/root.xml","classpath:org/luffy/wzqr/wzqrserver/config/jcaptcha.xml"}
+        {
+            "classpath:org/luffy/wzqr/wzqrserver/config/root.xml",
+            "classpath:org/luffy/wzqr/wzqrserver/config/jcaptcha.xml",
+            "WEB-INF/config.xml"
+        }
 )
 public class RootConfig {
     

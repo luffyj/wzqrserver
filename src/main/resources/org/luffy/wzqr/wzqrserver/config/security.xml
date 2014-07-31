@@ -17,6 +17,7 @@
     
     <!-- For capturing CAPTCHA fields -->
     <beans:bean id="captchaCaptureFilter" class="org.luffy.wzqr.wzqrserver.config.captcha.CaptchaCaptureFilter" />    
+    <beans:bean id="corsFilter" class="org.luffy.wzqr.wzqrserver.config.captcha.SimpleCORSFilter" />    
     
     <beans:bean class="org.luffy.wzqr.wzqrserver.config.captcha.JsonSavedRequestAwareAuthenticationSuccessHandler" id="jsonSavedRequestAwareAuthenticationSuccessHandler"/>
     <beans:bean class="org.luffy.wzqr.wzqrserver.config.captcha.JsonSimpleUrlAuthenticationFailureHandler" id="jsonSimpleUrlAuthenticationFailureHandler">
@@ -44,6 +45,7 @@
         <logout logout-url="/logout" logout-success-url="/loginPage?logout"/>
         <remember-me token-validity-seconds="604800" remember-me-parameter="rememberme" key="wzwzoxlabi"/>
         <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER"/>
+        <custom-filter ref="corsFilter" after="FORM_LOGIN_FILTER"/>        
     </http>
     
     <authentication-manager alias="authenticationManager">
