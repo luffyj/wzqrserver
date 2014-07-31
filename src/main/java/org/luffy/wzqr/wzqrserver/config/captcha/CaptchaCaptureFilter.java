@@ -6,6 +6,7 @@
 package org.luffy.wzqr.wzqrserver.config.captcha;
 
 import com.octo.captcha.module.servlet.image.SimpleImageCaptchaServlet;
+import com.octo.captcha.service.image.ImageCaptchaService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,6 +25,9 @@ public class CaptchaCaptureFilter extends OncePerRequestFilter {
 
     @Autowired
     private Environment env;
+    
+    @Autowired
+    private ImageCaptchaService captchaService;
 
     private RequestMatcher captchaAbleMatcher = new RequestMatcher() {
 
@@ -39,7 +43,7 @@ public class CaptchaCaptureFilter extends OncePerRequestFilter {
 
         // 添加需要保护的urls
         if (captchaAbleMatcher.matches(req) && (!env.acceptsProfiles("test") || env.acceptsProfiles("testcaptcha"))) {
-            if (!SimpleImageCaptchaServlet.validateResponse(req, req.getParameter("jcaptcha"))) {
+            if (!captchaService.validateResponseForID(req.getSession().getId(), req.getParameter("jcaptcha"))) {
                 res.sendError(410, "验证码错误");
 //                throw new ServletException("验证码错误");
                 return;
