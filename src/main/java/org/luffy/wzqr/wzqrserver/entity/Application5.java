@@ -21,6 +21,7 @@ public class Application5 extends Application4 {
 
     private String idType;
     private String idNumber;
+    private String personMobile,personPhone;
 
     private String address;
     private String addressOut, phoneOut;
@@ -392,6 +393,22 @@ public class Application5 extends Application4 {
 
     public String getRelationshipCountry8() {
         return relationshipCountry8;
+    }
+
+    public String getPersonMobile() {
+        return personMobile;
+    }
+
+    public void setPersonMobile(String personMobile) {
+        this.personMobile = personMobile;
+    }
+
+    public String getPersonPhone() {
+        return personPhone;
+    }
+
+    public void setPersonPhone(String personPhone) {
+        this.personPhone = personPhone;
     }
 
     public void setRelationshipCountry8(String relationshipCountry8) {
