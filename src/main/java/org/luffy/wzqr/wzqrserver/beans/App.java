@@ -224,6 +224,7 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
             } else {
                 SystemValue sv = systemValueRepository.findByName("dbversion");
                 if (sv.getIntValue() != version) {
+                    //alter table papplication5 add column personPhone varchar(255)
                     throw new java.lang.IllegalStateException("当前数据库版本为" + sv.getValue() + "，应该为" + version);
                 }
             }

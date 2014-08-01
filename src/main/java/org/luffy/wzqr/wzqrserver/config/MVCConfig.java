@@ -39,6 +39,8 @@ import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -57,7 +59,15 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 //@EnableSpringDataWebSupport
 @ImportResource("classpath:org/luffy/wzqr/wzqrserver/config/mvc.xml")
 public class MVCConfig extends WebMvcConfigurationSupport {
-
+    
+    /**
+     * for upload
+     */
+    @Bean
+    public CommonsMultipartResolver multipartResolver(){
+        return new CommonsMultipartResolver();
+    }
+        
 //    @Inject
 //    private ServletContextTemplateResolver templateResolver;
     @Bean

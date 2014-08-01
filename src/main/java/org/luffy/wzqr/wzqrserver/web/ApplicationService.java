@@ -6,6 +6,8 @@
 package org.luffy.wzqr.wzqrserver.web;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -182,7 +184,7 @@ public class ApplicationService {
     // @ModelAttribute( "uploadForm" ) FileUploadForm uploadForm
     @RequestMapping(value = "/uploadattachment", method = RequestMethod.POST)
     public @ResponseBody
-    JsonResponse upload(@RequestParam("file") MultipartFile pdf, @RequestParam("appid") Long appid) throws IOException {
+    JsonResponse upload(@RequestParam("file") MultipartFile pdf, @RequestParam("id") Long appid) throws IOException {
         System.out.println(pdf.getOriginalFilename() + " uploaded!");
         int errorBase = 590;
 
@@ -202,7 +204,7 @@ public class ApplicationService {
     }
 
     @RequestMapping(value = "/attachment/{appid}.pdf", method = RequestMethod.GET)
-    public HttpEntity<byte[]> downloadPDF(@PathVariable("appid") Long appid) {
+    public HttpEntity<byte[]> downloadPDF(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
         if (appid == null) {
             return null;
         }
@@ -214,13 +216,14 @@ public class ApplicationService {
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "pdf"));
-        StringBuilder name = new StringBuilder();
-        name.append(app.getBatch())
+        String name = new StringBuilder().append(app.getBatch())
                 .append(app.getRealName())
-                .append("的申请附件.pdf");
+                .append("的申请附件.pdf").toString();
+        
+        System.out.println("downloading "+name);
 
         header.set("Content-Disposition",
-                "attachment; filename=" + name);
+                "attachment; filename=" + URLEncoder.encode(name,"UTF-8"));        
         header.setContentLength(documentBody.length);
         return new HttpEntity<>(documentBody, header);
     }
