@@ -63,10 +63,10 @@
     <bean id="fontGenRandom" class="com.octo.captcha.component.image.fontgenerator.RandomFontGenerator" >
         <description>文字转换图片</description>
         <constructor-arg index="0">
-            <value>20</value>
+            <value>75</value>
         </constructor-arg><!--字体最小尺寸-->
         <constructor-arg index="1">
-            <value>20</value>
+            <value>75</value>
         </constructor-arg><!--字体最大尺寸-->
     </bean> 
 
@@ -91,7 +91,7 @@
             <value>4</value><!--字符最少个数-->
         </constructor-arg>
         <constructor-arg type="java.lang.Integer" index="1">
-            <value>4</value><!--字符最多个数-->
+            <value>7</value><!--字符最多个数-->
         </constructor-arg>
         <constructor-arg type="java.awt.Color" index="2">
             <ref bean="colorFont"/>
