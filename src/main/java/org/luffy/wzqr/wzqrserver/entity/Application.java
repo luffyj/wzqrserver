@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.luffy.wzqr.wzqrserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.LAZY;
@@ -22,51 +25,114 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "pApplication")
-public class Application extends Application5 implements java.io.Serializable{
+public class Application extends ApplicationCY implements java.io.Serializable {
 
     public Application() {
         super();
         this.setStatus("未上报");
     }
-    
+
+    /**
+     * 允许由这个用户导出
+     *
+     * @param user
+     * @return
+     */
+    public boolean ableReportTo(User user) {
+        if (user.getRole().getName().equals(Role.RoleAdmin)
+                || user.getRole().getName().equals(Role.RoleRoot)
+                || user.getRole().getName().equals(Role.RoleManager)) {
+            return true;
+        }
+        try {
+            if (this.getOwner() != null && this.getOwner().getId().equals(user.getId())) {
+                return true;
+            }
+            if (this.getMyorg().getId().equals(user.getOrg().getId())) {
+                return true;
+            }
+            return this.getMyorg().getSuperOrg().getId().equals(user.getOrg().getId());
+        } catch (java.lang.NullPointerException ex) {
+            return false;
+        }
+    }
+
     @ManyToOne
     private User owner;
     @ManyToOne
     private Organization myorg;
-    
-    
+
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date submitDate;
-    
+
     //专利情况
     private String patentDesc;
-    
+
     private String city;
     //中国前单位和职务
-    private String beforeOrg,beforePosition;
+    private String beforeOrg, beforePosition;
     private String borderDate;//到中国时间
     private String wdate;//合同
     private String platform;//引入平台
     private boolean poge;//破格
     private String comment;
-    
+
     @Lob
-    @Basic(fetch=LAZY)
+    @Basic(fetch = LAZY)
     @JsonIgnore
     private byte[] attachment;
     
-    private String unitApproveReason,unitApproveSupport;
-    private String pogeReason;
-    private String orgApproveReason,orgApproveSupport;
+    private String submitReason,submitSupport;
     
+    private String unitApproveReason, unitApproveSupport;
+    private String pogeReason;
+    private String orgApproveReason, orgApproveSupport;
+
     private String managerReason;//市委意见
     private String returnOrg;//退回
     private String returnReason;
-    
+
     @Lob
-    @Basic(fetch=LAZY)
+    @Basic(fetch = LAZY)
     @JsonIgnore
     private byte[] picture;
+    
+    @JsonAnyGetter
+    @JsonInclude
+    public Map<String,Object> getJsonData(){
+        Map<String,Object> data = new HashMap();
+        data.put("ownerLoginName", this.getOwnerLoginName());
+        data.put("orgSubName", this.getOrgSubName());
+        return data;
+    }
+    
+    public String getOrgSubName(){
+        if(this.getMyorg().getSuperOrg()==null)
+            return "";
+        return this.getMyorg().getSuperOrg().getName();
+    }
+    
+    public String getOwnerLoginName(){
+        if(this.getOwner()==null)
+            return "";
+        return this.getOwner().getLoginName();
+    }
+
+    public String getSubmitReason() {
+        return submitReason;
+    }
+
+    public void setSubmitReason(String submitReason) {
+        this.submitReason = submitReason;
+    }
+
+    public String getSubmitSupport() {
+        return submitSupport;
+    }
+
+    public void setSubmitSupport(String submitSupport) {
+        this.submitSupport = submitSupport;
+    }
 
     public String getPatentDesc() {
         return patentDesc;
@@ -234,7 +300,7 @@ public class Application extends Application5 implements java.io.Serializable{
 
     public void setSubmitDate(Date submitDate) {
         this.submitDate = submitDate;
-    }    
+    }
 
     public byte[] getPicture() {
         return picture;
@@ -243,5 +309,5 @@ public class Application extends Application5 implements java.io.Serializable{
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
-    
+
 }

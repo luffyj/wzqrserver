@@ -5,13 +5,11 @@
  */
 package org.luffy.wzqr.wzqrserver.web;
 
+import freemarker.template.TemplateException;
 import hello.IRuntimeConfig;
 import hello.WebTest;
-import java.security.Principal;
-import javax.inject.Inject;
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -20,39 +18,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.luffy.wzqr.wzqrserver.beans.AppService;
-import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
 import org.luffy.wzqr.wzqrserver.config.MVCConfig;
-import org.luffy.wzqr.wzqrserver.config.RestDataConfig;
 import org.luffy.wzqr.wzqrserver.config.RootConfig;
 import org.luffy.wzqr.wzqrserver.entity.Application;
 import org.luffy.wzqr.wzqrserver.entity.OLog;
 import org.luffy.wzqr.wzqrserver.entity.Organization;
-import org.luffy.wzqr.wzqrserver.entity.Role;
 import org.luffy.wzqr.wzqrserver.entity.User;
-import org.luffy.wzqr.wzqrserver.repositories.ApplicationRepository;
-import org.luffy.wzqr.wzqrserver.repositories.OrgRepository;
-import org.luffy.wzqr.wzqrserver.repositories.RoleRepository;
-import org.luffy.wzqr.wzqrserver.repositories.UserRepository;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -60,7 +33,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -134,6 +106,32 @@ public class ApplicationServiceTest extends WebTest {
         removeUser(userRoot);
     }
 
+    @Autowired
+    private DocumentHandler documentHandler;
+
+    @Test
+    public void reportTest() throws IOException, TemplateException {
+        for (Application app : this.applicationRepository.findAll()) {
+            FileOutputStream out = new FileOutputStream("target/1.doc");
+            try {
+                documentHandler.export1(app, out);
+            } finally {
+                out.flush();
+                out.close();
+            }
+            
+            out = new FileOutputStream("target/2.doc");
+            try {
+                documentHandler.export2(app, out);
+            } finally {
+                out.flush();
+                out.close();
+            }
+            
+            return;
+        }
+    }
+
     /**
      * Test of upload method, of class ApplicationService.
      */
@@ -141,8 +139,8 @@ public class ApplicationServiceTest extends WebTest {
     public void testUpload() throws Exception {
         //上传还不知道怎么弄
         Organization org = this.userRepository.findByLoginName(this.userUnit1).getOrg();
-        System.out.println(this.applicationRepository.findBySuperOrg(org.getId(),"","","","","","","", null).getTotalElements());
-        
+        System.out.println(this.applicationRepository.findBySuperOrg(org.getId(), "", "", "", "", "", "", "", null).getTotalElements());
+
     }
 
     /**
@@ -373,9 +371,9 @@ public class ApplicationServiceTest extends WebTest {
                 .andExpect(jsonPath("code", is(200)));
 
         assertEquals("等待形审", this.applicationRepository.findOne(tapp2.getId()).getStatus());
-        
+
         System.out.println("log");
-        for(OLog log:this.logRepository.findAll()){
+        for (OLog log : this.logRepository.findAll()) {
             System.out.println(log);
         }
     }
@@ -399,309 +397,303 @@ public class ApplicationServiceTest extends WebTest {
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-        
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-2")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(571)));
-        
+                .andExpect(jsonPath("code", is(571)));
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "2")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(571)));
-        
+                .andExpect(jsonPath("code", is(571)));
+
         //状态
-        
         //需要先上报
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(575)));
-        
-        simpleSubmit(appid);        
+                .andExpect(jsonPath("code", is(575)));
+
+        simpleSubmit(appid);
         //ok继续
-        
+
         //权限
 //        session = this.loginAs(this.userRoot);
-        
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
+                .andExpect(jsonPath("code", is(573)));
+
         session = this.loginAs(this.userManager);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
+                .andExpect(jsonPath("code", is(573)));
+
         session = this.loginAs(this.userPeople1);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
+                .andExpect(jsonPath("code", is(573)));
+
         session = this.loginAs(this.userUnit1);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
+                .andExpect(jsonPath("code", is(573)));
+
         //初审的特有检查
         session = this.loginAs(this.userSub2);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(574)));
-        
+                .andExpect(jsonPath("code", is(574)));
+
         session = this.loginAs(this.userSub1);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("形审退回", this.applicationRepository.findOne(appid).getStatus());
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(575)));
-        
+                .andExpect(jsonPath("code", is(575)));
+
         simpleSubmit(appid);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("形审未过", this.applicationRepository.findOne(appid).getStatus());
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("形审通过", this.applicationRepository.findOne(appid).getStatus());
-        
+
         ////////////////////////////
         //开始复审 只有管理员才可以而部门管理员 只可以退回
         //current sub
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
-        session  = this.loginAs(this.userPeople1);
+                .andExpect(jsonPath("code", is(573)));
+
+        session = this.loginAs(this.userPeople1);
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        session  = this.loginAs(this.userUnit1);
+                .andExpect(jsonPath("code", is(573)));
+        session = this.loginAs(this.userUnit1);
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
-        session  = this.loginAs(this.userManager);
+                .andExpect(jsonPath("code", is(573)));
+
+        session = this.loginAs(this.userManager);
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("复审退回", this.applicationRepository.findOne(appid).getStatus());
-        
+
         simplePassXingshen(appid);
-        
-        session  = this.loginAs(this.userRoot);
+
+        session = this.loginAs(this.userRoot);
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("复审退回", this.applicationRepository.findOne(appid).getStatus());
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "-1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(575)));
-        
+                .andExpect(jsonPath("code", is(575)));
+
         simplePassXingshen(appid);
-        
-        session  = this.loginAs(this.userManager);
-        
+
+        session = this.loginAs(this.userManager);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
-        session  = this.loginAs(this.userRoot);
-        
+                .andExpect(jsonPath("code", is(573)));
+
+        session = this.loginAs(this.userRoot);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("复审未过", this.applicationRepository.findOne(appid).getStatus());
-        
-        
-        session  = this.loginAs(this.userManager);
-        
+
+        session = this.loginAs(this.userManager);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
-        session  = this.loginAs(this.userRoot);
-        
+                .andExpect(jsonPath("code", is(573)));
+
+        session = this.loginAs(this.userRoot);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("复审通过", this.applicationRepository.findOne(appid).getStatus());
-        
-        
-        session  = this.loginAs(this.userManager);
-        
+
+        session = this.loginAs(this.userManager);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(573)));
-        
-        session  = this.loginAs(this.userRoot);
-        
+                .andExpect(jsonPath("code", is(573)));
+
+        session = this.loginAs(this.userRoot);
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("评审未过", this.applicationRepository.findOne(appid).getStatus());
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("评审通过", this.applicationRepository.findOne(appid).getStatus());
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "0")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("评审未过", this.applicationRepository.findOne(appid).getStatus());
-        
-        
+
     }
 
     private void simpleSubmit(Long appid) throws Exception {
@@ -713,24 +705,24 @@ public class ApplicationServiceTest extends WebTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code", is(200)));
-        
+
         assertEquals("等待形审", this.applicationRepository.findOne(appid).getStatus());
     }
 
     private void simplePassXingshen(Long appid) throws Exception {
         simpleSubmit(appid);
-        
+
         MockHttpSession session = this.loginAs(this.userSub1);
-        
+
         this.mockMvc.perform(post("/approvalapp")
-                .param("appid", ""+appid)
+                .param("appid", "" + appid)
                 .param("reason", "r")
                 .param("result", "1")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("code",is(200)));
-        
+                .andExpect(jsonPath("code", is(200)));
+
         assertEquals("形审通过", this.applicationRepository.findOne(appid).getStatus());
     }
 

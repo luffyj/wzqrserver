@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.luffy.wzqr.wzqrserver.entity;
 
 import java.io.Serializable;
@@ -25,13 +24,13 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "pApplication1")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Application1 implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     //状态
     private String status;
     //批次
@@ -41,39 +40,129 @@ public class Application1 implements Serializable {
     //专业领域
     private String specialty;
     private String profession;
-    
+
     private String number;
-    private String realName,realEnglishName;
+    private String realName, realEnglishName;
     //申报单位
     private String appOrgName;
-    
+
     private String people;
-    private String mobile,phone;
+    private String mobile, phone;
     @Temporal(TemporalType.DATE)
     private Date comletionDate;//填表日期
-    
+
     private int sex;
     @Temporal(TemporalType.DATE)
     private Date birthDate;
     private String birthPlace;
     private String nationality;
-    
-    
-    private String mgChineseCountry,mgChineseSchool,mgChineseMajor,mgChineseDegree;
-    private String mgEnglishCountry,mgEnglishSchool,mgEnglishMajor,mgEnglishDegree;
-    
+
+    private String mgChineseCountry, mgChineseSchool, mgChineseMajor, mgChineseDegree;
+    private String mgEnglishCountry, mgEnglishSchool, mgEnglishMajor, mgEnglishDegree;
+
     //回国前
-    private String foreignJobChinese,foreignJobEnglish;
+    private String foreignJobChinese, foreignJobEnglish;
     //现任
-    private String employer,position,employerAddress,zip;
-    
-    private String degree1,time1,country1,university1,major1;
-    private String degree2,time2,country2,university2,major2;
-    private String degree3,time3,country3,university3,major3;
-    private String degree4,time4,country4,university4,major4;
-    private String degree5,time5,country5,university5,major5;
-    private String degree6,time6,country6,university6,major6;
-    private String degree7,time7,country7,university7,major7;
+    private String employer, position, employerAddress, zip;
+
+    public String toEduString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (degree1 != null && degree1.length() > 0) {
+            sb.append(degree1)
+                    .append(" ")
+                    .append(time1)
+                    .append(" ")
+                    .append(country1)
+                    .append(" ")
+                    .append(university1)
+                    .append(" ")
+                    .append(major1)
+                    .append("\n");
+        }
+        if (degree2 != null && degree2.length() > 0) {
+            sb.append(degree2)
+                    .append(" ")
+                    .append(time2)
+                    .append(" ")
+                    .append(country2)
+                    .append(" ")
+                    .append(university2)
+                    .append(" ")
+                    .append(major2)
+                    .append("\n");
+        }
+        if (degree3 != null && degree3.length() > 0) {
+            sb.append(degree3)
+                    .append(" ")
+                    .append(time3)
+                    .append(" ")
+                    .append(country3)
+                    .append(" ")
+                    .append(university3)
+                    .append(" ")
+                    .append(major3)
+                    .append("\n");
+        }
+        if (degree4 != null && degree4.length() > 0) {
+            sb.append(degree4)
+                    .append(" ")
+                    .append(time4)
+                    .append(" ")
+                    .append(country4)
+                    .append(" ")
+                    .append(university4)
+                    .append(" ")
+                    .append(major4)
+                    .append("\n");
+        }
+        if (degree5 != null && degree5.length() > 0) {
+            sb.append(degree5)
+                    .append(" ")
+                    .append(time5)
+                    .append(" ")
+                    .append(country5)
+                    .append(" ")
+                    .append(university5)
+                    .append(" ")
+                    .append(major5)
+                    .append("\n");
+        }
+        if (degree6 != null && degree6.length() > 0) {
+            sb.append(degree6)
+                    .append(" ")
+                    .append(time6)
+                    .append(" ")
+                    .append(country6)
+                    .append(" ")
+                    .append(university6)
+                    .append(" ")
+                    .append(major6)
+                    .append("\n");
+        }
+        if (degree7 != null && degree7.length() > 0) {
+            sb.append(degree7)
+                    .append(" ")
+                    .append(time7)
+                    .append(" ")
+                    .append(country7)
+                    .append(" ")
+                    .append(university7)
+                    .append(" ")
+                    .append(major7)
+                    .append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    private String degree1, time1, country1, university1, major1;
+    private String degree2, time2, country2, university2, major2;
+    private String degree3, time3, country3, university3, major3;
+    private String degree4, time4, country4, university4, major4;
+    private String degree5, time5, country5, university5, major5;
+    private String degree6, time6, country6, university6, major6;
+    private String degree7, time7, country7, university7, major7;
 
     public Long getId() {
         return id;
@@ -82,7 +171,7 @@ public class Application1 implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     /**
      * @return 未上报、等待形审、形审通过、形审未过、形审退回、复审通过、复审未过、复审退回、评审通过、评审未过几个状态
      */
@@ -613,7 +702,5 @@ public class Application1 implements Serializable {
     public void setMajor7(String major7) {
         this.major7 = major7;
     }
-    
-    
-    
+
 }

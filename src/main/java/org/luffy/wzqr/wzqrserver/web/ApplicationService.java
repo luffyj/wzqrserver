@@ -5,6 +5,8 @@
  */
 package org.luffy.wzqr.wzqrserver.web;
 
+import freemarker.template.TemplateException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
+import jxl.write.WriteException;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponseWithMapdata;
@@ -52,18 +55,17 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 public class ApplicationService {
-    
+
 //    @PersistenceContext
 //    private EntityManager entityManager;
-    
     @RequestMapping(value = "/customMethod", method = RequestMethod.GET)
-    public Page<OLog> customMethod(@Param("superid")Long superid, String type, String roleName, Date time, String loginName, Pageable pageable) {
+    public Page<OLog> customMethod(@Param("superid") Long superid, String type, String roleName, Date time, String loginName, Pageable pageable) {
         StringBuilder jql = new StringBuilder("select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)");
-                
+
         Query query = entityManagerFactory.createEntityManager().createQuery(jql.toString());
         query.setParameter("superid", superid);
-        
-        return new PageImpl(query.getResultList(),pageable,query.getMaxResults());
+
+        return new PageImpl(query.getResultList(), pageable, query.getMaxResults());
     }
 
     @Autowired
@@ -76,6 +78,98 @@ public class ApplicationService {
     private LogRepository logRepository;
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private DocumentHandler documentHandler;
+
+    //导出报表和汇总表
+    @RequestMapping(value = "/reports", method = RequestMethod.GET)
+    public HttpEntity<byte[]> exportSome(@RequestParam("ids") String ids) throws IOException, WriteException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return null;
+        }
+        if (!(auth.getPrincipal() instanceof User)) {
+            return null;
+        }
+
+        User user = (User) auth.getPrincipal();
+        //获取apps
+        String[] ida = ids.split(",");
+        ArrayList<Application> apps = new ArrayList();
+        for (String id : ida) {
+            if (id == null || id.length() == 0) {
+                continue;
+            }
+            Application app = this.applicationRepository.findOne(Long.parseLong(id));
+            if (app.ableReportTo(user)) {
+                apps.add(app);
+            }
+        }
+        if (apps.isEmpty()) {
+            return null;
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        this.documentHandler.exportExcel(apps, out);
+
+        HttpHeaders header = new HttpHeaders();
+        //
+        header.setContentType(new MediaType("application", "vnd.ms-excel"));
+
+        System.out.println("downloading 温州市\"580海外精英引进计划\"申报人选情况汇总表");
+
+        header.set("Content-Disposition",
+                "attachment; filename=" + URLEncoder.encode("温州市\"580海外精英引进计划\"申报人选情况汇总表.xls", "UTF-8"));
+        header.setContentLength(out.toByteArray().length);
+        return new HttpEntity<>(out.toByteArray(), header);
+    }
+
+    @RequestMapping(value = "/report/{appid}.doc", method = RequestMethod.GET)
+    public HttpEntity<byte[]> export(@PathVariable("appid") Long appid) throws IOException, TemplateException {
+        //温州市“580海外精英引进计划”申报书
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return null;
+        }
+        if (!(auth.getPrincipal() instanceof User)) {
+            return null;
+        }
+
+        User user = (User) auth.getPrincipal();
+        //这个报表必须是你的 或者是你的上级部门的
+        Application app = applicationRepository.findOne(appid);
+        if (app == null) {
+            return null;
+        }
+        if (!app.ableReportTo(user)) {
+            return null;
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        if ("创业人才".equals(app.getType())) {
+            this.documentHandler.export2(app, out);
+        } else {
+            this.documentHandler.export1(app, out);
+        }
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "msword"));
+        StringBuilder name = new StringBuilder("温州市“580海外精英引进计划”");
+        if ("创业人才".equals(app.getType())) {
+            name.append("创业类");
+        } else {
+            name.append("创新类");
+        }
+        name.append("申报书.doc");
+
+        System.out.println("downloading " + name);
+
+        header.set("Content-Disposition",
+                "attachment; filename=" + URLEncoder.encode(name.toString(), "UTF-8"));
+        header.setContentLength(out.toByteArray().length);
+        return new HttpEntity<>(out.toByteArray(), header);
+    }
 
     //counting
     /**
@@ -165,12 +259,47 @@ public class ApplicationService {
 
                 List dataResult = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString())).getResultList();
                 ArrayList list = new ArrayList();
-                for (Object cr : dataResult) {
-                    Object[] countResult = (Object[]) cr;
-                    HashMap toJson = new HashMap();
-                    toJson.put("name", countResult[1]);
-                    toJson.put("count", countResult[0]);
-                    list.add(toJson);
+                if ("status".equals(condition)) {
+                    String[] statuses = new String[]{
+                        "未上报", "等待形审", "形审未过", "形审通过", "形审退回", "复审未过",
+                        "复审通过", "复审退回", "评审未过", "评审通过"
+                    };
+                    for (String status : statuses) {
+                        //寻找status
+                        Object[] target = null;
+                        for (Object cr : dataResult) {
+                            Object[] countResult = (Object[]) cr;
+                            if (status.equals(countResult[1])) {
+                                target = countResult;
+                                break;
+                            }
+                        }
+
+                        if (target != null) {
+                            HashMap toJson = new HashMap();
+                            toJson.put("name", target[1]);
+                            toJson.put("count", target[0]);
+                            list.add(toJson);
+                            continue;
+                        }
+
+                        if (status.equals("未上报")) {
+                            continue;
+                        }
+
+                        HashMap toJson = new HashMap();
+                        toJson.put("name", status);
+                        toJson.put("count", 0);
+                        list.add(toJson);
+                    }
+                } else {
+                    for (Object cr : dataResult) {
+                        Object[] countResult = (Object[]) cr;
+                        HashMap toJson = new HashMap();
+                        toJson.put("name", countResult[1]);
+                        toJson.put("count", countResult[0]);
+                        list.add(toJson);
+                    }
                 }
                 result.put(condition, list);
             }
@@ -219,11 +348,11 @@ public class ApplicationService {
         String name = new StringBuilder().append(app.getBatch())
                 .append(app.getRealName())
                 .append("的申请附件.pdf").toString();
-        
-        System.out.println("downloading "+name);
+
+        System.out.println("downloading " + name);
 
         header.set("Content-Disposition",
-                "attachment; filename=" + URLEncoder.encode(name,"UTF-8"));        
+                "attachment; filename=" + URLEncoder.encode(name, "UTF-8"));
         header.setContentLength(documentBody.length);
         return new HttpEntity<>(documentBody, header);
     }
@@ -583,13 +712,13 @@ public class ApplicationService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         jql.append(" where u.status <> '已删除'");
-        
+
         if (null != user.getRole().getName()) {
             switch (user.getRole().getName()) {
                 case Role.RolePeople:
                     jql.append("  and ( u.owner.id = :userid )");
                     break;
-                case Role.RoleUnit:                    
+                case Role.RoleUnit:
                     jql.append(" and ( u.myorg.id = :superid)");
                     break;
                 case Role.RoleSubManager:
@@ -613,7 +742,7 @@ public class ApplicationService {
                 case Role.RolePeople:
                     query.setParameter("userid", user.getId());
                     break;
-                case Role.RoleUnit:                    
+                case Role.RoleUnit:
                 case Role.RoleSubManager:
                     query.setParameter("superid", user.getOrg().getId());
                     break;

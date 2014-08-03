@@ -6,18 +6,18 @@
 
 package org.luffy.wzqr.wzqrserver.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import java.util.Set;
-import javax.persistence.CascadeType;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -28,6 +28,8 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "pOrganization", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class Organization implements Serializable {
+    
+    private static final long serialVersionUID = 436311670243359213L;
     
     public static final String NameRoot = "温州市委组织部";
     
@@ -50,6 +52,41 @@ public class Organization implements Serializable {
     
     @ManyToOne
     private User manager;
+    
+    @JsonAnyGetter
+    @JsonInclude
+    public Map<String,Object> getJsonData(){
+        Map<String,Object> data = new HashMap();
+        data.put("managerLoginName", this.getManagerLoginName());
+        data.put("managerEnabled", this.isManagerEnabled());
+        data.put("superOrgName", this.getSuperOrgName());
+        data.put("managerLastLogin", this.getManagerLastLogin());
+        return data;
+    }
+    
+    public String getSuperOrgName(){
+        if(this.getSuperOrg()==null)
+            return null;
+        return this.getSuperOrg().getName();
+    }
+    
+    public Date getManagerLastLogin(){        
+        if(this.getManager()==null)
+            return null;
+        return this.getManager().getLastLogin();
+    }
+    
+    public String getManagerLoginName(){        
+        if(this.getManager()==null)
+            return null;
+        return this.getManager().getLoginName();
+    }
+    
+    public boolean isManagerEnabled(){
+        if(this.getManager()==null)
+            return false;
+        return this.getManager().isEnabled();
+    }
     
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "superOrg")
 //    @JsonIgnore
