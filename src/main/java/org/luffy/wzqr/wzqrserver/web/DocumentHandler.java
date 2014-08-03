@@ -20,6 +20,7 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import org.luffy.wzqr.wzqrserver.beans.BeanHelper;
 import org.luffy.wzqr.wzqrserver.beans.bean.Datadto;
+import org.luffy.wzqr.wzqrserver.beans.bean.NoNullLabel;
 import org.luffy.wzqr.wzqrserver.beans.bean.NoNullMap;
 import org.luffy.wzqr.wzqrserver.entity.Application;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class DocumentHandler implements ServletContextAware {
     private final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     private final SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
     private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+    private final SimpleDateFormat fullFormat = new SimpleDateFormat("yyyyMMdd");
 
     public DocumentHandler() {
         configuration = new Configuration();
@@ -51,7 +53,7 @@ public class DocumentHandler implements ServletContextAware {
         WritableSheet sheet = workbook.createSheet("第一页", 0);
         sheet.mergeCells(0, 1, 25, 1);
         sheet.addCell(new Label(0, 1, "温州市\"580海外精英引进计划\"申报人选情况汇总表"));
-        sheet.addCell(new Label(0, 2, "填表时间：20130101"));
+        sheet.addCell(new Label(0, 2, "填表时间："+fullFormat.format(new Date())));
 
         sheet.addCell(new Label(0, 3, "序号"));
         sheet.addCell(new Label(1, 3, "姓名"));
@@ -81,32 +83,33 @@ public class DocumentHandler implements ServletContextAware {
         sheet.addCell(new Label(25, 3, "备注"));
 
         for (int i = 0; i < list.size(); i++) {
-            sheet.addCell(new Label(0, 4 + i, "序号"));
-            sheet.addCell(new Label(1, 4 + i, "姓名"));
-            sheet.addCell(new Label(2, 4 + i, "性别"));
-            sheet.addCell(new Label(3, 4 + i, "国籍"));
-            sheet.addCell(new Label(4, 4 + i, "出生日期"));
-            sheet.addCell(new Label(5, 4 + i, "最高(海外)学历学位"));
-            sheet.addCell(new Label(6, 4 + i, "毕业院校"));
-            sheet.addCell(new Label(7, 4 + i, "用人(申报)单位/创办企业"));
-            sheet.addCell(new Label(8, 4 + i, "职务/拟任职务或职称"));
-            sheet.addCell(new Label(9, 4 + i, "专业领域"));
-            sheet.addCell(new Label(10, 4 + i, "专业方向"));
-            sheet.addCell(new Label(11, 4 + i, "专利授权或研发成果情况"));
-            sheet.addCell(new Label(12, 4 + i, "目前实际到位资金占比%"));
-            sheet.addCell(new Label(13, 4 + i, "个人或风投的占股比例或资金额度"));
-            sheet.addCell(new Label(14, 4 + i, "承诺每年国内工作时限（月/年）"));
-            sheet.addCell(new Label(15, 4 + i, "落地市"));
-            sheet.addCell(new Label(16, 4 + i, "到中国前单位"));
-            sheet.addCell(new Label(17, 4 + i, "职务"));
-            sheet.addCell(new Label(18, 4 + i, "（拟）到中国时间"));
-            sheet.addCell(new Label(19, 4 + i, "创新类签订合同时间/创业类企业完成工商注册时间"));
-            sheet.addCell(new Label(20, 4 + i, "引进平台"));
-            sheet.addCell(new Label(21, 4 + i, "申报单位所属"));
-            sheet.addCell(new Label(22, 4 + i, "人才类型"));
-            sheet.addCell(new Label(23, 4 + i, "是否破格"));
-            sheet.addCell(new Label(24, 4 + i, "牵头单位"));
-            sheet.addCell(new Label(25, 4 + i, "备注"));
+            Application app = list.get(i);
+            sheet.addCell(new NoNullLabel(0, 4 + i, app.getNumber()));
+            sheet.addCell(new NoNullLabel(1, 4 + i, app.getRealName()));
+            sheet.addCell(new NoNullLabel(2, 4 + i, app.getSex()==0?"男":"女"));
+            sheet.addCell(new NoNullLabel(3, 4 + i, app.getNationality()));
+            sheet.addCell(new NoNullLabel(4, 4 + i, app.getBirthDate()!=null?fullFormat.format(app.getBirthDate()):""));
+            sheet.addCell(new NoNullLabel(5, 4 + i, app.getMgChineseDegree()));
+            sheet.addCell(new NoNullLabel(6, 4 + i, app.getMgChineseSchool()));
+            sheet.addCell(new NoNullLabel(7, 4 + i, app.getAppOrgName()));
+            sheet.addCell(new NoNullLabel(8, 4 + i, app.getPosition()));
+            sheet.addCell(new NoNullLabel(9, 4 + i, app.getSpecialty()));
+            sheet.addCell(new NoNullLabel(10, 4 + i, app.getProfession()));
+            sheet.addCell(new NoNullLabel(11, 4 + i, app.getPatentDesc()));
+            sheet.addCell(new NoNullLabel(12, 4 + i, app.getActualCurrentFundsPer()+"%"));
+            sheet.addCell(new NoNullLabel(13, 4 + i, app.getMyFundsPer()+"%"));
+            sheet.addCell(new NoNullLabel(14, 4 + i, ""));// 承诺每年国内工作时限（月/年）?
+            sheet.addCell(new NoNullLabel(15, 4 + i, app.getCity()));
+            sheet.addCell(new NoNullLabel(16, 4 + i, app.getForeignJobChinese()));
+            sheet.addCell(new NoNullLabel(17, 4 + i, ""));//职务
+            sheet.addCell(new NoNullLabel(18, 4 + i, app.getWdate()));
+            sheet.addCell(new NoNullLabel(19, 4 + i, ""));//创新类签订合同时间/创业类企业完成工商注册时间
+            sheet.addCell(new NoNullLabel(20, 4 + i, app.getPlatform()));
+            sheet.addCell(new NoNullLabel(21, 4 + i, app.getOrgSubName()));
+            sheet.addCell(new NoNullLabel(22, 4 + i, app.getType()));
+            sheet.addCell(new NoNullLabel(23, 4 + i, app.isPoge()?"是":"女"));
+            sheet.addCell(new NoNullLabel(24, 4 + i, app.getAppOrgName()));//牵头单位
+            sheet.addCell(new NoNullLabel(25, 4 + i, app.getComment()));
 
         }
 
