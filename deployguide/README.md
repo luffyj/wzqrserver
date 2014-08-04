@@ -20,4 +20,6 @@
    复制wzqrserver.war到webappps
 ********************************
 搞定!
+
+btw:http://115.29.228.62:9999/ext/wzqrserver.war 这里下载
    
