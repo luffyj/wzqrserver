@@ -1,0 +1,31 @@
+Request URL:http://115.29.228.62:9999/wzqrserver/api/org/83?_dc=1407225456874&page=NaN
+Request Method:PUT
+
+
+Accept:*/*
+Accept-Encoding:gzip,deflate,sdch
+Accept-Language:zh-CN,zh;q=0.8
+Connection:keep-alive
+Content-Length:351
+Content-Type:application/json
+Cookie:JSESSIONID=EFE77C43CB3056925154BC1DA8E7D25C; jforumUserId=1; UAID=yVI4w9hOiSgnMeDXDC1TwnZLSKT2yLM
+Host:115.29.228.62:9999
+Origin:http://115.29.228.62:9999
+Referer:http://115.29.228.62:9999/wzqrserver/
+User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36
+X-Requested-With:XMLHttpRequest
+
+people: "g"
+phone: ""
+description: ""
+id: 83
+manager: "http://115.29.228.62:9999/wzqrserver/api/user/84"
+managerEnabled: false
+managerLastLogin: null
+managerLoginName: ""
+name: "经济开发区"
+subType: ""
+superOrg: "http://115.29.228.62:9999/wzqrserver/api/org/8"
+superOrgName: ""
+type: "县市区"
+
