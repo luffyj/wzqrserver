@@ -492,10 +492,34 @@ public class ApplicationService {
         }
     }
 
+    public int checkResult(int input) {
+        return input << 24 >> 24;
+    }
+
+    public int checkType(int input) {
+        return input >> 8;
+    }
+
+    public int computusResult(int type, int result) {
+        return (type << 8) | result;
+    }
+
     // 形审 复审 评审
     // 评审没有退回
     /**
      * 评审没有退回
+     *
+     * 逻辑修正 重审就是重审 要在参数内提供明确的参数
+     *
+     * 形审通过 可以重审 为形审未过 形审退回
+     *
+     * 复审通过 可以重审 为复审未过 复审退回 评审通过 评审退回
+     *
+     * 评审通过 可以重审 评审通过 评审未过 复审通过 评审未过 可以重审 评审通过 评审未过 复审通过
+     *
+     * 鉴于现在的表现形式 应该通过增加result类型的方式达成目的
+     *
+     * --------|--------|--表示是否操作上级--|---操作数--
      *
      * @param result -1 退回 0 未过 1 通过
      * @param reason 审核原因
@@ -518,7 +542,10 @@ public class ApplicationService {
             return new ErrorResponse(errorBase, "审核必须输入足够的参数");
         }
 
-        if (result != 0 && result != 1 && result != -1) {
+        int type = this.checkType(result);
+        result = this.checkResult(result);
+
+        if (result != 0 && result != 1 && result != 2) {
             return new ErrorResponse(errorBase + 1, "错误的参数");
         }
 
@@ -538,58 +565,34 @@ public class ApplicationService {
                 case "等待形审":
                 case "形审未过":
                     //形审通过
-                    //执行的人为 次级机构管理员                    
-                    if (!Role.RoleSubManager.equals(cuser.getRole().getName())) {
-                        return new ErrorResponse(errorBase + 3, "你必须是一个次级机构管理员");
-                    }
-                    if (!app.getMyorg().getSuperOrg().getId().equals(cuser.getOrg().getId())) {
-                        return new ErrorResponse(errorBase + 4, "你无权进行这个操作");
-                    }
-                    switch (result) {
-                        case -1:
-                            return returnApp(app, cuser, reason, "形审", "", request);
-                        case 1:
-                            return yesApp(app, cuser, reason, "形审", "", request);
-                        default:
-                            return noApp(app, cuser, reason, "形审", "", request);
-                    }
+                    //执行的人为 次级机构管理员
+                    return doXingshen(errorBase, cuser, app, result, reason, request);
                 //部门管理员可以退回
                 case "形审通过":
+                    if (type == 1) {
+                        return doXingshen(errorBase, cuser, app, result, reason, request);
+                    }
 //                case "复审通过":
                 case "复审未过":
 //                case "复审退回":
                     //通过 和退回 的无法重审
                     //复审 或者重审
-                    switch (result) {
-                        case -1:
-                            if (!Role.RoleManager.equals(cuser.getRole().getName())
-                                    && !Role.RoleRoot.equals(cuser.getRole().getName())
-                                    && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase + 3, "你必须是一个部门管理员或者市委组织部管理员");
-                            }
-                            return returnApp(app, cuser, reason, "复审", "", request);
-                        case 1:
-                            if (!Role.RoleRoot.equals(cuser.getRole().getName())
-                                    && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
-                            }
-                            return yesApp(app, cuser, reason, "复审", "", request);
-                        default:
-                            if (!Role.RoleRoot.equals(cuser.getRole().getName())
-                                    && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
-                                return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
-                            }
-                            return noApp(app, cuser, reason, "复审", "", request);
-                    }
+                    return doFushen(errorBase, cuser, app, result, reason, request);
                 case "复审通过":
+                    if (type == 1) {
+                        return doFushen(errorBase, cuser, app, result, reason, request);
+                    }
                 case "评审通过":
                 case "评审未过":
+                    if (type == 1) {
+                        return doFushen(errorBase, cuser, app, result, reason, request);
+                    }
                     if (!Role.RoleRoot.equals(cuser.getRole().getName())) {
                         return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
                     }
                     switch (result) {
-//                        case -1:
-//                            return returnApp(app, cuser, reason, "形审", "");
+                        case 2:
+                            return returnApp(app, cuser, reason, "评审", "", request);
                         case 1:
                             return yesApp(app, cuser, reason, "评审", "", request);
                         default:
@@ -622,6 +625,9 @@ public class ApplicationService {
                 app.setOrgApproveReason(reason);
         }
         boolean CS = app.getStatus().contains(type);
+        if (app.getStatus().contains("评审") && type.equals("复审")) {
+            CS = true;
+        }
         app.setStatus(newStatus);
         this.applicationRepository.save(app);
 
@@ -655,6 +661,9 @@ public class ApplicationService {
                 app.setOrgApproveReason(reason);
         }
         boolean CS = app.getStatus().contains(type);
+        if (app.getStatus().contains("评审") && type.equals("复审")) {
+            CS = true;
+        }
         app.setStatus(newStatus);
         this.applicationRepository.save(app);
 
@@ -688,6 +697,9 @@ public class ApplicationService {
                 app.setOrgApproveReason(reason);
         }
         boolean CS = app.getStatus().contains(type);
+        if (app.getStatus().contains("评审") && type.equals("复审")) {
+            CS = true;
+        }
         app.setStatus(newStatus);
         this.applicationRepository.save(app);
 
@@ -753,5 +765,46 @@ public class ApplicationService {
             }
         }
         return query;
+    }
+
+    private JsonResponse doXingshen(int errorBase, User cuser, Application app, int result, String reason, HttpServletRequest request) {
+        if (!Role.RoleSubManager.equals(cuser.getRole().getName())) {
+            return new ErrorResponse(errorBase + 3, "你必须是一个次级机构管理员");
+        }
+        if (!app.getMyorg().getSuperOrg().getId().equals(cuser.getOrg().getId())) {
+            return new ErrorResponse(errorBase + 4, "你无权进行这个操作");
+        }
+        switch (result) {
+            case 2:
+                return returnApp(app, cuser, reason, "形审", "", request);
+            case 1:
+                return yesApp(app, cuser, reason, "形审", "", request);
+            default:
+                return noApp(app, cuser, reason, "形审", "", request);
+        }
+    }
+
+    private JsonResponse doFushen(int errorBase, User cuser, Application app, int result, String reason, HttpServletRequest request) {
+        switch (result) {
+            case 2:
+                if (!Role.RoleManager.equals(cuser.getRole().getName())
+                        && !Role.RoleRoot.equals(cuser.getRole().getName())
+                        && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
+                    return new ErrorResponse(errorBase + 3, "你必须是一个部门管理员或者市委组织部管理员");
+                }
+                return returnApp(app, cuser, reason, "复审", "", request);
+            case 1:
+                if (!Role.RoleRoot.equals(cuser.getRole().getName())
+                        && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
+                    return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
+                }
+                return yesApp(app, cuser, reason, "复审", "", request);
+            default:
+                if (!Role.RoleRoot.equals(cuser.getRole().getName())
+                        && !Role.RoleAdmin.equals(cuser.getRole().getName())) {
+                    return new ErrorResponse(errorBase + 3, "你必须是一个市委组织部管理员");
+                }
+                return noApp(app, cuser, reason, "复审", "", request);
+        }
     }
 }

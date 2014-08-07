@@ -108,6 +108,18 @@ public class ApplicationServiceTest extends WebTest {
 
     @Autowired
     private DocumentHandler documentHandler;
+    @Autowired
+    private ApplicationService applicationService;
+    
+    @Test
+    public void cresult(){
+        int type = 8;
+        int result = 3;
+        int data = this.applicationService.computusResult(type, result);
+        System.out.println(data);
+        assertEquals(type,this.applicationService.checkType(data));
+        assertEquals(result,this.applicationService.checkResult(data));
+    }
 
     @Test
     public void reportTest() throws IOException, TemplateException {
