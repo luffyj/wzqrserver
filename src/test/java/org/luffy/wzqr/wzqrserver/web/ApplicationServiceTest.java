@@ -422,7 +422,7 @@ public class ApplicationServiceTest extends WebTest {
         this.mockMvc.perform(post("/approvalapp")
                 .param("appid", "" + appid)
                 .param("reason", "r")
-                .param("result", "2")
+                .param("result", "3")
                 .session(session))
                 .andDo(print())
                 .andExpect(status().isOk())
