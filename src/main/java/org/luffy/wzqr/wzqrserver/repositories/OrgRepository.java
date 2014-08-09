@@ -27,6 +27,12 @@ public interface OrgRepository extends PagingAndSortingRepository<Organization, 
     
     
     /**
+     * 增加次级部门选择器
+     */
+    @Query("select u from Organization u where u.superOrg.name = '温州市委组织部'")
+    Page<Organization> findSubOrg(Pageable pageable);
+    
+    /**
      * 以上级部门检索
      * @param pageable
      * @return list
