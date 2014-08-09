@@ -93,35 +93,51 @@ public class ApplicationService {
         }
 
         User user = (User) auth.getPrincipal();
-        //获取apps
-        String[] ida = ids.split(",");
-        ArrayList<Application> apps = new ArrayList();
-        for (String id : ida) {
-            if (id == null || id.length() == 0) {
-                continue;
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            //获取apps
+            List<Application> apps;
+            if (ids.equalsIgnoreCase("all")) {
+
+                StringBuilder jql = new StringBuilder("select u from Application u");
+                handleResponseableApplicationJQL(jql);
+                apps = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString())).getResultList();
+
+            } else {
+                String[] ida = ids.split(",");
+                apps = new ArrayList();
+                for (String id : ida) {
+                    if (id == null || id.length() == 0) {
+                        continue;
+                    }
+                    Application app = this.applicationRepository.findOne(Long.parseLong(id));
+                    if (app.ableReportTo(user)) {
+                        apps.add(app);
+                    }
+                }
             }
-            Application app = this.applicationRepository.findOne(Long.parseLong(id));
-            if (app.ableReportTo(user)) {
-                apps.add(app);
+
+            if (apps.isEmpty()) {
+                return null;
             }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            this.documentHandler.exportExcel(apps, out);
+
+            HttpHeaders header = new HttpHeaders();
+            //
+            header.setContentType(new MediaType("application", "vnd.ms-excel"));
+
+            System.out.println("downloading 温州市\"580海外精英引进计划\"申报人选情况汇总表");
+
+            header.set("Content-Disposition",
+                    "attachment; filename=" + URLEncoder.encode("温州市\"580海外精英引进计划\"申报人选情况汇总表.xls", "UTF-8"));
+            header.setContentLength(out.toByteArray().length);
+            return new HttpEntity<>(out.toByteArray(), header);
+        } finally {
+            entityManager.close();
         }
-        if (apps.isEmpty()) {
-            return null;
-        }
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        this.documentHandler.exportExcel(apps, out);
-
-        HttpHeaders header = new HttpHeaders();
-        //
-        header.setContentType(new MediaType("application", "vnd.ms-excel"));
-
-        System.out.println("downloading 温州市\"580海外精英引进计划\"申报人选情况汇总表");
-
-        header.set("Content-Disposition",
-                "attachment; filename=" + URLEncoder.encode("温州市\"580海外精英引进计划\"申报人选情况汇总表.xls", "UTF-8"));
-        header.setContentLength(out.toByteArray().length);
-        return new HttpEntity<>(out.toByteArray(), header);
     }
 
     @RequestMapping(value = "/report/{appid}.doc", method = RequestMethod.GET)
