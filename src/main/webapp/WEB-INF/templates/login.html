@@ -29,28 +29,28 @@
                                     </div>
                                 </div>
                                 <div class="lgn-box1-body">
-                                    <div id="login_box">
-                                        <!--th:action="@{/login}"-->
-                                        <form id="loginForm" name="loginForm" method="post" action="login"
+                                    <div id="login_box">                                        
+                                        <form id="loginForm" name="loginForm" method="post" th:action="@{/login}"
                                               class="validate">
+<!--                                             onsubmit="javascript:return wzqrserver.login(this)"-->
                                             <input type="hidden" name="action" />
                                             <table>
                                                 <tr>
                                                     <td><label for="username">用户名</label>：</td>
                                                     <td colspan="2"><input type="text" id="username" name="username"
-                                                               class="ipt required" maxlength="20" style="width: 165px" /></td>
+                                                                           class="ipt required" maxlength="20" style="width: 165px" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><label for="password">密码</label>：</td>
                                                     <td colspan="2"><input type="password" id="password"
-                                                               name="password" class="ipt required" style="width: 165px"
-                                                               maxlength="20" /></td>
+                                                                           name="password" class="ipt required" style="width: 165px"
+                                                                           maxlength="20" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td><label for="jcaptcha">验证码</label>：</td>
                                                     <td><input type="text" id="jcaptcha" name="jcaptcha"
                                                                class="ipt required" maxlength="20" style="width: 58px" /></td>
-                                                    <td align="right"><img onclick="javascript:this.src=this.src+'?rmd'+new Date().getTime();" src="jcaptcha.jpg" alt="点击刷新" title="点击刷新" style="width: 93px;height: 29px;cursor: pointer;" /></td>
+                                                    <td align="right"><img onclick="javascript:this.src = this.src + '?rmd' + new Date().getTime();" src="jcaptcha.jpg" alt="点击刷新" title="点击刷新" style="width: 93px;height: 29px;cursor: pointer;" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td></td>
@@ -73,6 +73,11 @@
                                                         <span style="color:red">验证码错误</span>
                                                     </td>
                                                 </tr>
+<!--                                                <tr align="center">
+                                                    <td colspan="3" style="height: 20px;">
+                                                        <span style="color:red" id="errorMsg"></span>
+                                                    </td>
+                                                </tr>-->
                                             </table>
                                         </form>
                                     </div>
@@ -89,7 +94,7 @@
                                 <div class="lgn-box2-body">
                                     <div class="index_content">
                                         <div class="index_content_inner">
-                                            围绕温州市经济社会发展需求，面向海外引进具有国际国内领先学术技术水平，或拥有自主知识产权、富有产业化发展潜力的科研成果，能够突破关键技术、发展高新产业、带动学科发展的高层次创业创新人才。引进重点是：新能源、新材料、生物、先进装备制造业、节能环保、新一代信息技术、海洋开发等战略性新兴产业和现代服务业发展紧缺急需的高层次创业创新人才，经济金融管理、风险投资、国际商贸、文化创意等专业高端人才，以及重大创新项目、重点学科、重点实验室等平台紧缺急需的领军人才。
+                                            围绕温州市经济社会发展需求和市“五一〇产业培育提升工程”要求，面向海外引进具有国际国内领先学术技术水平，或拥有自主知识产权、富有产业化发展潜力的科研成果，能够突破关键技术、发展高新产业、带动学科发展的高层次创业创新人才。重点引进新能源、新材料、新一代信息技术、节能环保、生物医药、激光与光电、先进装备制造、文化创意、现代服务等产业高层次创业创新人才，以及重大创新项目、重点学科、重点实验室等平台紧缺急需的领军人才。                                            
                                         </div>
                                     </div>
                                 </div>
@@ -107,13 +112,16 @@
                                 </div>
                                 <div class="lgn-box1-body">
                                     <div class="item">
-                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583366_996430.doc">温州市"580海外精英引进计划"创业类申报书</a>
+                                        <a href="wresources/温州市580海外精英引进计划创业类申报书.doc">温州市“580海外精英引进计划”创业类申报书.doc</a>
                                     </div>
                                     <div class="item">
-                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583369_998371.doc">温州市"580海外精英引进计划"创新类申报书</a>
+                                        <a href="wresources/温州市580海外精英引进计划创新类申报书.doc">温州市“580海外精英引进计划”创新类申报书.doc</a>
                                     </div>
                                     <div class="item">
-                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583370_587426.xls">温州市"580海外精英引进计划"申报人选情况汇总表</a>
+                                        <a href="wresources/温州市580海外精英引进计划申报人选情况汇总表.xls">温州市“580海外精英引进计划”申报人选情况汇总表.xls</a>
+                                    </div>
+                                    <div class="item">
+                                        <a href="wresources/申报人其他个人信息表.doc">申报人其他个人信息表.doc</a>
                                     </div>
                                 </div>
                             </div>
@@ -128,26 +136,31 @@
                                 <div class="lgn-box2-body">
                                     <div id="artDiv">
                                         <div class="item">
-                                            <a href="http://www.wzlx.cn/system/2012/06/25/011054184.shtml"
-                                               target="_blank">温州市"580海外精英引进计划"2012年度人选申报公告</a>
+                                            <a href="wresources/580申报材料填写说明.doc"
+                                               target="_blank">"580"申报材料填写说明</a>
+                                        </div>
+                                    </div>
+                                    <div id="artDiv">
+                                        <div class="item">
+                                            <a href="wresources/温州市580海外精英引进计划2014年度人选申报公告.doc"
+                                               target="_blank">温州市580海外精英引进计划2014年度人选申报公告.doc</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="lgn_footer">
-                <div
-                    style="line-height: 35px; text-align: center; padding-top: 40px;">
-                    版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
-                    &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
+                    <div class="lgn_footer">
+                        <div
+                            style="line-height: 35px; text-align: center; padding-top: 40px;">
+                            版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
+                            &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <!--        <input type="checkbox" name="rememberme"/>-->        
     </body>
 </html>
