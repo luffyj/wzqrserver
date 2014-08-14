@@ -1,5 +1,9 @@
 mysql
 
+CREATE DATABASE wzqr
+CHARACTER SET 'utf8'
+COLLATE 'utf8_general_ci';
+
 create database wzqr;
 grant all on wzqr.* to wzqruser@localhost identified by 'wzqr';
 
