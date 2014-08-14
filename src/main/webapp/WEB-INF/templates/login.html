@@ -2,29 +2,151 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
-        <title>Spring Security Example </title>
+        <meta charset="UTF-8"/>
+
+        <title>用户登录 | “580”人才计划申报系统</title>
+        <script src="wresources/jquery-1.7.2.min.js"></script>
+        <script src="wresources/jquery-ui-1.8.18.custom.min.js"></script>
+        <script src="wresources/script.js"></script>
+        <link type="text/css" rel="stylesheet" href="wresources/jquery-ui-1.8.18.custom.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/style.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/login.css" />
     </head>
     <body>
-        <div th:if="${param.error}">
-            Invalid username and password.
-        </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
-        </div>
-        <form th:action="@{/login}" method="post">
-            <div><label> User Name : <input type="text" name="username"/> </label></div>
-            <div><label> Password: <input type="password" name="password"/> </label></div>
-            <div>
-                <label>
-                    Remember Me:<input type="checkbox" name="rememberme"/>
-                </label>
+        <div class="lgn_wrap">
+            <div class="lgn_header1">
+                <img src="wresources/images/top.jpg" width="1004" height="240"/>
             </div>
-            <div>
-                <label>
-                    code:<input type="text" name="jcaptcha"/><img src="jcaptcha.jpg" alt="" />
-                </label>
+            <div class="lgn_body">
+                <div style="padding: 10px 60px 10px 70px">
+                    <div class="fn-clear">
+                        <div class="fn-right">
+                            <div class="lgn-box1">
+                                <div class="lgn-box1-head">
+                                    <div class="lgn-box1-head-inner">
+                                        <div class="icon-yhdl" title="用户登录"></div>
+                                    </div>
+                                </div>
+                                <div class="lgn-box1-body">
+                                    <div id="login_box">
+                                        <!--th:action="@{/login}"-->
+                                        <form id="loginForm" name="loginForm" method="post" action="login"
+                                              class="validate">
+                                            <input type="hidden" name="action" />
+                                            <table>
+                                                <tr>
+                                                    <td><label for="username">用户名</label>：</td>
+                                                    <td colspan="2"><input type="text" id="username" name="username"
+                                                               class="ipt required" maxlength="20" style="width: 165px" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="password">密码</label>：</td>
+                                                    <td colspan="2"><input type="password" id="password"
+                                                               name="password" class="ipt required" style="width: 165px"
+                                                               maxlength="20" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="jcaptcha">验证码</label>：</td>
+                                                    <td><input type="text" id="jcaptcha" name="jcaptcha"
+                                                               class="ipt required" maxlength="20" style="width: 58px" /></td>
+                                                    <td align="right"><img onclick="javascript:this.src=this.src+'?rmd'+new Date().getTime();" src="jcaptcha.jpg" alt="点击刷新" title="点击刷新" style="width: 93px;height: 29px;cursor: pointer;" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td colspan="2" style="padding-top: 8px">
+                                                        <input type="submit" value="" style="background:url(wresources/images/login_btn.gif) no-repeat;width:127px;height:37px;border:none" />
+                                                    </td>
+                                                </tr>
+                                                <tr th:if="${param.error}" align="center">
+                                                    <td colspan="3" style="height: 20px;">
+                                                        <span style="color:red">用户名或者密码错误</span>
+                                                    </td>
+                                                </tr>
+                                                <tr th:if="${param.logout}" align="center">
+                                                    <td colspan="3" style="height: 20px;">
+                                                        <span style="color:red">成功登出</span>
+                                                    </td>
+                                                </tr>
+                                                <tr th:if="${param.code}" align="center">
+                                                    <td colspan="3" style="height: 20px;">
+                                                        <span style="color:red">验证码错误</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fn-left">
+                            <div class="lgn-box2">
+                                <div class="lgn-box2-head">
+                                    <div class="lgn-box2-head-inner">
+                                        <div class="icon-zjqr" title="浙江千人"></div>
+                                    </div>
+                                </div>
+                                <div class="lgn-box2-body">
+                                    <div class="index_content">
+                                        <div class="index_content_inner">
+                                            围绕温州市经济社会发展需求，面向海外引进具有国际国内领先学术技术水平，或拥有自主知识产权、富有产业化发展潜力的科研成果，能够突破关键技术、发展高新产业、带动学科发展的高层次创业创新人才。引进重点是：新能源、新材料、生物、先进装备制造业、节能环保、新一代信息技术、海洋开发等战略性新兴产业和现代服务业发展紧缺急需的高层次创业创新人才，经济金融管理、风险投资、国际商贸、文化创意等专业高端人才，以及重大创新项目、重点学科、重点实验室等平台紧缺急需的领军人才。
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear" style="height: 10px"></div>
+                    <div class="fn-clear">
+                        <div class="fn-right">
+                            <div class="lgn-box1">
+                                <div class="lgn-box1-head">
+                                    <div class="lgn-box1-head-inner">
+                                        <div class="icon-xgxz" title="相关下载"></div>
+                                    </div>
+                                </div>
+                                <div class="lgn-box1-body">
+                                    <div class="item">
+                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583366_996430.doc">温州市"580海外精英引进计划"创业类申报书</a>
+                                    </div>
+                                    <div class="item">
+                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583369_998371.doc">温州市"580海外精英引进计划"创新类申报书</a>
+                                    </div>
+                                    <div class="item">
+                                        <a href="http://xs.66wz.com/att/0/10/58/33/10583370_587426.xls">温州市"580海外精英引进计划"申报人选情况汇总表</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fn-left">
+                            <div class="lgn-box2">
+                                <div class="lgn-box2-head">
+                                    <div class="lgn-box2-head-inner">
+                                        <div class="icon-gzdt" title="工作动态"></div>
+                                    </div>
+                                </div>
+                                <div class="lgn-box2-body">
+                                    <div id="artDiv">
+                                        <div class="item">
+                                            <a href="http://www.wzlx.cn/system/2012/06/25/011054184.shtml"
+                                               target="_blank">温州市"580海外精英引进计划"2012年度人选申报公告</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
             </div>
-            <div><input type="submit" value="Sign In"/></div>
-        </form>
+            <div class="lgn_footer">
+                <div
+                    style="line-height: 35px; text-align: center; padding-top: 40px;">
+                    版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
+                    &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
+                </div>
+            </div>
+        </div>
+
+        <!--        <input type="checkbox" name="rememberme"/>-->        
     </body>
 </html>

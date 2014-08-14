@@ -15,39 +15,74 @@
           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 " default-autowire="byType">
     
+<!--    <beans:bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"> 
+        <beans:property name="createSessionAllowed" value="false" /> 
+    </beans:bean>-->
+    
     <!-- For capturing CAPTCHA fields -->
     <beans:bean id="captchaCaptureFilter" class="org.luffy.wzqr.wzqrserver.config.captcha.CaptchaCaptureFilter" />    
     <beans:bean id="corsFilter" class="org.luffy.wzqr.wzqrserver.config.captcha.SimpleCORSFilter" />    
+    <beans:bean class="org.luffy.wzqr.wzqrserver.config.captcha.DisableUrlSessionFilter" id="disableUrlSessionFilter"/>
     
     <beans:bean class="org.luffy.wzqr.wzqrserver.config.captcha.JsonSavedRequestAwareAuthenticationSuccessHandler" id="jsonSavedRequestAwareAuthenticationSuccessHandler"/>
     <beans:bean class="org.luffy.wzqr.wzqrserver.config.captcha.JsonSimpleUrlAuthenticationFailureHandler" id="jsonSimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/loginPage?error"/>        
     </beans:bean>
-            
+    
+<!--    
+    <beans:bean id="concurrencyFilter"
+      class="org.springframework.security.web.session.ConcurrentSessionFilter">
+    <beans:property name="sessionRegistry" ref="sessionRegistry" />
+    <beans:property name="expiredUrl" value="/session-expired.htm" />
+  </beans:bean>
+
+  <beans:bean id="myAuthFilter"
+      class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+    <beans:property name="sessionAuthenticationStrategy" ref="sas" />
+    <beans:property name="authenticationManager" ref="authenticationManager" />
+  </beans:bean>
+
+  <beans:bean id="sas"
+      class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+    <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+    <beans:property name="maximumSessions" value="1" />
+  </beans:bean>
+
+  <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+            -->
     <http use-expressions="true">
-        <intercept-url pattern="/index.html" access="permitAll()" />
+        <!--<request-cache ref="httpSessionRequestCache"/>--> 
+        
+        <intercept-url pattern="/index.html" access="isAuthenticated()" />
         <intercept-url pattern="/app.js" access="permitAll()" />
         <intercept-url pattern="/resources/**" access="permitAll()" />
+        <intercept-url pattern="/wresources/**" access="permitAll()" />        
         <intercept-url pattern="/jcaptcha.jpg" access="permitAll()" />
         <intercept-url pattern="/api/*" access="isAuthenticated()" />
-        <intercept-url pattern="/" access="permitAll()" />
+        <intercept-url pattern="/" access="isAuthenticated()" />
         <intercept-url pattern="/home" access="permitAll()" />
         <intercept-url pattern="/loginPage" access="permitAll()" />
         <intercept-url pattern="/login" access="permitAll()" />
         <intercept-url pattern="/ajaxLogin" access="permitAll()" />        
         <intercept-url pattern="/queryUser" access="permitAll()" />
         <intercept-url pattern="/**" access="isAuthenticated()" />
-        <form-login authentication-success-handler-ref="jsonSavedRequestAwareAuthenticationSuccessHandler" 
-                    authentication-failure-handler-ref="jsonSimpleUrlAuthenticationFailureHandler" 
+        <form-login             
+            authentication-success-handler-ref="jsonSavedRequestAwareAuthenticationSuccessHandler" 
+                    authentication-failure-handler-ref="jsonSimpleUrlAuthenticationFailureHandler" always-use-default-target="true"
                     login-page="/loginPage" login-processing-url="/login" authentication-failure-url="/loginPage?error" 
-                    username-parameter="username" password-parameter="password"                                        
+                    username-parameter="username" password-parameter="password" default-target-url="/"
         />
         <logout logout-url="/logout" logout-success-url="/loginPage?logout"/>
         <remember-me token-validity-seconds="604800" remember-me-parameter="rememberme" key="wzwzoxlabi"/>
         <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER"/>
         <custom-filter ref="corsFilter" after="FORM_LOGIN_FILTER"/>        
+        <!--<custom-filter ref="disableUrlSessionFilter" after="CONCURRENT_SESSION_FILTER"/>-->
+
+        <!--<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />-->
+        <!--<custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />-->        
+        <!--<session-management session-authentication-strategy-ref="sas"/>-->
     </http>
-    
+        
     <authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="appService">
             <password-encoder ref="passwordEncoder"/>

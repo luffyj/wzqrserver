@@ -14,7 +14,12 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import jxl.Workbook;
+import jxl.format.Alignment;
+import jxl.format.UnderlineStyle;
+import jxl.format.VerticalAlignment;
 import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -52,43 +57,73 @@ public class DocumentHandler implements ServletContextAware {
         // 创建新的一页
         WritableSheet sheet = workbook.createSheet("第一页", 0);
         sheet.mergeCells(0, 1, 25, 1);
-        sheet.addCell(new Label(0, 1, "温州市\"580海外精英引进计划\"申报人选情况汇总表"));
-        sheet.addCell(new Label(0, 2, "填表时间："+fullFormat.format(new Date())));
+        sheet.mergeCells(16, 2, 17, 2);
+        sheet.mergeCells(18, 2, 19, 2);
 
-        sheet.addCell(new Label(0, 3, "序号"));
-        sheet.addCell(new Label(1, 3, "姓名"));
-        sheet.addCell(new Label(2, 3, "性别"));
-        sheet.addCell(new Label(3, 3, "国籍"));
-        sheet.addCell(new Label(4, 3, "出生日期"));
-        sheet.addCell(new Label(5, 3, "最高(海外)学历学位"));
-        sheet.addCell(new Label(6, 3, "毕业院校"));
-        sheet.addCell(new Label(7, 3, "用人(申报)单位/创办企业"));
-        sheet.addCell(new Label(8, 3, "职务/拟任职务或职称"));
-        sheet.addCell(new Label(9, 3, "专业领域"));
-        sheet.addCell(new Label(10, 3, "专业方向"));
-        sheet.addCell(new Label(11, 3, "专利授权或研发成果情况"));
-        sheet.addCell(new Label(12, 3, "目前实际到位资金占比%"));
-        sheet.addCell(new Label(13, 3, "个人或风投的占股比例或资金额度"));
-        sheet.addCell(new Label(14, 3, "承诺每年国内工作时限（月/年）"));
-        sheet.addCell(new Label(15, 3, "落地市"));
-        sheet.addCell(new Label(16, 3, "到中国前单位"));
-        sheet.addCell(new Label(17, 3, "职务"));
-        sheet.addCell(new Label(18, 3, "（拟）到中国时间"));
-        sheet.addCell(new Label(19, 3, "创新类签订合同时间/创业类企业完成工商注册时间"));
-        sheet.addCell(new Label(20, 3, "引进平台"));
-        sheet.addCell(new Label(21, 3, "申报单位所属"));
-        sheet.addCell(new Label(22, 3, "人才类型"));
-        sheet.addCell(new Label(23, 3, "是否破格"));
-        sheet.addCell(new Label(24, 3, "牵头单位"));
-        sheet.addCell(new Label(25, 3, "备注"));
+        //设置字体      
+        WritableFont font1 = new WritableFont(WritableFont.createFont("方正小标宋简体"), 16, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE);
+        WritableCellFormat cFormat1 = new WritableCellFormat(font1);
+        cFormat1.setAlignment(Alignment.CENTRE);
+        cFormat1.setVerticalAlignment(VerticalAlignment.CENTRE);
+
+        sheet.addCell(new Label(0, 1, "温州市\"580海外精英引进计划\"申报人选情况汇总表", cFormat1));
+
+        WritableFont font2 = new WritableFont(WritableFont.createFont("宋体"), 12, WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE);
+        WritableCellFormat cFormat2 = new WritableCellFormat(font2);
+        cFormat2.setAlignment(Alignment.RIGHT);
+        cFormat2.setVerticalAlignment(VerticalAlignment.CENTRE);
+
+        sheet.addCell(new Label(16, 2, "填表时间：", cFormat2));
+        sheet.addCell(new Label(18, 2, "20130101"));
+
+        WritableFont font3 = new WritableFont(WritableFont.createFont("宋体"), 9, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE);
+        WritableCellFormat cFormat3 = new WritableCellFormat(font3);
+        cFormat3.setAlignment(Alignment.CENTRE);
+        cFormat3.setWrap(true);
+        cFormat3.setVerticalAlignment(VerticalAlignment.CENTRE);
+
+        sheet.addCell(new Label(0, 3, "序号", cFormat3));
+        sheet.addCell(new Label(1, 3, "姓名", cFormat3));
+        sheet.addCell(new Label(2, 3, "性别", cFormat3));
+        sheet.addCell(new Label(3, 3, "国籍", cFormat3));
+        sheet.addCell(new Label(4, 3, "出生日期", cFormat3));
+        sheet.addCell(new Label(5, 3, "最高(海外)学历学位", cFormat3));
+        sheet.addCell(new Label(6, 3, "毕业院校", cFormat3));
+        sheet.addCell(new Label(7, 3, "用人(申报)单位/创办企业", cFormat3));
+        sheet.addCell(new Label(8, 3, "职务/拟任职务或职称", cFormat3));
+        sheet.addCell(new Label(9, 3, "专业领域", cFormat3));
+        sheet.addCell(new Label(10, 3, "专业方向", cFormat3));
+        sheet.addCell(new Label(11, 3, "专利授权或研发成果情况", cFormat3));
+        sheet.addCell(new Label(12, 3, "目前实际到位资金占比%", cFormat3));
+        sheet.addCell(new Label(13, 3, "个人或风投的占股比例或资金额度", cFormat3));
+        sheet.addCell(new Label(14, 3, "承诺每年国内工作时限（月/年）", cFormat3));
+        sheet.addCell(new Label(15, 3, "落地市", cFormat3));
+        sheet.addCell(new Label(16, 3, "到中国前单位", cFormat3));
+        sheet.addCell(new Label(17, 3, "职务", cFormat3));
+        sheet.addCell(new Label(18, 3, "（拟）到中国时间", cFormat3));
+        sheet.addCell(new Label(19, 3, "创新类签订合同时间/创业类企业完成工商注册时间", cFormat3));
+        sheet.addCell(new Label(20, 3, "引进平台", cFormat3));
+        sheet.addCell(new Label(21, 3, "申报单位所属", cFormat3));
+        sheet.addCell(new Label(22, 3, "人才类型", cFormat3));
+        sheet.addCell(new Label(23, 3, "是否破格", cFormat3));
+        sheet.addCell(new Label(24, 3, "牵头单位", cFormat3));
+        sheet.addCell(new Label(25, 3, "备注", cFormat3));
+
+        WritableFont font4 = new WritableFont(WritableFont.createFont("宋体"), 12, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE);
+        WritableCellFormat cFormat4 = new WritableCellFormat(font4);
+        cFormat4.setAlignment(Alignment.CENTRE);
+        cFormat4.setWrap(true);
+        cFormat4.setVerticalAlignment(VerticalAlignment.CENTRE);
+        
+        NoNullLabel.setDefaultFormat(cFormat4);
 
         for (int i = 0; i < list.size(); i++) {
             Application app = list.get(i);
             sheet.addCell(new NoNullLabel(0, 4 + i, app.getNumber()));
             sheet.addCell(new NoNullLabel(1, 4 + i, app.getRealName()));
-            sheet.addCell(new NoNullLabel(2, 4 + i, app.getSex()==0?"男":"女"));
+            sheet.addCell(new NoNullLabel(2, 4 + i, app.getSex() == 0 ? "男" : "女"));
             sheet.addCell(new NoNullLabel(3, 4 + i, app.getNationality()));
-            sheet.addCell(new NoNullLabel(4, 4 + i, app.getBirthDate()!=null?fullFormat.format(app.getBirthDate()):""));
+            sheet.addCell(new NoNullLabel(4, 4 + i, app.getBirthDate() != null ? fullFormat.format(app.getBirthDate()) : ""));
             sheet.addCell(new NoNullLabel(5, 4 + i, app.getMgChineseDegree()));
             sheet.addCell(new NoNullLabel(6, 4 + i, app.getMgChineseSchool()));
             sheet.addCell(new NoNullLabel(7, 4 + i, app.getAppOrgName()));
@@ -96,8 +131,8 @@ public class DocumentHandler implements ServletContextAware {
             sheet.addCell(new NoNullLabel(9, 4 + i, app.getSpecialty()));
             sheet.addCell(new NoNullLabel(10, 4 + i, app.getProfession()));
             sheet.addCell(new NoNullLabel(11, 4 + i, app.getPatentDesc()));
-            sheet.addCell(new NoNullLabel(12, 4 + i, app.getActualCurrentFundsPer()+"%"));
-            sheet.addCell(new NoNullLabel(13, 4 + i, app.getMyFundsPer()+"%"));
+            sheet.addCell(new NoNullLabel(12, 4 + i, app.getActualCurrentFundsPer() + "%"));
+            sheet.addCell(new NoNullLabel(13, 4 + i, app.getMyFundsPer() + "%"));
             sheet.addCell(new NoNullLabel(14, 4 + i, ""));// 承诺每年国内工作时限（月/年）?
             sheet.addCell(new NoNullLabel(15, 4 + i, app.getCity()));
             sheet.addCell(new NoNullLabel(16, 4 + i, app.getForeignJobChinese()));
@@ -107,7 +142,7 @@ public class DocumentHandler implements ServletContextAware {
             sheet.addCell(new NoNullLabel(20, 4 + i, app.getPlatform()));
             sheet.addCell(new NoNullLabel(21, 4 + i, app.getOrgSubName()));
             sheet.addCell(new NoNullLabel(22, 4 + i, app.getType()));
-            sheet.addCell(new NoNullLabel(23, 4 + i, app.isPoge()?"是":"女"));
+            sheet.addCell(new NoNullLabel(23, 4 + i, app.isPoge() ? "是" : "女"));
             sheet.addCell(new NoNullLabel(24, 4 + i, app.getAppOrgName()));//牵头单位
             sheet.addCell(new NoNullLabel(25, 4 + i, app.getComment()));
 
@@ -215,10 +250,10 @@ public class DocumentHandler implements ServletContextAware {
         dataMap.put("str4_12", app.getForeignJobEnglish());// 工作单位及职务英文
         dataMap.put("str4_13", app.getEmployer());// 现任职单位
         dataMap.put("str4_14", app.getPosition());// 职务
-        try{
+        try {
             dataMap.put("str4_15", app.getMyorg().getContact().getAddress());// 单位地址
-        }catch(NullPointerException ex){
-            dataMap.put("str4_15",app.getEmployerAddress());
+        } catch (NullPointerException ex) {
+            dataMap.put("str4_15", app.getEmployerAddress());
         }
         dataMap.put("str4_16", app.getZip());// 邮编                
         dataMap.put("str4_17", beanHelper.toString(app, new String[]{
@@ -362,10 +397,10 @@ public class DocumentHandler implements ServletContextAware {
         dataMap.put("str4_12", app.getForeignJobEnglish());// 工作单位及职务英文
         dataMap.put("str4_13", app.getEmployer());// 现任职单位
         dataMap.put("str4_14", app.getPosition());// 职务
-        try{
+        try {
             dataMap.put("str4_15", app.getMyorg().getContact().getAddress());// 单位地址
-        }catch(NullPointerException ex){
-            dataMap.put("str4_15",app.getEmployerAddress());
+        } catch (NullPointerException ex) {
+            dataMap.put("str4_15", app.getEmployerAddress());
         }
         dataMap.put("str4_16", app.getZip());// 邮编
         dataMap.put("str4_17", beanHelper.toString(app, new String[]{

@@ -14,9 +14,14 @@ import jxl.write.Label;
  * @author luffy
  */
 public class NoNullLabel extends Label {
+    private static CellFormat defaultFormat;
+
+    public static void setDefaultFormat(CellFormat format) {
+        defaultFormat = format;
+    }
 
     public NoNullLabel(int c, int r, String cont) {
-        super(c, r, cont == null ? "" : cont);
+        super(c, r, cont == null ? "" : cont,defaultFormat);
     }
 
     public NoNullLabel(int c, int r, String cont, CellFormat st) {

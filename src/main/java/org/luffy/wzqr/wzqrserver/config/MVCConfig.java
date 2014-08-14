@@ -75,6 +75,7 @@ public class MVCConfig extends WebMvcConfigurationSupport {
         ThymeleafViewResolver bean = new ThymeleafViewResolver();
         bean.setTemplateEngine(this.templateEngine());
         bean.setOrder(1);
+        bean.setCharacterEncoding("UTF-8");
         return bean;
     }
 
@@ -90,6 +91,7 @@ public class MVCConfig extends WebMvcConfigurationSupport {
         ServletContextTemplateResolver bean = new ServletContextTemplateResolver();
         bean.setPrefix("/WEB-INF/templates/");
         bean.setSuffix(".html");
+        bean.setCharacterEncoding("UTF-8");
 //        bean.setTemplateMode("HTML5");
         return bean;
     }

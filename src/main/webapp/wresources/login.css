@@ -1,0 +1,107 @@
+@CHARSET "UTF-8";
+.lgn_wrap {
+    width:1003px;
+    margin: 0px auto;
+}
+.lgn_header {
+    /*background-image:url(../images/login/header_bk.jpg);*/
+    height:215px;
+}
+.lgn_body {
+    background-image:url(images/body_bk.jpg);
+}
+.lgn_footer {
+    background-image:url(images/footer_bk.jpg);
+    height:150px;
+}
+.lgn-box1 {
+    border: solid 1px #437dd8;
+    width: 285px;
+    background: url(images/box1-bk.jpg) repeat-x scroll;
+    -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; -khtml-border-top-left-radius: 5px; border-top-left-radius: 5px;
+    -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; -khtml-border-top-right-radius: 5px; border-top-right-radius: 5px;
+}
+.lgn-box1-head {
+    background:#2661be;
+    height: 40px;
+    border-bottom: solid 1px #437dd8;
+}
+.lgn-box1-head-inner {
+    padding: 2px 0 0 0px;
+}
+.lgn-box1-head .icon-yhdl {
+    width: 122px; 
+    height: 36px; 
+    background-image:url(images/tit3.gif);
+}
+.lgn-box1-head .icon-xgxz {
+    width: 122px; 
+    height: 36px; 
+    background-image:url(images/tit4.gif);
+}
+.lgn-box1-body {
+    background: url(images/box1-bk.jpg) repeat-x scroll bottom left;
+    padding: 0px 10px 0px 10px;
+    _height: 100px;
+}
+.lgn-box2 {
+    border: solid 1px #C9C9C9;
+    background-color: #f7f7f7;
+    width: 566px;
+    margin-left: 9px;
+}
+.lgn-box2-head {
+    height: 40px;
+    border-bottom: solid 1px #C9C9C9;
+}
+.lgn-box2-head-inner {
+    position:relative;
+}
+.lgn-box2-head .icon-zjqr, .lgn-box2-head .icon-gzdt {
+    position:absolute;
+    left: -9px;
+    top: 3px;
+    width: 197px; 
+    height: 45px;     
+}
+.lgn-box2-head .icon-zjqr {
+    background-image:url(images/tit1.gif);
+}
+.lgn-box2-head .icon-gzdt {
+    background-image:url(images/tit2.gif);
+}
+.lgn-box2-body {
+    padding: 10px;
+    min-height: 100px;
+    _height: 100px;
+}
+
+.lgn_body input, td {
+    font-size: 14px;
+}
+
+.lgn_body div.item {
+    background: url("images/list-prefix.gif") 10px 6px no-repeat;
+    padding: 3px 0 3px 8px;
+    margin-bottom: 3px;
+    line-height: 18px;
+    border-bottom: dotted 1px #c0c0c0;
+}
+
+#login_box {
+    width:100%;
+    height:190px;
+}
+#login_box form {
+    padding: 0px 0px 0px 20px;
+    font-size:14px;
+}
+#login_box td {
+    height: 40px;
+    vertical-align: middle;
+}
+#login_box input.ipt {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+}

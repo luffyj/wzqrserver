@@ -25,7 +25,7 @@ public class CaptchaCaptureFilter extends OncePerRequestFilter {
 
     @Autowired
     private Environment env;
-    
+
     @Autowired
     private ImageCaptchaService captchaService;
 
@@ -44,7 +44,11 @@ public class CaptchaCaptureFilter extends OncePerRequestFilter {
         // 添加需要保护的urls
         if (captchaAbleMatcher.matches(req) && (!env.acceptsProfiles("test") || env.acceptsProfiles("testcaptcha"))) {
             if (!captchaService.validateResponseForID(req.getSession().getId(), req.getParameter("jcaptcha"))) {
-                res.sendError(410, "验证码错误");
+                if (req.getParameter("ajax") != null) {
+                    res.sendError(410, "验证码错误");
+                } else {
+                    res.sendRedirect("loginPage?code");
+                }
 //                throw new ServletException("验证码错误");
                 return;
             }
