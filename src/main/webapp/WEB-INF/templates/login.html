@@ -30,9 +30,9 @@
                                 </div>
                                 <div class="lgn-box1-body">
                                     <div id="login_box">                                        
-                                        <form id="loginForm" name="loginForm" method="post" th:action="@{/login}"
-                                              class="validate">
-<!--                                             onsubmit="javascript:return wzqrserver.login(this)"-->
+                                        <form th:action="@{/login}" id="loginForm" name="loginForm" method="post" action="login"
+                                              class="validate" onsubmit="javascript:wzqrserver.login(this);
+                                                      return false;">
                                             <input type="hidden" name="action" />
                                             <table>
                                                 <tr>
@@ -73,11 +73,11 @@
                                                         <span style="color:red">验证码错误</span>
                                                     </td>
                                                 </tr>
-<!--                                                <tr align="center">
+                                                <tr align="center">
                                                     <td colspan="3" style="height: 20px;">
                                                         <span style="color:red" id="errorMsg"></span>
                                                     </td>
-                                                </tr>-->
+                                                </tr>
                                             </table>
                                         </form>
                                     </div>
@@ -112,16 +112,16 @@
                                 </div>
                                 <div class="lgn-box1-body">
                                     <div class="item">
-                                        <a href="wresources/温州市580海外精英引进计划创业类申报书.doc">温州市“580海外精英引进计划”创业类申报书.doc</a>
+                                        <a href="wresources/温州市580海外精英引进计划创业类申报书.doc">温州市"580海外精英引进计划"创业类申报书</a>
                                     </div>
                                     <div class="item">
-                                        <a href="wresources/温州市580海外精英引进计划创新类申报书.doc">温州市“580海外精英引进计划”创新类申报书.doc</a>
+                                        <a href="wresources/温州市580海外精英引进计划创新类申报书.doc">温州市"580海外精英引进计划"创新类申报书</a>
                                     </div>
                                     <div class="item">
-                                        <a href="wresources/温州市580海外精英引进计划申报人选情况汇总表.xls">温州市“580海外精英引进计划”申报人选情况汇总表.xls</a>
+                                        <a href="wresources/温州市580海外精英引进计划申报人选情况汇总表.xls">温州市"580海外精英引进计划"申报人选情况汇总表</a>
                                     </div>
                                     <div class="item">
-                                        <a href="wresources/申报人其他个人信息表.doc">申报人其他个人信息表.doc</a>
+                                        <a href="wresources/申报人其他个人信息表.doc">申报人其他个人信息表</a>
                                     </div>
                                 </div>
                             </div>
@@ -136,31 +136,26 @@
                                 <div class="lgn-box2-body">
                                     <div id="artDiv">
                                         <div class="item">
-                                            <a href="wresources/580申报材料填写说明.doc"
-                                               target="_blank">"580"申报材料填写说明</a>
-                                        </div>
-                                    </div>
-                                    <div id="artDiv">
-                                        <div class="item">
                                             <a href="wresources/温州市580海外精英引进计划2014年度人选申报公告.doc"
-                                               target="_blank">温州市580海外精英引进计划2014年度人选申报公告.doc</a>
+                                               target="_blank">温州市"580海外精英引进计划"2012年度人选申报公告</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="lgn_footer">
-                        <div
-                            style="line-height: 35px; text-align: center; padding-top: 40px;">
-                            版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
-                            &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
-                        </div>
-                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="lgn_footer">
+                <div
+                    style="line-height: 35px; text-align: center; padding-top: 40px;">
+                    版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
+                    &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
                 </div>
             </div>
         </div>
+
         <!--        <input type="checkbox" name="rememberme"/>-->        
     </body>
 </html>
