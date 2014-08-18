@@ -104,7 +104,7 @@ public class DocumentHandler implements ServletContextAware {
         cell16.setCellStyle(headstyle2);
 
         HSSFCell cell18 = row2.createCell(18);
-        cell18.setCellValue(new HSSFRichTextString("2013年1月1日"));
+        cell18.setCellValue(new HSSFRichTextString(fullFormat.format(new Date())));
         cell18.setCellStyle(headstyle2);
 
         // 设置字体
@@ -569,7 +569,7 @@ public class DocumentHandler implements ServletContextAware {
         cFormat2.setVerticalAlignment(VerticalAlignment.CENTRE);
 
         sheet.addCell(new Label(16, 2, "填表时间：", cFormat2));
-        sheet.addCell(new Label(18, 2, "20130101"));
+        sheet.addCell(new Label(18, 2, fullFormat.format(new Date())));
 
         WritableFont font3 = new WritableFont(WritableFont.createFont("宋体"), 9, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE);
         WritableCellFormat cFormat3 = new WritableCellFormat(font3);
