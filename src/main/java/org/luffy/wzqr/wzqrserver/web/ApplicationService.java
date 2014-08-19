@@ -358,6 +358,10 @@ public class ApplicationService {
             return null;
         }
         byte[] documentBody = app.getAttachment();
+        
+        if (documentBody == null) {
+            return null;
+        }
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "pdf"));
