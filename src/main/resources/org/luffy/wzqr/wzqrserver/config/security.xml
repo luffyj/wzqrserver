@@ -55,6 +55,7 @@
         
         <intercept-url pattern="/index.html" access="isAuthenticated()" />
         <intercept-url pattern="/app.js" access="permitAll()" />
+        <intercept-url pattern="/favicon.ico" access="permitAll()" />
         <intercept-url pattern="/resources/**" access="permitAll()" />
         <intercept-url pattern="/wresources/**" access="permitAll()" />        
         <intercept-url pattern="/jcaptcha.jpg" access="permitAll()" />
