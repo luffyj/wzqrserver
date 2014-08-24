@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+.sl-file{
+	position:relative;
+	display:inline-block;
+	zoom:1;
+	cursor:pointer;
+	overflow:hidden;
+	vertical-align:middle;
+}
+.sl-file .sl-file-input{
+	position:absolute;
+	right:0;
+	top:0;
+	_font-size:100px; /* overwrite*/
+	_font-size:12px;
+	_zoom:10; /* overwrite */
+	height:100%;
+	_height:auto;
+	opacity:0;
+	filter:alpha(opacity=0);
+	-ms-filter:"alpha(opacity=0)";
+	cursor:pointer;
+	*height:22px;
+}

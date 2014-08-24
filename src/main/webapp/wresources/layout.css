@@ -1,0 +1,462 @@
+@CHARSET "UTF-8";
+
+.wrapper {
+	min-width: 1152px;
+	width: auto;
+	_width: expression(((document.compatMode && document.compatMode=='CSS1Compat')? document.documentElement.clientWidth : document.body.clientWidth) < 1152? '1152px' : 'auto');
+}
+
+#header {
+	background: url("../images/header_bk.jpg") repeat-x scroll left top
+		transparent;
+	height: 78px;
+	top: 0;
+}
+
+#header #logo2 {
+	position: absolute;
+	width: 450px;
+	height: 68px;
+	top: 5px;
+	left: 105px;
+}
+
+#logo1 {
+    position: absolute;
+    width: 98px;
+    height: 98px;
+    top: 3px;
+    left: 3px;
+    z-index: 10
+}
+
+#header #user {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+#user .user_info {
+	background: url("../images/ui16.gif") -40px 0px no-repeat transparent;
+	height: 16px;
+	padding-left: 20px;
+}
+
+#nav {
+	background: url("../images/sep_20_u.gif") repeat-x scroll left bottom transparent;
+	height: 29px;
+	overflow:hidden;
+}
+
+#nav .main_menu {
+	padding-left: 108px;
+}
+
+#nav .main_menu a {
+	background: url("../images/nav_item_current.gif") repeat scroll 0 0
+		transparent;
+	float: left;
+	height: 29px;
+	line-height: 34px;
+	text-align: center;
+	width: 95px;
+}
+
+#nav .main_menu a.current {
+	background: url("../images/nav_item_normal.gif") repeat scroll 0 0
+		transparent;
+	color: #fff;
+	font-weight: bold;
+}
+.main_wrap {
+	background: #fff url(../images/content_bg.jpg) left top repeat-x;
+	padding: 5px;
+	min-height: 400px;
+	_height: 400px;
+}
+#main {
+	width: 100%;
+	overflow: hidden;	
+}
+
+#footer {
+	margin: 0 0 10px 0;
+	padding-top: 10px;
+	background: url("../images/sep_20_d.gif") repeat-x scroll left top transparent;
+	color: #333;
+	text-align: center;
+}
+
+/* search-form----------------2013年7月28日 */
+form.search-form {
+	position: relative;
+}
+.search-form div.list_search div.search_btn {
+	position: absolute;
+	height: 23px;
+	bottom: 2px;
+	right: 2px;
+}
+.search-data-total-count {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+/* -----------------------------table begin----------------------------- */
+div.list_search {
+	background: url(../images/search_bg.jpg) left top repeat-x;
+	border: 1px solid #4087bc;
+	padding: 5px;
+}
+
+div.list_search th {
+	padding: 3px 2px;
+}
+
+div.list_search td {
+	padding: 1px 2px;
+}
+
+div.list_search div.search_btn {
+	float: right;
+	height: 23px;
+	margin-top: -23px;
+	text-align: right;
+}
+
+div.list_header {
+	margin:0px;
+}
+
+div.list_grid {
+    margin:0px;
+}
+
+div.list_grid table {
+	width: 100%;
+	border: 1px solid #A4D2E2;
+	border-collapse: collapse;
+}
+
+div.list_grid td {
+	border: #BBCDDF 1px solid;
+	padding: 3px 2px 2px 2px;
+}
+
+div.list_grid td.right {
+	text-align: right;
+}
+
+div.list_grid thead {
+	background-color: #DEEDF7;
+	background: url(../images/search_bg.jpg) left -20px repeat-x;
+}
+
+div.list_grid thead a {
+	text-decoration: none;
+}
+
+div.list_grid tbody {
+	background-color: #fff;
+}
+
+div.list_grid tfoot {
+	background: url(../images/search_bg.jpg) #DEEDF7 left -40px repeat-x;
+}
+
+tr.odd {
+	background-color: #eee;
+}
+
+div.list_grid td.selected {
+	text-align: center;
+	width: 25px;
+}
+
+div.list_grid td.no {
+	text-align: right;
+	padding-right: 5px;
+	width: 22px;
+}
+
+div.list_grid td.action {
+	text-align: center;
+}
+
+/* -----------------------------table end----------------------------- */
+div.sortable {
+	background: url(../images/sortable.gif) right -46px no-repeat;
+	padding-right: 8px;
+}
+
+div.asc {
+	background-position: right 5px;
+}
+
+div.desc {
+	background-position: right -20px;
+}
+
+div.select_all {
+	background: url(../images/ui16.gif) 0px -40px no-repeat;
+	width: 16px;
+	height: 16px;
+}
+/* -----------------------------table end----------------------------- */
+
+/* -----------------------------box start----------------------------- */
+.box { border: 1px solid #cbc9ca;  padding: 5px; }
+.box1 {
+	border: 1px solid #cbc9ca;
+	border-top: 0px;
+}
+
+.box1 .head {
+	background: #ebe9ea url(../images/xbg20.gif) 0px 0px repeat-x;
+	border-bottom: 1px solid #cbc9ca;
+	height: 28px;
+	line-height: 28px;
+	padding: 0 5px;
+	position:relative;
+}
+
+.box1 .head .title {
+	background: url(../images/ui16.gif) -40px -25px no-repeat;
+	padding-left: 16px;
+	font-weight: bold;
+}
+
+.box1 .head .rhead {
+	float: right;
+}
+
+.box1 .body {
+	background-color: #fff;
+}
+
+.box-list .body {
+	padding: 5px;
+}
+.box-list .body .item {
+	background: url("../images/box1_item_prefix.gif") -2px 1px no-repeat;
+	padding: 1px 0 2px 13px;
+	display: block;
+}
+/* -----------------------------box end----------------------------- */
+
+/* ----------------------------- g-list start ----------------------------- */
+.g-list {
+	line-height: 20px;
+	padding: 10px 5px;
+}
+
+.g-list-item {
+	overflow: hidden;
+	padding: 3px 0;
+}
+
+.g-list-title {
+	float: left;
+	text-align: right;
+	white-space: nowrap;
+	width: 116px;
+}
+
+.g-list-cnt {
+	height: auto;
+	margin-left: 125px;
+}
+
+.g-split {
+	border-top: 1px #C5D2DA dotted;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+	overflow: hidden;
+}
+
+.g-list-smallTitle .g-list-title {
+	width: 76px;
+}
+
+.g-list-smallTitle .g-list-cnt {
+	margin-left: 85px;
+}
+/* ----------------------------- g-list end ----------------------------- */
+
+/* ----------------------------- area begin ----------------------------- */
+.area {
+	zoom: 1;
+}
+.area:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+.area-main {
+	float: left;
+	width: 100%;
+	min-height: 1px;
+}
+.area-sub,.area-extra {
+	float: left;
+}
+.area-s120-m .area-main-wrap {
+    margin-left: 125px;
+}
+.area-s120-m  .area-sub {
+    width: 120px;
+    margin-left: -100%;
+}
+.area-s145-m .area-main-wrap {
+    margin-left: 150px;
+}
+.area-s145-m  .area-sub {
+    width: 145px;
+    margin-left: -100%;
+}
+.area-s180-m .area-main-wrap {
+	margin-left: 185px;
+}
+.area-s180-m  .area-sub {
+	width: 180px;
+	margin-left: -100%;
+}
+.area-s200-m .area-main-wrap {
+    margin-left: 205px;
+}
+.area-s200-m  .area-sub {
+    width: 200px;
+    margin-left: -100%;
+}
+.area-s230-m .area-main-wrap {
+    margin-left: 235px;
+}
+.area-s230-m  .area-sub {
+    width: 230px;
+    margin-left: -100%;
+}
+.area-m-s230 .area-main-wrap {
+    margin-right: 235px;
+}
+.area-m-s230  .area-sub {
+    width: 230px;
+    margin-left: -230px;
+}
+.area-m-s320 .area-main-wrap {
+    margin-right: 325px;
+}
+.area-m-s320  .area-sub {
+    width: 320px;
+    margin-left: -320px;
+}
+/* ----------------------------- area end ----------------------------- */
+
+/* ----------------------------- dlg_ begin ----------------------------- */
+.dlg_main_wrap {
+	background: #fff url(../images/content_bg.jpg) left top repeat-x;
+	padding: 5px;
+}
+#dlg_header {
+	background: url("../images/header_bk.jpg") repeat-x;
+	border-bottom : solid 1px #7EB0DC;
+	padding: 3px;
+}
+#dlg_logo {
+    position: absolute;
+    left:2px;
+    top: 2px;
+    width: 48px;
+    height: 48px;
+}
+#dlg_title {
+	font-weight:bold;
+	font-size:20px;
+	color:#153255;
+	padding-left: 55px;
+	line-height: 48px;
+}
+#dlg_close {
+	position: absolute;
+	text-align: right;
+	top: 15px;
+	right: 5px;
+}
+/* ----------------------------- dlg_ end ----------------------------- */
+
+/* ----------------------------- applyStep begin ----------------------------- */
+#applyStepCnt { padding: 8px 0; }
+#applyStepFoot { text-align: center; }
+/* ----------------------------- applyStep end ----------------------------- */
+
+/* ----------------------------- input_grid begin ----------------------------- */
+div.input_grid table {
+	width: 100%;
+	border: 1px solid #A4D2E2;
+	border-collapse: collapse;
+	background-color: #fff;
+}
+.input_grid th, .input_grid td {
+	border: #BBCDDF 1px solid;
+	padding: 2px 2px;
+}
+div.input_grid th {
+	text-align: right;
+	background-color: #E5F8FE;
+}
+div.input_grid thead th {
+    text-align: center;
+    padding: 5px 0 3px 0;
+    background: #E5F8FE url("../images/xbg20.gif") 0px -60px repeat-x;
+}
+
+div.input_grid td {
+}
+
+div.input_grid td.right {
+	text-align: right;
+}
+
+div.input_grid tfoot th {
+	text-align: center;
+	background: #f9f9f9 url("../images/xbg20.gif") 0px -90px repeat-x;
+}
+
+table>tbody>tr.current_row {
+	background-color: #FFE4E1;
+}
+/* ----------------------------- input_grid begin ----------------------------- */
+
+#dlg_header_with_nav {
+    background: url("../images/header_bk.jpg") repeat-x;
+    border-bottom : solid 1px #7EB0DC;
+    padding: 3px;
+    height: 68px;
+}
+
+#dlg_header_with_nav #dlg_title_with_nav {
+    font-weight:bold;
+    font-size:20px;
+    color:#153255;
+    padding-left: 80px;
+    line-height: 36px;
+}
+#dlg_header_with_nav #dlg_logo {
+    position: absolute;
+    left:3px;
+    top: 3px;
+    width: 70px;
+    height: 70px;
+}
+#dlg_header_with_nav #nav {
+    height: 29px;
+    overflow:hidden;
+    position: absolute;
+    left: 80px;
+    top: 45px;
+}
+#dlg_header_with_nav #nav .main_menu {
+    padding-left: 0px;
+}

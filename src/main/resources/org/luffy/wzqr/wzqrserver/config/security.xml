@@ -54,6 +54,8 @@
         <!--<request-cache ref="httpSessionRequestCache"/>--> 
         
         <intercept-url pattern="/index.html" access="isAuthenticated()" />
+        <intercept-url pattern="/register" access="permitAll()" />
+        <intercept-url pattern="/register.do" access="permitAll()" />
         <intercept-url pattern="/app.js" access="permitAll()" />
         <intercept-url pattern="/favicon.ico" access="permitAll()" />
         <intercept-url pattern="/resources/**" access="permitAll()" />

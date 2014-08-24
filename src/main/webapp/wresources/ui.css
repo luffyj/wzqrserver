@@ -1,0 +1,122 @@
+@CHARSET "UTF-8";
+/*== 输入框样式 ==============================*/
+.ipt {
+	border: solid 1px #c0c0c0;
+}
+input.ipt {
+	padding: 2px 1px;
+}
+.ipt:focus {
+	background-color:#ffff99;
+	border-color: #6c92ad;
+}
+
+.help-menu .ui-accordion .ui-accordion-content {
+    padding: 0 5px 8px 8px;
+    line-height: 18px;
+}
+.help-menu .ui-accordion li { 
+    background: url("../images/help_menu_prefix.gif") -2px 0px no-repeat;
+    padding-left: 12px;
+}
+#helpContent .b {
+    font-weight:bold;
+}
+
+.prj-supportMeasures {
+	width:100%;
+	height:150px;
+}
+
+.prj-recommendedReason {
+	width:100%;
+	height:150px;
+}
+
+.prj-auditOpinion {
+	width:100%;
+	height:150px;
+}
+
+.prj-review2Suggestion {
+	width:100%;
+	height:250px;
+}
+
+.prj-otherApplyInfo {
+	width:100%;
+	height:250px;
+}
+
+.prj-strongSuit {
+	width:100%;
+	height:250px;
+}
+
+.prj-product {
+	width:100%;
+	height:150px;
+}
+
+.prj-otherProfit {
+	width:100%;
+	height:250px;
+}
+
+.prj-workImagine {
+	width:100%;
+	height:250px;
+}
+
+.prj-validProhibitProtocol {
+	width:100%;
+	height:100px;
+}
+
+.prj-summaryPatent2Result {
+	width:100%;
+	height:75px;
+}
+
+.prj-summaryNotes {
+	width:100%;
+	height:75px;
+}
+
+.exp-notes {
+	width:100%;
+	height:160px;
+}
+
+.org-introduction {
+	width:600px;
+	height:75px;
+}
+
+.combobox .ui-widget-content { border: solid 1px #c0c0c0; }
+.combobox .ui-button { margin-left: -1px; }
+.combobox .ui-button-icon-only .ui-button-text { padding: 1px 0 1px 0; } 
+.combobox .ui-autocomplete-input { margin: 0; padding: 2px 2px 2px 2px; }
+
+.ui-autocomplete {
+    max-height: 300px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* add padding to account for vertical scrollbar */
+    padding-right: 20px;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+    height: 300px;
+}
+* html .combobox .ui-button {
+    height: 20px;
+    overflow:hidden;
+}
+
+.applyInfo-navigation h3 {
+	background-image:url("images/ui-bg_glass_85_dfeffc_1x400.png");
+}

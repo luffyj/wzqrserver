@@ -1,0 +1,296 @@
+#accordionMenu h3{
+	padding:5px 5px 5px 25px;
+}
+.ui-button-text-icon-primary .ui-button-text,.ui-button-text-icons .ui-button-text{
+	padding: 2px 1.4em 2px 0.7em;
+}
+.ui-button-text-icon-primary .ui-button-icon-primary,.ui-button-text-icons .ui-button-icon-primary,.ui-button-icons-only .ui-button-icon-primary{
+	right:0.4px;
+	left:auto;
+}
+.ui-state-default,.ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	font-weight:normal;
+}
+.btnDropdownList ul{
+	position:absolute;
+	width:80px;
+	text-align:center;
+}
+.btnDropdownList ul li a{
+	padding:3px 10px; 
+}
+.themes-list{
+	width:108px;
+	position:absolute;
+	right:0px;
+	background: none repeat scroll 0 0 rgba(234, 244, 254, 0.8);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 3px 3px 9px #E4EEFC;
+    height: 18px;
+    list-style: none outside none;
+    margin: 0;
+    border: 1px solid #d8dcdf;
+    box-shadow: 2px 2px 5px #EBDDFF;
+    overflow: hidden;
+    padding: 5px 3px 3px 5px;
+}
+.themes-list ul {
+	display:inline;
+	float:right;
+	width:60px;
+}
+
+.themes-list ul li {
+    float: right;
+    list-style: none outside none;
+    margin: 0 3px;
+    display:inline;
+}
+
+.themes-list ul li a {
+    border: 1px solid #CCCCCC;
+    display: block;
+    height: 13px;
+    width: 13px;
+    list-style: none outside none;
+    margin: 0;
+    overflow: hidden;
+    padding: 1px;
+    text-indent: -999999px;
+}
+
+.themes-list ul li a.blue {
+    background: none repeat scroll 0 0 #67C3EA;
+}
+
+.themes-list ul li a.red {
+    background: none repeat scroll 0 0 #FF525E;
+}
+
+.apply_state{
+	margin-left:50px;
+	margin-top:20px;
+}
+.apply_state .apply_line{
+	float:left;
+	height:13px;
+	width:150px;
+	position:relative;
+	background: url("../images/bg_state_line1.jpg") no-repeat;
+}
+.apply_state .approveline{
+	background: url("../images/bg_state_line2.jpg") no-repeat;
+}
+.apply_state .apply_dot{
+	float:left;
+	height:13px;
+	width:13px;
+	position:relative;
+	background: url("../images/bg_state_dot.jpg") no-repeat;
+	color:#7C7A7A;
+}
+.apply_state .approve{
+	background: url("../images/bg_state_dot_approve.jpg") no-repeat;
+	color:#353131;
+}
+.apply_state .reject{
+	background: url("../images/bg_state_dot_reject.jpg") no-repeat;
+	color:#FE8B0A;
+}
+.apply_state ul{
+	width:150px;
+	text-align:center;
+	position:absolute;
+	margin-left:-68px;
+}
+.apply_state ul li.state_describe{
+	margin-top:20px;
+}
+.apply_state ul li.state_time{
+	color:#999;
+}
+
+#accordionMenu a{
+	margin-left:10px;
+}
+.ui-state-active{
+	border-color:#d8dcdf;
+}
+.ui-widget-content{
+	border-color:#d8dcdf;
+}
+a.currentCountItem{
+	color:#FA670E;
+	font-weight:bold;
+}
+.btn-export-stat {
+	position:absolute;
+	display: block;
+	top: 0px;
+	right: 1px;
+}
+.box-list .head .btn-export-stat {	
+	top: 8px;
+	right: 8px;
+}
+.icon-csv-export {
+	background: url("../images/actions/csv_export.png") no-repeat;
+	width: 16px;
+	height: 16px;
+	display: block;
+}
+#accordionMenu .btn-export-stat {
+	display: none;
+}
+#accordionMenu .ui-state-active .btn-export-stat {
+	display: block;
+}
+.icon-go-into{
+	background:url("../images/actions/go-into.png") no-repeat;
+	width:16px;
+	height:16px;
+	display: block;
+	float:right;
+}
+
+/** 鍒楁爣棰樺眳涓�*/
+.list_grid table thead td {
+	text-align:center;
+}
+
+
+/*--- expandable-search begin---------------------- */
+div.expandable-search > div {
+	position: relative;
+}
+div.expandable-search div.search_btn {
+	position: absolute;
+	top: 1px;
+	right: 2px;
+	float: none;
+	margin-top: 0;
+}
+div.expandable-search th {
+	text-align: right;
+}
+div.expandable-search .sortby-item {
+	width: 18%;
+	margin-right: 2px;
+}
+.expandable-search .expandable-tbl {
+	width: 88%;
+}
+.expandable-tbl-c3 th {
+	width: 11%
+}
+.expandable-tbl-c3 td {
+	width: 22%	
+}
+/*--- expandable-search end---------------------- */
+
+select { margin-left: 0; margin-right: 0 }
+
+.signature-item {
+	margin-top: 5px;
+	background-color: #fff;
+	padding: 10px;
+	border: solid 1px #ccc;
+}
+.signature-item-text {
+	float: left;
+	padding-right: 20px;
+}
+.signature-item-text h3 {
+	width: 250px;
+	font-size: 14px;
+	line-height: 150%;
+}
+.signature-file-id {
+	color: #999
+}
+.signature-item-text-row {
+	margin-top: 10px;
+}
+.signature-item-text-row label {
+	color: #666;
+}
+.signature-item-image {	
+}
+.signature-item-image img {
+	border: solid 1px #000;
+}
+.applyInfo-navigation-fixed {
+	position: fixed;
+	top: 110px;
+	left: 10px;
+	width: 190px;
+}
+.applyInfo-navigation {
+	border: solid 1px #ccc;
+}
+.applyInfo-navigation h3 {
+	padding: 5px 5px 5px 25px;
+}
+.applyInfo-navigation-cnt {
+	padding: 5px 5px 5px 0;
+}
+.applyInfo-navigation-cnt li {
+	padding: 2px 0 3px 15px;
+}
+
+.action-legend {
+	margin: 10px 0;
+	text-align: right;
+}
+
+ul.apply-state {
+	display: block;
+	height: 50px;	
+	margin: 20px 40px;
+	padding: 0;
+}
+ul.apply-state li {
+	background: url("../images/apply_state.png") no-repeat;
+	display: block;
+	float: left;
+	position: relative;
+	height: 13px;
+	width: 13px;
+}
+ul.apply-state li.apply-state-approved {
+	background-position: -40px 0;
+}
+ul.apply-state li.apply-state-reject {
+	background-position: -80px 0;
+}
+ul.apply-state li.apply-state-doing {
+	background-position: -120px 0;
+}
+ul.apply-state li.apply-state-line-approved, ul.apply-state li.apply-state-line-reject, ul.apply-state li.apply-state-line-doing {
+	width: 150px;
+	background-position: 0 -40px;
+}
+ul.apply-state li.apply-state-line-wait {
+	width: 150px;
+	background-position: 0 -20px;
+}
+ul.apply-state li span {
+	position: absolute;
+	width: 150px;
+	top: 20px;
+	left: -68px; 
+	text-align: center;
+}
+
+.btnDropdownList .ui-menu {
+	z-index: 2;
+}
+
+.combobox {
+	width: 90%;
+	float:left;
+}
+
+.combobox .combobox-input {
+	width: 85%;
+}

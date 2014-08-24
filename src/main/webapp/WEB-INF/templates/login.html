@@ -56,8 +56,12 @@
                                                 </tr>
                                                 <tr>
                                                     <td></td>
-                                                    <td colspan="2" style="padding-top: 8px">
+                                                    <td style="padding-top:5px" colspan="2">
                                                         <input type="submit" value="" style="background:url(wresources/images/login_btn.gif) no-repeat;width:127px;height:37px;border:none" />
+                                                        <div style="font-size:12px; padding-top:5px;">
+                                                            <a th:href="@{/register}">单位帐号申请</a>　
+                                                            <a href="#" onclick="javascript:alert('请联系所属管区。')">忘记密码了？</a>　
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <tr th:if="${param.error}" align="center">

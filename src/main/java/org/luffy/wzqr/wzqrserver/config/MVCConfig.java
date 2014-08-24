@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.geo.GeoModule;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.rest.webmvc.convert.UriListHttpMessageConverter;
@@ -60,6 +61,9 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 @ImportResource("classpath:org/luffy/wzqr/wzqrserver/config/mvc.xml")
 public class MVCConfig extends WebMvcConfigurationSupport {
     
+    @Autowired
+    private Environment env;
+    
     /**
      * for upload
      */
@@ -92,6 +96,10 @@ public class MVCConfig extends WebMvcConfigurationSupport {
         bean.setPrefix("/WEB-INF/templates/");
         bean.setSuffix(".html");
         bean.setCharacterEncoding("UTF-8");
+        if(env.acceptsProfiles("dev")){
+            System.out.println("Develement Mode");
+            bean.setCacheable(false);
+        }
 //        bean.setTemplateMode("HTML5");
         return bean;
     }

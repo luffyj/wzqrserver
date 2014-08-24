@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head profile="http://www.w3.org/2005/10/profile">
+        <title>注册 | “580”人才计划申报系统</title>
+        <meta charset="UTF-8"/>
+        <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+        <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+
+        <script src="wresources/jquery-1.7.2.min.js"></script>
+        <script src="wresources/jquery-ui-1.8.18.custom.min.js"></script>
+        <script type="text/javascript" src="wresources/jquery.form.js"></script>
+        <script type="text/javascript" src="wresources/jquery.validate.js"></script>
+        <script type="text/javascript" src="wresources/jquery.blockUI.js"></script>
+        <script type="text/javascript" src="wresources/jquery.bgiframe.js"></script>
+        <script type="text/javascript" src="wresources/js.combobox.js"></script>
+        <script type="text/javascript" src="wresources/js.format.js"></script>
+        <script type="text/javascript" src="wresources/jshelper.js"></script>
+        <script type="text/javascript" src="wresources/js.datepicker.js"></script>
+        <script type="text/javascript" src="wresources/js.validator.js"></script>
+        <script type="text/javascript" src="wresources/js.ajax2dialog.js?ver=20140724"></script>
+        <script type="text/javascript" src="wresources/js.grid.paging.js"></script>
+        <script type="text/javascript" src="wresources/js.grid.rowedit.js?ver=20140718"></script>
+        <script type="text/javascript" src="wresources/js.grid.js?ver=20140526"></script>
+        <script type="text/javascript" src="wresources/js.input.js"></script>
+        <script type="text/javascript" src="wresources/js.common.js"></script>
+        <script type="text/javascript" src="wresources/js.app.js?ver=20140718"></script>
+        <script type="text/javascript" src="wresources/jquery.zjaddress-selector.js"></script>
+        <script type="text/javascript" src="wresources/jquery.editable-select.js"></script>
+
+
+
+        <link type="text/css" rel="stylesheet" href="wresources/jquery-ui-1.8.18.custom.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/style.css" />
+
+        <link type="text/css" rel="stylesheet" href="wresources/login.css" />
+
+        <link type="text/css" rel="stylesheet" href="wresources/layout.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/global.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/sl.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/ui.css" />
+
+        <link type="text/css" rel="stylesheet" href="wresources/common-ui.css" />
+        <link type="text/css" rel="stylesheet" href="wresources/jquery.editable-select.css" />
+
+        <style>
+            #register_info td{
+                font-size:12.5px;
+            }
+            table#register input{
+                padding:5px 3px;
+            }
+            table#register select{
+                padding:2px 2px;
+            }
+            table#register tr{
+                height:35px;
+            }
+            .hide{display:none;}
+            .lgn_footer{
+                background-position:0px -7px;
+                background-repeat: no-repeat;
+            }
+            #btnOrgSave{
+                padding-left:5px;
+                padding-right:5px;
+            }
+            .org-introduction{
+                width:750px;
+                height:75px;
+            }
+        </style>        
+        <script type="text/javascript" src="wresources/register1.js"></script>
+    </head>
+    <body>
+        <div class="lgn_wrap">
+            <div class="lgn_header" style="height:240px;">
+                <img src="wresources/images/top.jpg" width="1004" height="240"/>
+            </div>
+            <div id="register_info" style="position:relative">
+                <div style="position:absolute;right:10px;top:10px;">
+                    <a href="loginPage">返回登录页面</a>
+                </div>
+                <form id="editForm" class="validate"
+                      action="#" th:action="@{/register.do}" method="post" th:object="${bean}">
+                    <div class="input_grid">
+                        <table id="register">
+                            <thead>
+                                <tr><th colspan="4">单位帐号申请</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><label for="org_orgName">单位名称</label></th>
+                                    <td colspan="3">
+                                        <input type="text" th:field="*{name}" maxlength="40" value="" id="org_orgName" class="ipt size60 required"/>						</td>
+                                </tr>
+                                <tr>
+                                    <th style="width:100px;"><label for="org_area">上级管区</label></th>
+                                    <td colspan="3">
+                                        <select th:field="*{superPk}" class="required">
+                                            <option th:each="type : ${subNames}" 
+                                                    th:value="${type.id}" 
+                                                    th:text="${type.name}"></option>
+                                        </select>
+<!--                                        <select class="city required" id="city"></select>
+                                        <select class="district"></select>
+                                        <input type="hidden" name="org.area" value="" id="org_area"/>		-->
+                                    </td>
+                                    <!--                                    <th style="width:100px;"><label for="org_unitType">管理归口</label></th>
+                                                                        <td>
+                                                                            <select name="org.unitType" id="org_unitType" class="ipt required">
+                                                                                <option value=""></option>
+                                                                                <option value="1">教育</option>
+                                                                                <option value="2">科技</option>
+                                                                                <option value="3">人社</option>
+                                                                                <option value="4">外专</option>
+                                                                                <option value="5">宣传</option>
+                                                                                <option value="6">金融</option>
+                                    
+                                    
+                                                                            </select>
+                                    
+                                                                            <span class="input_prompt">（指负责审核、管理本单位管理部门）</span>
+                                                                        </td>-->
+                                </tr>
+                                <tr>
+                                    <th><label for="org_linkman">联系人姓名</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.people}" maxlength="20" value="" id="org_linkman" class="ipt required size40"/>						</td>
+                                    <th><label for="org_jobTitle">职务</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contactJob}" maxlength="20" value="" id="org_jobTitle" class="ipt size40"/>						</td>					
+                                </tr>
+                                <tr>
+                                    <th><label for="org_mobile">手机</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.mobile}" maxlength="20" value="" id="org_mobile" class="ipt size40 number required"/>						</td>
+                                    <th><label for="org_tel">电话</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.phone}" maxlength="20" value="" id="org_tel" class="ipt size40"/>						</td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_fax">传真</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.fax}" maxlength="20" value="" id="org_fax" class="ipt size40"/>						</td>
+                                    <th><label for="org_email">电子邮件</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.email}" maxlength="40" value="" id="org_email" class="ipt size40 email"/>						</td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_address">联系地址</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.address}" maxlength="40" value="" id="org_address" class="ipt size40"/>						</td>
+                                    <th><label for="org_zip">邮编</label></th>
+                                    <td>
+                                        <input type="text" th:field="*{contact.zip}" maxlength="10" value="" id="org_zip" class="ipt size40 number"/>						</td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_introduction">单位介绍</label></th>
+                                    <td colspan="3">
+                                        <textarea th:field="*{description}" cols="" rows="" id="org_introduction" class="ipt ime_active org-introduction" maxlength="200"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_userName">用户名</label></th>
+                                    <td colspan="3">
+                                        <input type="text" th:field="*{username}" maxlength="20" value="" id="org_userName" class="ipt size20 required"/>							<span class="input_prompt">请使用3-20个字符或数字</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_password">密　码</label></th>
+                                    <td colspan="3">
+                                        <input th:field="*{password}" type="password" id="org_password" maxlength="16" class="ipt size20 required" />
+                                        <span class="input_prompt">为了保证信息安全，请使用6-16个字符数字混合的较复杂的密码，不要使用“111111”、“123456”等过于简单的密码</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="org_resetpwd">重复密码</label></th>
+                                    <td colspan="3">
+                                        <input id="org_resetpwd" type="password" maxlength="16" class="ipt size20 required" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4">
+                                        <input type="button" id="btnOrgSave" value="提交申请" class="btn-save" />
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="lgn_footer">
+                <div
+                    style="line-height: 35px; text-align: center; padding-top: 40px;">
+                    版权所有 温州市海外高层次人才引进工作专项办公室  <br />技术支持：温州网
+                    &nbsp;&nbsp;&nbsp;&nbsp;电话：0577-88969029 88096642
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script type="text/javascript" src="wresources/register2.js"></script>
+<!--register-->

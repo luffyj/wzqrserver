@@ -135,6 +135,8 @@ public class LogService {
             
 //            jql.append(" SQL('UNIX_TIMESTAMP(?)=UNIX_TIMESTAMP(?)',u.optime,:optime)");
         }
+        
+        jql.append("  order by u.optime desc");
         EntityManager em = this.entityManagerFactory.createEntityManager();
 
         try {
