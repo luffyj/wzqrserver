@@ -5,6 +5,7 @@
  */
 package org.luffy.wzqr.wzqrserver.web;
 
+import java.util.Objects;
 import org.luffy.wzqr.wzqrserver.beans.bean.ErrorResponse;
 import org.luffy.wzqr.wzqrserver.beans.bean.JsonResponse;
 import org.luffy.wzqr.wzqrserver.entity.Organization;
@@ -35,6 +36,38 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @RequestMapping("/setPassword")
+    @ResponseBody
+    public JsonResponse setPassword(
+            @RequestParam("user") String user,
+            @RequestParam("password") String password) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return new ErrorResponse(400, "尚未登录");
+        }
+        if (user == null || user.length() < 0) {
+            return new ErrorResponse(510, "请输入用户名");
+        }
+        if (password == null || password.length() < 0) {
+            return new ErrorResponse(510, "请输入密码");
+        }
+        if (auth.getPrincipal() instanceof User) {
+            User ap = (User) auth.getPrincipal();
+            User target = userRepository.findByLoginName(user);
+
+            //必须是ap管理target
+            if (Objects.equals(target.getOrg().getSuperOrg().getId(), ap.getOrg().getId())) {
+                target.setPassword(passwordEncoder.encode(password));
+                userRepository.save(target);
+                return new JsonResponse(200 ,"修改成功！");
+            } else {
+                return new ErrorResponse(400, "尚未登录");
+            }
+        } else {
+            return new ErrorResponse(400, "尚未登录");
+        }
+    }
 
     @RequestMapping("/cpassword")
     @ResponseBody
