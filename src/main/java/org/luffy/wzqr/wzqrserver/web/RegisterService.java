@@ -83,7 +83,7 @@ public class RegisterService {
 
         RegisterRequest rr = new RegisterRequest();
         bean.setSuperOrg(this.orgRepository.findOne(bean.getSuperPk()));
-        rr.setBean(bean);        
+        rr.setBean(bean);
         rr.setCreateDate(new Date());
         rr.setStatus("申请");
 
@@ -110,15 +110,17 @@ public class RegisterService {
 
         User user = (User) auth.getPrincipal();
 
-        if (!user.getRole().getName().equals(Role.RoleRoot)
-                && !user.getRole().getName().equals(Role.RoleAdmin)) {
-            return new ErrorResponse(901, "只有管理员可以做这个事。");
-        }
-
         RegisterRequest rr = this.registerRequestRepository.findOne(target);
 
         if (rr == null) {
             return new ErrorResponse(902, "找不到这个申请");
+        }
+
+        if (!rr.getBean().getSuperOrg().getId().equals(user.getOrg().getId())) {
+            if (!user.getRole().getName().equals(Role.RoleRoot)
+                    && !user.getRole().getName().equals(Role.RoleAdmin)) {
+                return new ErrorResponse(901, "只有管理员可以做这个事。");
+            }
         }
 
         if (!ok) {

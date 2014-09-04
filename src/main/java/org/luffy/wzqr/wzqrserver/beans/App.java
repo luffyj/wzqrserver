@@ -222,10 +222,59 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
 //            user.setPassword(this.passwordEncoder.encode("123456"));
 //            userRepository.save(user);
             } else {
+                
+//                if (this.dbtype == DBType.mysql){
+//                    StringBuilder sb = new StringBuilder();
+//                    sb.append("CREATE TABLE `papplication22` (")
+//                            .append("`id` bigint(20) NOT NULL");
+//                    
+//                    String[] colums = new String[]{
+//                        "jobPosition"
+//                            ,"jobTime"
+//                            ,"jobCountry"
+//                            ,"jobOrg"
+//                            ,"projectTime"
+//                            ,"projectDesc"
+//                            ,"projectBudget"
+//                            ,"projectPeoples"
+//                            ,"projectResponsibility"
+//                    };
+//                    for (int i = 10; i <= 20; i++) {
+//                        for(String column:colums){
+//                            sb.append(",`")
+//                                    .append(column)
+//                                    .append(i)
+//                                    .append("` varchar(255) NULL");
+//                        }
+//                    }                    
+//                    sb.append(",CONSTRAINT `FK_pApplication22_ID` FOREIGN KEY (`id`) REFERENCES `papplication1` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT");
+//                    sb.append(") ENGINE=InnoDB ")
+//                            .append("DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;");
+//                    System.out.println(sb);
+//                }
+                
                 SystemValue sv = systemValueRepository.findByName("dbversion");
                 if (sv.getIntValue() != version) {
                     //alter table papplication5 add column personPhone varchar(255)
-                    throw new java.lang.IllegalStateException("当前数据库版本为" + sv.getValue() + "，应该为" + version);
+//                    if(sv.getValue().equals("10001") && version==10002){
+//                        Statement stmt = con.createStatement();
+//                        for (int i = 10; i <= 20; i++) {
+//                            stmt.execute("alter table papplication2 add column jobPosition"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column jobTime"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column jobCountry"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column jobOrg"+i+" varchar(255)");
+//                            
+//                            stmt.execute("alter table papplication2 add column projectTime"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column projectDesc"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column projectBudget"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column projectPeoples"+i+" varchar(255)");
+//                            stmt.execute("alter table papplication2 add column projectResponsibility"+i+" varchar(255)");
+//                        }                        
+//                        stmt.close();
+//                        sv.setValue("10002");
+//                        systemValueRepository.save(sv);
+//                    }else
+                        throw new java.lang.IllegalStateException("当前数据库版本为" + sv.getValue() + "，应该为" + version);
                 }
             }
         } finally {

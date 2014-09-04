@@ -768,8 +768,9 @@ public class DocumentHandler implements ServletContextAware {
 
         dataMap.put("str5_1", beanHelper.escapeToWord(app.getExpertTo()));// 个人专长
         List tables5_1 = new ArrayList();
-        for (int i = 0; i < 5; i++) {
-            //TODO...
+        for (int i = 0; i < 20; i++) {
+            if(i>4 && beanHelper.toString(app, "projectTime", i, "").equals(""))                
+                break;
             Datadto t = new Datadto();
             t.setCol1(beanHelper.toString(app, "projectTime", i, ""));//起始时间
             t.setCol2(beanHelper.toString(app, "projectDesc", i, ""));//项目性质和来源
@@ -783,7 +784,9 @@ public class DocumentHandler implements ServletContextAware {
         dataMap.put("tables5_1", tables5_1);  //领导（参与）过的主要项目
 
         List tables5_2 = new ArrayList();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
+            if(i>4 && beanHelper.toString(app, "paperTime", i, "").equals(""))                
+                break;
             Datadto t = new Datadto();
             t.setCol1(beanHelper.toString(app, "paperTime", i, ""));//发表时间
             t.setCol2(beanHelper.toString(app, "paperTitle", i, ""));//论著
@@ -796,7 +799,9 @@ public class DocumentHandler implements ServletContextAware {
         dataMap.put("tables5_2", tables5_2);  //代表性论著
 
         List tables5_3 = new ArrayList();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
+            if(i>4 && beanHelper.toString(app, "patentTime", i, "").equals(""))                
+                break;
             Datadto t = new Datadto();
             t.setCol1(beanHelper.toString(app, "patentTime", i, ""));//专利保护期
             t.setCol2(beanHelper.toString(app, "patentName", i, ""));//专利名称

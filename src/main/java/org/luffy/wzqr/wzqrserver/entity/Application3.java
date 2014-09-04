@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "pApplication3")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class Application3 extends Application2{
+public class Application3 extends Application22{
         
     
     //专利
