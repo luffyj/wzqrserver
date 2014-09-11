@@ -6,6 +6,7 @@
 package org.luffy.wzqr.wzqrserver.web;
 
 import freemarker.template.TemplateException;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -324,32 +326,72 @@ public class ApplicationService {
             entityManager.close();
         }
     }
+    
+    interface WorkingData{
+        void setValues(Application app,MultipartFile file) throws IOException;
 
-    // 附件上传和下载
-    // @ModelAttribute( "uploadForm" ) FileUploadForm uploadForm
-    @RequestMapping(value = "/uploadattachment", method = RequestMethod.POST)
-    public @ResponseBody
-    JsonResponse upload(@RequestParam("file") MultipartFile pdf, @RequestParam("id") Long appid) throws IOException {
-        System.out.println(pdf.getOriginalFilename() + " uploaded!");
-        int errorBase = 590;
+        public byte[] getValue(Application app);
 
-        if (appid == null) {
-            return new ErrorResponse(errorBase + 0, "上传附件必须指定申报信息");
-        }
-        Application app = applicationRepository.findOne(appid);
-        if (app == null) {
-            return new ErrorResponse(errorBase + 1, "找不到指定的申报信息");
-        }
+        public MediaType getMediaType();
 
-        app.setAttachment(pdf.getBytes());
-
-        this.applicationRepository.save(app);
-
-        return new JsonResponse(200);
+        public String getFileName(Application app);
     }
+    
+    private WorkingData attachment = new WorkingData(){
 
-    @RequestMapping(value = "/attachment/{appid}.pdf", method = RequestMethod.GET)
-    public HttpEntity<byte[]> downloadPDF(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
+        @Override
+        public void setValues(Application app, MultipartFile file) throws IOException {
+            app.setAttachment(file.getBytes());
+        }
+
+        @Override
+        public byte[] getValue(Application app) {
+            return app.getAttachment();
+        }
+
+        @Override
+        public MediaType getMediaType() {
+            return new MediaType("application", "pdf");
+        }
+
+        @Override
+        public String getFileName(Application app) {
+            return new StringBuilder().append(app.getBatch())
+                .append(app.getRealName())
+                .append("的申请附件.pdf").toString();
+        }
+    };
+    
+    private WorkingData picture = new WorkingData(){
+
+        @Override
+        public void setValues(Application app, MultipartFile file) throws IOException {
+            BufferedImage image = ImageIO.read(file.getInputStream());
+            ByteArrayOutputStream bys = new ByteArrayOutputStream();
+            ImageIO.write(image, "PNG", bys);
+            app.setPicture(bys.toByteArray());
+        }
+
+        @Override
+        public byte[] getValue(Application app) {
+            return app.getPicture();
+        }
+
+        @Override
+        public MediaType getMediaType() {
+            return MediaType.IMAGE_PNG;
+        }
+
+        @Override
+        public String getFileName(Application app) {
+            return new StringBuilder().append(app.getBatch())
+                .append(app.getRealName())
+                .append(".png").toString();
+        }
+        
+    };
+    
+    private HttpEntity<byte[]> downloadData(Long appid,WorkingData data) throws UnsupportedEncodingException {
         if (appid == null) {
             return null;
         }
@@ -357,17 +399,15 @@ public class ApplicationService {
         if (app == null) {
             return null;
         }
-        byte[] documentBody = app.getAttachment();
+        byte[] documentBody = data.getValue(app);
         
         if (documentBody == null) {
             return null;
         }
 
         HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "pdf"));
-        String name = new StringBuilder().append(app.getBatch())
-                .append(app.getRealName())
-                .append("的申请附件.pdf").toString();
+        header.setContentType(data.getMediaType());
+        String name = data.getFileName(app);
 
         System.out.println("downloading " + name);
 
@@ -375,6 +415,48 @@ public class ApplicationService {
                 "attachment; filename=" + URLEncoder.encode(name, "UTF-8"));
         header.setContentLength(documentBody.length);
         return new HttpEntity<>(documentBody, header);
+    }
+    
+    private HttpEntity uploadData(MultipartFile pdf, Long appid,WorkingData data) throws IOException {
+        //{"code":200,"originalMessage":"上传成功！"}
+        System.out.println(pdf.getOriginalFilename() + " uploaded!");
+        int errorBase = 590;
+
+        if (appid == null) {
+            return new ErrorResponse(errorBase + 0, "上传附件必须指定申报信息").toHttpEntity();
+        }
+        Application app = applicationRepository.findOne(appid);
+        if (app == null) {
+            return new ErrorResponse(errorBase + 1, "找不到指定的申报信息").toHttpEntity();
+        }
+        
+        data.setValues(app, pdf);
+
+        this.applicationRepository.save(app);
+
+        return new JsonResponse(200,"上传成功！").toHttpEntity();
+    }
+
+    // 附件上传和下载
+    // @ModelAttribute( "uploadForm" ) FileUploadForm uploadForm
+    @RequestMapping(value = "/uploadattachment", method = RequestMethod.POST)
+    public HttpEntity upload(@RequestParam("file") MultipartFile pdf, @RequestParam("id") Long appid) throws IOException {
+        return this.uploadData(pdf, appid, attachment);
+    }
+
+    @RequestMapping(value = "/attachment/{appid}.pdf", method = RequestMethod.GET)
+    public HttpEntity<byte[]> downloadPDF(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
+        return this.downloadData(appid, attachment);
+    }
+    
+    @RequestMapping(value = "/uploadpicture", method = RequestMethod.POST)
+    public HttpEntity uploadPicture(@RequestParam("file") MultipartFile pdf, @RequestParam("id") Long appid) throws IOException {
+        return this.uploadData(pdf, appid, picture);
+    }
+
+    @RequestMapping(value = "/picture/{appid}.png", method = RequestMethod.GET)
+    public HttpEntity<byte[]> downloadPicture(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
+        return this.downloadData(appid, picture);
     }
 
     //更换用户

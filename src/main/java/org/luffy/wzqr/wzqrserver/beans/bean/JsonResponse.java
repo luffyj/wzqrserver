@@ -5,6 +5,11 @@
  */
 package org.luffy.wzqr.wzqrserver.beans.bean;
 
+import java.io.UnsupportedEncodingException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 /**
  *
  * @author luffy
@@ -25,6 +30,18 @@ public class JsonResponse {
     public JsonResponse(int code, String originalMessage) {
         this.code = code;
         this.originalMessage = originalMessage;
+    }
+    
+    public HttpEntity toHttpEntity() throws UnsupportedEncodingException {
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.valueOf("text/html;charset=UTF-8"));
+        //{"code":200,"originalMessage":"上传成功！"}
+        String json = String.format("{\"code\":%1d,\"originalMessage\":\"%2s\"}", this.getCode(),this.getOriginalMessage());        
+        System.out.println(json);
+        byte[] documentBody = json.getBytes("UTF-8");
+        header.setContentLength(documentBody.length);
+        return new HttpEntity<>(documentBody, header);
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public JsonResponse() {

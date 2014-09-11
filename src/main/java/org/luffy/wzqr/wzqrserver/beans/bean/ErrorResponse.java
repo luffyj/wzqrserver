@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.luffy.wzqr.wzqrserver.beans.bean;
 
 /**
  *
  * @author luffy
  */
-public class ErrorResponse extends JsonResponse{
+public class ErrorResponse extends JsonResponse {
 
     public ErrorResponse(int code) {
         super(code);
@@ -22,5 +21,5 @@ public class ErrorResponse extends JsonResponse{
 
     public ErrorResponse() {
     }
-    
+
 }
