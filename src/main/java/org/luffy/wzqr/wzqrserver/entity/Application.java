@@ -82,12 +82,23 @@ public class Application extends ApplicationCY implements java.io.Serializable {
     @JsonIgnore
     private byte[] attachment;
     
-    private String submitReason,submitSupport;
+    @Lob
+    private String submitReason;
+    @Lob
+    private String submitSupport;
     
-    private String unitApproveReason, unitApproveSupport;
+    @Lob
+    private String unitApproveReason;
+    @Lob
+    private String unitApproveSupport;
+    @Lob
     private String pogeReason;
-    private String orgApproveReason, orgApproveSupport;
+    @Lob
+    private String orgApproveReason;
+    @Lob
+    private String orgApproveSupport;
 
+    @Lob
     private String managerReason;//市委意见
     private String returnOrg;//退回
     private String returnReason;

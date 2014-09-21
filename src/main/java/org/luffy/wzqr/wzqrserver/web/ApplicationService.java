@@ -42,6 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -458,6 +459,9 @@ public class ApplicationService {
     public HttpEntity<byte[]> downloadPicture(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
         return this.downloadData(appid, picture);
     }
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //更换用户
     //只有申报单位 才可以做这个事
@@ -509,6 +513,9 @@ public class ApplicationService {
                 if (!user.getOrg().getId().equals(cuser.getOrg().getId())) {
                     return new ErrorResponse(errorBase + 5, "用户已存在，且非" + cuser.getOrg().getName() + "申报人");
                 }
+                
+                user.setPassword(passwordEncoder.encode(password));
+                userRepository.save(user);                
             }
 
             app.setOwner(user);
