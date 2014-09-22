@@ -23,6 +23,14 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     
     /**
+     * 
+     * @param superid
+     * @return picture attachment
+     */
+    @Query("select u.picture,u.attachment from Application u where u.id = :id")
+    Object[] selectBytes(@Param("id") Long superid);
+    
+    /**
      * 用于次级机构 查看
      */
     // u.myorg.id = :superid or 

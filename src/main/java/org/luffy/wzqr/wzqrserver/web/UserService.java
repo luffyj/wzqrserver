@@ -41,6 +41,7 @@ public class UserService {
     @ResponseBody
     public JsonResponse setPassword(
             @RequestParam("user") String user,
+            @RequestParam("newUsername") String newUsername,
             @RequestParam("password") String password) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
@@ -52,15 +53,28 @@ public class UserService {
         if (password == null || password.length() < 0) {
             return new ErrorResponse(510, "请输入密码");
         }
+
+        // 如果要修改新的用户名 但是新的用户名已存在？
+        if (newUsername != null && newUsername.trim().length() == 0) {
+            newUsername = null;
+        }
+
+        if (newUsername != null && userRepository.findByLoginName(newUsername) != null) {
+            return new ErrorResponse(511, "这个新用户名正在被使用中");
+        }
+
         if (auth.getPrincipal() instanceof User) {
             User ap = (User) auth.getPrincipal();
             User target = userRepository.findByLoginName(user);
 
             //必须是ap管理target
             if (Objects.equals(target.getOrg().getSuperOrg().getId(), ap.getOrg().getId())) {
+                if (newUsername != null) {
+                    target.setLoginName(newUsername);
+                }
                 target.setPassword(passwordEncoder.encode(password));
                 userRepository.save(target);
-                return new JsonResponse(200 ,"修改成功！");
+                return new JsonResponse(200, "修改成功！");
             } else {
                 return new ErrorResponse(400, "尚未登录");
             }
