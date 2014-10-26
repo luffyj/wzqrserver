@@ -298,6 +298,10 @@ public class DocumentHandler implements ServletContextAware {
         workbook.write(out);
     }
 
+    /**
+     * @see #exportExcel(java.util.List, java.io.OutputStream) 
+     * @deprecated 
+     **/
     public InputStream exportExcel(List list) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -546,6 +550,10 @@ public class DocumentHandler implements ServletContextAware {
         return null;
     }
 
+    /**
+     * @see #exportExcel(java.util.List, java.io.OutputStream) 
+     * @deprecated 
+     **/
     public void exportExcelOld(List<Application> list, OutputStream out) throws WriteException, IOException {
         // 创建工作薄
         WritableWorkbook workbook = Workbook.createWorkbook(out);
