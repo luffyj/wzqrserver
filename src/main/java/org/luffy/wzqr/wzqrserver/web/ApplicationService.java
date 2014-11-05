@@ -63,9 +63,9 @@ public class ApplicationService {
 //    private EntityManager entityManager;
     @RequestMapping(value = "/customMethod", method = RequestMethod.GET)
     public Page<OLog> customMethod(@Param("superid") Long superid, String type, String roleName, Date time, String loginName, Pageable pageable) {
-        StringBuilder jql = new StringBuilder("select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)");
+        String jql = "select u from OLog u where (u.who.org.superOrg.id = :superid or u.who.org.id = :superid)";
 
-        Query query = entityManagerFactory.createEntityManager().createQuery(jql.toString());
+        Query query = entityManagerFactory.createEntityManager().createQuery(jql);
         query.setParameter("superid", superid);
 
         return new PageImpl(query.getResultList(), pageable, query.getMaxResults());
