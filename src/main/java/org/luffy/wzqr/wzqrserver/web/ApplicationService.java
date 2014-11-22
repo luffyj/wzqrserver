@@ -99,30 +99,31 @@ public class ApplicationService {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             //获取apps
-            List<Application> apps;
+            Query apps;
             if (ids.equalsIgnoreCase("all")) {
 
                 StringBuilder jql = new StringBuilder("select u from Application u");
                 handleResponseableApplicationJQL(jql);
-                apps = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString())).getResultList();
+                apps = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString()));
 
             } else {
                 String[] ida = ids.split(",");
-                apps = new ArrayList();
+                ArrayList<Long> lids = new ArrayList();
                 for (String id : ida) {
                     if (id == null || id.length() == 0) {
                         continue;
                     }
-                    Application app = this.applicationRepository.findOne(Long.parseLong(id));
-                    if (app.ableReportTo(user)) {
-                        apps.add(app);
-                    }
+                    lids.add(Long.parseLong(id));
                 }
+                
+                apps = entityManager.createQuery("select u from Application u where u.id in ?1")
+                        .setParameter(1, lids);
+                
             }
 
-            if (apps.isEmpty()) {
-                return null;
-            }
+//            if (apps.isEmpty()) {
+//                return null;
+//            }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             this.documentHandler.exportExcel(apps, out);

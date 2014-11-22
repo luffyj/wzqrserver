@@ -8,8 +8,15 @@ package org.luffy.wzqr.wzqrserver.web;
 import freemarker.template.TemplateException;
 import hello.IRuntimeConfig;
 import hello.WebTest;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,9 +37,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultHandler;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.util.StreamUtils;
 
 /**
  *
@@ -111,14 +121,63 @@ public class ApplicationServiceTest extends WebTest {
     @Autowired
     private ApplicationService applicationService;
     
+//    @Test
+    public void readexecl() throws FileNotFoundException, IOException{
+        File file = new File("D:\\Users\\luffy\\Documents\\Tencent Files\\2896313907\\FileRecv\\MobileFile\\温州市_580海外精英引进计划_申报人选情况汇总表.xls");
+        HSSFWorkbook book = new HSSFWorkbook(new FileInputStream(file));
+        
+        HSSFSheet sheet = book.getSheetAt(0);
+        
+        int width = sheet.getColumnWidth(0);
+        System.out.println(width);
+        System.out.println(width/4.14);
+    }
+
     @Test
-    public void cresult(){
+    public void xmlTest() throws Exception {
+        
+        Organization org = orgRepository.findByName(Organization.NameRoot);
+        User admin = userRepository.findByLoginName("admin");
+        
+        while(applicationRepository.count()<10000){
+            Application app = createApplication(UUID.randomUUID().toString(), org, admin);
+        }
+
+        MockHttpSession session = loginAs(this.userRoot);
+
+        mockMvc.perform(get("/reports")
+//                .param("ids", "all")
+                .param("ids", "468,469")
+                .session(session))
+                .andExpect(status().isOk())
+                .andDo(new ResultHandler() {
+
+                    @Override
+                    public void handle(MvcResult result) throws Exception {
+                        File file = new File("target/all.xls");
+                        file.delete();
+                        FileOutputStream fout = new FileOutputStream(file);
+                        ByteArrayInputStream bin = new ByteArrayInputStream(result.getResponse().getContentAsByteArray());
+                        StreamUtils.copy(bin, fout);
+                        fout.close();
+//                result.getResponse().getOutputStream()
+//                        System.out.println(result.getModelAndView().getModel());
+//                result.getResponse().get
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                })
+//                .andDo(print())
+                ;
+    }
+
+    @Test
+    public void cresult() {
         int type = 8;
         int result = 3;
         int data = this.applicationService.computusResult(type, result);
         System.out.println(data);
-        assertEquals(type,this.applicationService.checkType(data));
-        assertEquals(result,this.applicationService.checkResult(data));
+        assertEquals(type, this.applicationService.checkType(data));
+        assertEquals(result, this.applicationService.checkResult(data));
     }
 
     @Test
@@ -131,7 +190,7 @@ public class ApplicationServiceTest extends WebTest {
                 out.flush();
                 out.close();
             }
-            
+
             out = new FileOutputStream("target/2.doc");
             try {
                 documentHandler.export2(app, out);
@@ -139,7 +198,7 @@ public class ApplicationServiceTest extends WebTest {
                 out.flush();
                 out.close();
             }
-            
+
             return;
         }
     }

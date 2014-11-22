@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.Query;
 import javax.servlet.ServletContext;
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -63,16 +64,16 @@ public class DocumentHandler implements ServletContextAware {
 
     }
 
-    public void exportExcel(List<Application> list, OutputStream out) throws WriteException, IOException {
+    public void exportExcel(Query query, OutputStream out) throws WriteException, IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet();
         /**
          * 合并单元格 第一个参数：第一个单元格的行数（从0开始） 第二个参数：第二个单元格的行数（从0开始）
          * 第三个参数：第一个单元格的列数（从0开始） 第四个参数：第二个单元格的列数（从0开始）
          */
-        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 24));
-        sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 17));
-        sheet.addMergedRegion(new CellRangeAddress(2, 2, 18, 19));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 20));
+//        sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 17));
+//        sheet.addMergedRegion(new CellRangeAddress(2, 2, 18, 19));
 
         // 设置字体
         HSSFFont headfont = workbook.createFont();
@@ -85,8 +86,9 @@ public class DocumentHandler implements ServletContextAware {
         headstyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
         //headstyle.setLocked(true);
         //headstyle.setWrapText(true);// 自动换行
-        HSSFRow row1 = sheet.createRow(1);
-        row1.setHeight((short) (23.25 * 20));  //设置行高
+        int currentRow = 0;
+        HSSFRow row1 = sheet.createRow(currentRow++);
+        row1.setHeight((short) (45.75 * 20));  //设置行高
         HSSFCell cell0 = row1.createCell(0);
         cell0.setCellValue(new HSSFRichTextString("温州市\"580海外精英引进计划\"申报人选情况汇总表"));
         cell0.setCellStyle(headstyle);
@@ -101,7 +103,7 @@ public class DocumentHandler implements ServletContextAware {
         headstyle2.setAlignment(HSSFCellStyle.ALIGN_RIGHT);// 左右居右
         headstyle2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
 
-        HSSFRow row2 = sheet.createRow(2);
+        HSSFRow row2 = sheet.createRow(currentRow++);
         row2.setHeight((short) (21.75 * 20));  //设置行高
         HSSFCell cell16 = row2.createCell(16);
         cell16.setCellValue(new HSSFRichTextString("填表时间："));
@@ -133,39 +135,68 @@ public class DocumentHandler implements ServletContextAware {
         headstyle3.setBorderLeft((short) 1);   //左边框
         headstyle3.setBorderRight((short) 1);  //右边框
 
-        int beishu = 340;  //缩放倍数
-        HSSFRow row3 = sheet.createRow(3);
-        sheet.setColumnWidth(0, (int) (3.13 * beishu));//a
-        sheet.setColumnWidth(1, (int) (4.5 * beishu));//b
-        sheet.setColumnWidth(2, (int) (3.13 * beishu));//c
-        sheet.setColumnWidth(3, (int) (4.38 * beishu));//d
-        sheet.setColumnWidth(4, (int) (6.63 * beishu));//e
-        sheet.setColumnWidth(5, (int) (3.13 * beishu));//f
-        sheet.setColumnWidth(6, (int) (5.88 * beishu));//g
-        sheet.setColumnWidth(7, (int) (6.75 * beishu));//h
-        sheet.setColumnWidth(8, (int) (5.38 * beishu));//i
-        sheet.setColumnWidth(9, (int) (4.75 * beishu));//j
-        sheet.setColumnWidth(10, (int) (5.25 * beishu));//k
-        sheet.setColumnWidth(11, (int) (5 * beishu));   //l
-        sheet.setColumnWidth(12, (int) (4.25 * beishu));//m
-        sheet.setColumnWidth(13, (int) (4.75 * beishu));//n
-        sheet.setColumnWidth(14, (int) (4.38 * beishu));//o
-        sheet.setColumnWidth(15, (int) (3.38 * beishu));//p
-        sheet.setColumnWidth(16, (int) (6.13 * beishu));//q
-        sheet.setColumnWidth(17, (int) (4 * beishu));//r
-        sheet.setColumnWidth(18, (int) (4.88 * beishu));//s
-        sheet.setColumnWidth(19, (int) (6.75 * beishu));//t
-        sheet.setColumnWidth(20, (int) (6.25 * beishu));//u
-        sheet.setColumnWidth(21, (int) (3.63 * beishu));//v
-        sheet.setColumnWidth(22, (int) (3.13 * beishu));//w
-        sheet.setColumnWidth(23, (int) (2.88 * beishu));//x
-        sheet.setColumnWidth(24, (int) (3.63 * beishu));//y
-        sheet.setColumnWidth(25, (int) (3.88 * beishu));//z
-
+        float beishu = 300.24154589371983f;  //缩放倍数
+        HSSFRow row3 = sheet.createRow(currentRow++);
+        row3.setHeight((short) (90 * 20));
         int cellIndex = 0;
+
+        sheet.setColumnWidth(cellIndex++, (int) (4.14 * beishu));//a
+        sheet.setColumnWidth(cellIndex++, (int) (6.57 * beishu));//b
+        sheet.setColumnWidth(cellIndex++, (int) (6.29 * beishu));//c
+        sheet.setColumnWidth(cellIndex++, (int) (3.43 * beishu));//d
+        sheet.setColumnWidth(cellIndex++, (int) (5.14 * beishu));//e
+        sheet.setColumnWidth(cellIndex++, (int) (4.14 * beishu));//f
+        sheet.setColumnWidth(cellIndex++, (int) (3.5 * beishu));//g
+        sheet.setColumnWidth(cellIndex++, (int) (7.71 * beishu));//h
+        sheet.setColumnWidth(cellIndex++, (int) (8.57 * beishu));//i
+        sheet.setColumnWidth(cellIndex++, (int) (6 * beishu));//j
+        sheet.setColumnWidth(cellIndex++, (int) (5.71 * beishu));//k
+        sheet.setColumnWidth(cellIndex++, (int) (5.71 * beishu));   //l
+        sheet.setColumnWidth(cellIndex++, (int) (5.71 * beishu));//m
+        sheet.setColumnWidth(cellIndex++, (int) (5.71 * beishu));//n
+        sheet.setColumnWidth(cellIndex++, (int) (9.86 * beishu));//o
+        sheet.setColumnWidth(cellIndex++, (int) (6.43 * beishu));//p
+        sheet.setColumnWidth(cellIndex++, (int) (6 * beishu));//q
+        sheet.setColumnWidth(cellIndex++, (int) (4.86 * beishu));//r
+        sheet.setColumnWidth(cellIndex++, (int) (4.86 * beishu));//s
+        sheet.setColumnWidth(cellIndex++, (int) (4.86 * beishu));//t
+        sheet.setColumnWidth(cellIndex++, (int) (7.14 * beishu));//u
+        sheet.setColumnWidth(cellIndex++, (int) (7.29 * beishu));//v
+//        
+//        sheet.setColumnWidth(cellIndex++, (int) (3.13 * beishu));//a
+//        sheet.setColumnWidth(cellIndex++, (int) (4.5 * beishu));//b
+//        sheet.setColumnWidth(cellIndex++, (int) (3.13 * beishu));//c
+//        sheet.setColumnWidth(cellIndex++, (int) (4.38 * beishu));//d
+//        sheet.setColumnWidth(cellIndex++, (int) (6.63 * beishu));//e
+//        sheet.setColumnWidth(cellIndex++, (int) (3.13 * beishu));//f
+//        sheet.setColumnWidth(cellIndex++, (int) (5.88 * beishu));//g
+//        sheet.setColumnWidth(cellIndex++, (int) (6.75 * beishu));//h
+//        sheet.setColumnWidth(cellIndex++, (int) (5.38 * beishu));//i
+//        sheet.setColumnWidth(cellIndex++, (int) (4.75 * beishu));//j
+//        sheet.setColumnWidth(cellIndex++, (int) (5.25 * beishu));//k
+//        sheet.setColumnWidth(cellIndex++, (int) (5 * beishu));   //l
+//        sheet.setColumnWidth(cellIndex++, (int) (4.25 * beishu));//m
+//        sheet.setColumnWidth(cellIndex++, (int) (4.75 * beishu));//n
+//        sheet.setColumnWidth(cellIndex++, (int) (4.38 * beishu));//o
+//        sheet.setColumnWidth(cellIndex++, (int) (3.38 * beishu));//p
+//        sheet.setColumnWidth(cellIndex++, (int) (6.13 * beishu));//q
+//        sheet.setColumnWidth(cellIndex++, (int) (4 * beishu));//r
+//        sheet.setColumnWidth(cellIndex++, (int) (4.88 * beishu));//s
+//        sheet.setColumnWidth(cellIndex++, (int) (6.75 * beishu));//t
+//        sheet.setColumnWidth(cellIndex++, (int) (6.25 * beishu));//u
+//        sheet.setColumnWidth(cellIndex++, (int) (3.63 * beishu));//v
+//        sheet.setColumnWidth(cellIndex++, (int) (3.13 * beishu));//w
+//        sheet.setColumnWidth(cellIndex++, (int) (2.88 * beishu));//x
+//        sheet.setColumnWidth(cellIndex++, (int) (3.63 * beishu));//y
+//        sheet.setColumnWidth(cellIndex++, (int) (3.88 * beishu));//z
+
+        cellIndex = 0;
         HSSFCell cell3_0 = row3.createCell(cellIndex++);
         cell3_0.setCellValue(new HSSFRichTextString("序号"));
         cell3_0.setCellStyle(headstyle3);
+        HSSFCell cell3_0p = row3.createCell(cellIndex++);
+        cell3_0p.setCellValue(new HSSFRichTextString("编号"));
+        cell3_0p.setCellStyle(headstyle3);
         HSSFCell cell3_1 = row3.createCell(cellIndex++);
         cell3_1.setCellValue(new HSSFRichTextString("姓名"));
         cell3_1.setCellStyle(headstyle3);
@@ -179,7 +210,7 @@ public class DocumentHandler implements ServletContextAware {
         cell3_4.setCellValue(new HSSFRichTextString("出生日期"));
         cell3_4.setCellStyle(headstyle3);
         HSSFCell cell3_5 = row3.createCell(cellIndex++);
-        cell3_5.setCellValue(new HSSFRichTextString("最高(海外)学历学位"));
+        cell3_5.setCellValue(new HSSFRichTextString("最高学历学位"));
         cell3_5.setCellStyle(headstyle3);
         HSSFCell cell3_6 = row3.createCell(cellIndex++);
         cell3_6.setCellValue(new HSSFRichTextString("毕业院校"));
@@ -196,32 +227,34 @@ public class DocumentHandler implements ServletContextAware {
         HSSFCell cell3_10 = row3.createCell(cellIndex++);
         cell3_10.setCellValue(new HSSFRichTextString("专业方向"));
         cell3_10.setCellStyle(headstyle3);
-        HSSFCell cell3_11 = row3.createCell(cellIndex++);
-        cell3_11.setCellValue(new HSSFRichTextString("专利授权或研发成果情况"));
-        cell3_11.setCellStyle(headstyle3);
+//        HSSFCell cell3_11 = row3.createCell(cellIndex++);
+//        cell3_11.setCellValue(new HSSFRichTextString("专利授权或研发成果情况"));
+//        cell3_11.setCellStyle(headstyle3);
         HSSFCell cell3_12 = row3.createCell(cellIndex++);
         cell3_12.setCellValue(new HSSFRichTextString("目前实际到位资金占比%"));
         cell3_12.setCellStyle(headstyle3);
         HSSFCell cell3_13 = row3.createCell(cellIndex++);
         cell3_13.setCellValue(new HSSFRichTextString("个人或风投的占股比例或资金额度"));
         cell3_13.setCellStyle(headstyle3);
-        HSSFCell cell3_14 = row3.createCell(cellIndex++);
-        cell3_14.setCellValue(new HSSFRichTextString("承诺每年国内工作时限（月/年）"));
-        cell3_14.setCellStyle(headstyle3);
+//        HSSFCell cell3_14 = row3.createCell(cellIndex++);
+//        cell3_14.setCellValue(new HSSFRichTextString("承诺每年国内工作时限（月/年）"));
+//        cell3_14.setCellStyle(headstyle3);
 //        HSSFCell cell3_15 = row3.createCell(cellIndex++);
 //        cell3_15.setCellValue(new HSSFRichTextString("落地市"));
 //        cell3_15.setCellStyle(headstyle3);
         HSSFCell cell3_16 = row3.createCell(cellIndex++);
-        cell3_16.setCellValue(new HSSFRichTextString("到中国前单位"));
+        cell3_16.setCellValue(new HSSFRichTextString("到中国前单位及职务"));
         cell3_16.setCellStyle(headstyle3);
-        HSSFCell cell3_17 = row3.createCell(cellIndex++);
-        cell3_17.setCellValue(new HSSFRichTextString("职务"));
-        cell3_17.setCellStyle(headstyle3);
+//        HSSFCell cell3_17 = row3.createCell(cellIndex++);
+//        cell3_17.setCellValue(new HSSFRichTextString("职务"));
+//        cell3_17.setCellStyle(headstyle3);
         HSSFCell cell3_18 = row3.createCell(cellIndex++);
         cell3_18.setCellValue(new HSSFRichTextString("（拟）到中国时间"));
         cell3_18.setCellStyle(headstyle3);
         HSSFCell cell3_19 = row3.createCell(cellIndex++);
-        cell3_19.setCellValue(new HSSFRichTextString("创新类签订合同时间/创业类企业完成工商注册时间"));
+        //
+        //创新类签订合同时间/创业类企业完成工商注册时间
+        cell3_19.setCellValue(new HSSFRichTextString("签订合同时间/工商注册时间"));
         cell3_19.setCellStyle(headstyle3);
 //        HSSFCell cell3_20 = row3.createCell(cellIndex++);
 //        cell3_20.setCellValue(new HSSFRichTextString("引进平台"));
@@ -235,9 +268,9 @@ public class DocumentHandler implements ServletContextAware {
         HSSFCell cell3_23 = row3.createCell(cellIndex++);
         cell3_23.setCellValue(new HSSFRichTextString("是否破格"));
         cell3_23.setCellStyle(headstyle3);
-//        HSSFCell cell3_24 = row3.createCell(cellIndex++);
-//        cell3_24.setCellValue(new HSSFRichTextString("牵头单位"));
-//        cell3_24.setCellStyle(headstyle3);
+        HSSFCell cell3_24 = row3.createCell(cellIndex++);
+        cell3_24.setCellValue(new HSSFRichTextString("审核状态"));
+        cell3_24.setCellStyle(headstyle3);
         HSSFCell cell3_25 = row3.createCell(cellIndex++);
         cell3_25.setCellValue(new HSSFRichTextString("备注"));
         cell3_25.setCellStyle(headstyle3);
@@ -251,101 +284,121 @@ public class DocumentHandler implements ServletContextAware {
         headstyle4.setAlignment(HSSFCellStyle.ALIGN_RIGHT);// 左右居右
         headstyle4.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
         headstyle4.setWrapText(true);// 自动换行
-        for (int i = 0; i < list.size(); i++) {
-            Application app = list.get(i);
-            HSSFRow rown = sheet.createRow(4 + i);
-            
-            int cellInIndex = 0;
-            HSSFCell celll_0 = rown.createCell(cellInIndex++);
-            celll_0.setCellValue(new HSSFRichTextString(app.getNumber()));
-            celll_0.setCellStyle(headstyle3);
-            HSSFCell celll_1 = rown.createCell(cellInIndex++);
-            celll_1.setCellValue(new HSSFRichTextString(app.getRealName()));
-            celll_1.setCellStyle(headstyle3);
-            HSSFCell celll_2 = rown.createCell(cellInIndex++);
-            celll_2.setCellValue(new HSSFRichTextString(app.getSex() == 0 ? "男" : "女"));
-            celll_2.setCellStyle(headstyle3);
-            HSSFCell celll_3 = rown.createCell(cellInIndex++);
-            celll_3.setCellValue(new HSSFRichTextString(app.getNationality()));
-            celll_3.setCellStyle(headstyle3);
-            HSSFCell celll_4 = rown.createCell(cellInIndex++);
-            celll_4.setCellValue(new HSSFRichTextString(app.getBirthDate() != null ? fullFormat.format(app.getBirthDate()) : ""));
-            celll_4.setCellStyle(headstyle3);
-            HSSFCell celll_5 = rown.createCell(cellInIndex++);
-            celll_5.setCellValue(new HSSFRichTextString(app.getMgChineseDegree()));
-            celll_5.setCellStyle(headstyle3);
-            HSSFCell celll_6 = rown.createCell(cellInIndex++);
-            celll_6.setCellValue(new HSSFRichTextString(app.getMgChineseSchool()));
-            celll_6.setCellStyle(headstyle3);
-            HSSFCell celll_7 = rown.createCell(cellInIndex++);
-            celll_7.setCellValue(new HSSFRichTextString(app.getAppOrgName()));
-            celll_7.setCellStyle(headstyle3);
-            HSSFCell celll_8 = rown.createCell(cellInIndex++);
-            celll_8.setCellValue(new HSSFRichTextString(app.getPosition()));
-            celll_8.setCellStyle(headstyle3);
-            HSSFCell celll_9 = rown.createCell(cellInIndex++);
-            celll_9.setCellValue(new HSSFRichTextString(app.getSpecialty()));
-            celll_9.setCellStyle(headstyle3);
-            HSSFCell celll_10 = rown.createCell(cellInIndex++);
-            celll_10.setCellValue(new HSSFRichTextString(app.getProfession()));
-            celll_10.setCellStyle(headstyle3);
-            HSSFCell celll_11 = rown.createCell(cellInIndex++);
-            celll_11.setCellValue(new HSSFRichTextString(app.getPatentDesc()));
-            celll_11.setCellStyle(headstyle3);
-            HSSFCell celll_12 = rown.createCell(cellInIndex++);
-            celll_12.setCellValue(new HSSFRichTextString(app.getActualCurrentFundsPer() + "%"));
-            celll_12.setCellStyle(headstyle3);
-            HSSFCell celll_13 = rown.createCell(cellInIndex++);
-            celll_13.setCellValue(new HSSFRichTextString(app.getMyFundsPer() + "%"));
-            celll_13.setCellStyle(headstyle3);
-            HSSFCell celll_14 = rown.createCell(cellInIndex++);
-            celll_14.setCellValue(new HSSFRichTextString(""));
-            celll_14.setCellStyle(headstyle3);
+
+        query.setMaxResults(20);
+        int firstResult = 0;
+        int icount = 0;
+        while (true) {
+            query.setFirstResult(firstResult);
+            List<Application> list = query.getResultList();
+            if (list.isEmpty()) {
+                break;
+            }
+            firstResult += list.size();
+            for (Application app : list) {
+                int cellInIndex = 0;
+                HSSFRow rown = sheet.createRow(currentRow + (icount++));
+
+                rown.setHeight((short) (63.75 * 20));  //设置行高
+
+                HSSFCell celll_0p = rown.createCell(cellInIndex++);
+                celll_0p.setCellValue(new HSSFRichTextString("" + (icount)));
+                celll_0p.setCellStyle(headstyle3);
+                HSSFCell celll_0 = rown.createCell(cellInIndex++);
+                celll_0.setCellValue(new HSSFRichTextString(app.getNumber()));
+                celll_0.setCellStyle(headstyle3);
+                HSSFCell celll_1 = rown.createCell(cellInIndex++);
+                celll_1.setCellValue(new HSSFRichTextString(app.getRealName()));
+                celll_1.setCellStyle(headstyle3);
+                HSSFCell celll_2 = rown.createCell(cellInIndex++);
+                celll_2.setCellValue(new HSSFRichTextString(app.getSex() == 0 ? "男" : "女"));
+                celll_2.setCellStyle(headstyle3);
+                HSSFCell celll_3 = rown.createCell(cellInIndex++);
+                celll_3.setCellValue(new HSSFRichTextString(app.getNationality()));
+                celll_3.setCellStyle(headstyle3);
+                HSSFCell celll_4 = rown.createCell(cellInIndex++);
+                celll_4.setCellValue(new HSSFRichTextString(app.getBirthDate() != null ? fullFormat.format(app.getBirthDate()) : ""));
+                celll_4.setCellStyle(headstyle3);
+                HSSFCell celll_5 = rown.createCell(cellInIndex++);
+                celll_5.setCellValue(new HSSFRichTextString(app.getMgChineseDegree()));
+                celll_5.setCellStyle(headstyle3);
+                HSSFCell celll_6 = rown.createCell(cellInIndex++);
+                celll_6.setCellValue(new HSSFRichTextString(app.getMgChineseSchool()));
+                celll_6.setCellStyle(headstyle3);
+                HSSFCell celll_7 = rown.createCell(cellInIndex++);
+                celll_7.setCellValue(new HSSFRichTextString(app.getAppOrgName()));
+                celll_7.setCellStyle(headstyle3);
+                HSSFCell celll_8 = rown.createCell(cellInIndex++);
+                celll_8.setCellValue(new HSSFRichTextString(app.getPosition()));
+                celll_8.setCellStyle(headstyle3);
+                HSSFCell celll_9 = rown.createCell(cellInIndex++);
+                celll_9.setCellValue(new HSSFRichTextString(app.getSpecialty()));
+                celll_9.setCellStyle(headstyle3);
+                HSSFCell celll_10 = rown.createCell(cellInIndex++);
+                celll_10.setCellValue(new HSSFRichTextString(app.getProfession()));
+                celll_10.setCellStyle(headstyle3);
+//                HSSFCell celll_11 = rown.createCell(cellInIndex++);
+//                celll_11.setCellValue(new HSSFRichTextString(app.getPatentDesc()));
+//                celll_11.setCellStyle(headstyle3);
+                HSSFCell celll_12 = rown.createCell(cellInIndex++);
+                celll_12.setCellValue(new HSSFRichTextString(app.getActualCurrentFundsPer() + "%"));
+                celll_12.setCellStyle(headstyle3);
+                HSSFCell celll_13 = rown.createCell(cellInIndex++);
+                celll_13.setCellValue(new HSSFRichTextString(app.getMyFundsPer() + "%"));
+                celll_13.setCellStyle(headstyle3);
+//                HSSFCell celll_14 = rown.createCell(cellInIndex++);
+//                celll_14.setCellValue(new HSSFRichTextString(""));
+//                celll_14.setCellStyle(headstyle3);
 //            HSSFCell celll_15 = rown.createCell(cellInIndex++);
 //            celll_15.setCellValue(new HSSFRichTextString(app.getCity()));
 //            celll_15.setCellStyle(headstyle3);
-            HSSFCell celll_16 = rown.createCell(cellInIndex++);
-            celll_16.setCellValue(new HSSFRichTextString(app.getForeignJobChinese()));
-            celll_16.setCellStyle(headstyle3);
-            HSSFCell celll_17 = rown.createCell(cellInIndex++);
-            celll_17.setCellValue(new HSSFRichTextString(""));
-            celll_17.setCellStyle(headstyle3);
-            HSSFCell celll_18 = rown.createCell(cellInIndex++);
-            celll_18.setCellValue(new HSSFRichTextString(app.getWdate()));
-            celll_18.setCellStyle(headstyle3);
-            HSSFCell celll_19 = rown.createCell(cellInIndex++);
-            celll_19.setCellValue(new HSSFRichTextString(""));
-            celll_19.setCellStyle(headstyle3);
+                HSSFCell celll_16 = rown.createCell(cellInIndex++);
+                celll_16.setCellValue(new HSSFRichTextString(app.getForeignJobChinese()));
+                celll_16.setCellStyle(headstyle3);
+//                HSSFCell celll_17 = rown.createCell(cellInIndex++);
+//                celll_17.setCellValue(new HSSFRichTextString(""));
+//                celll_17.setCellStyle(headstyle3);
+                HSSFCell celll_18 = rown.createCell(cellInIndex++);
+                celll_18.setCellValue(new HSSFRichTextString(app.getWdate()));
+                celll_18.setCellStyle(headstyle3);
+                HSSFCell celll_19 = rown.createCell(cellInIndex++);
+                celll_19.setCellValue(new HSSFRichTextString(""));
+                celll_19.setCellStyle(headstyle3);
 //            HSSFCell celll_20 = rown.createCell(cellInIndex++);
 //            celll_20.setCellValue(new HSSFRichTextString(app.getPlatform()));
 //            celll_20.setCellStyle(headstyle3);
-            HSSFCell celll_21 = rown.createCell(cellInIndex++);
-            celll_21.setCellValue(new HSSFRichTextString(app.getOrgSubName()));
-            celll_21.setCellStyle(headstyle3);
-            HSSFCell celll_22 = rown.createCell(cellInIndex++);
-            celll_22.setCellValue(new HSSFRichTextString(app.getType()));
-            celll_22.setCellStyle(headstyle3);
-            HSSFCell celll_23 = rown.createCell(cellInIndex++);
-            celll_23.setCellValue(new HSSFRichTextString(app.isPoge() ? "是" : "否"));
-            celll_23.setCellStyle(headstyle3);
-//            HSSFCell celll_24 = rown.createCell(cellInIndex++);
-//            celll_24.setCellValue(new HSSFRichTextString(app.getAppOrgName()));
-//            celll_24.setCellStyle(headstyle3);
-            HSSFCell celll_25 = rown.createCell(cellInIndex++);
-            celll_25.setCellValue(new HSSFRichTextString(app.getComment()));
-            celll_25.setCellStyle(headstyle3);
+                HSSFCell celll_21 = rown.createCell(cellInIndex++);
+                celll_21.setCellValue(new HSSFRichTextString(app.getOrgSubName()));
+                celll_21.setCellStyle(headstyle3);
+                HSSFCell celll_22 = rown.createCell(cellInIndex++);
+                celll_22.setCellValue(new HSSFRichTextString(app.getType()));
+                celll_22.setCellStyle(headstyle3);
+                HSSFCell celll_23 = rown.createCell(cellInIndex++);
+                celll_23.setCellValue(new HSSFRichTextString(app.isPoge() ? "是" : "否"));
+                celll_23.setCellStyle(headstyle3);
+                HSSFCell celll_24 = rown.createCell(cellInIndex++);
+                celll_24.setCellValue(new HSSFRichTextString(app.getStatus()));
+                celll_24.setCellStyle(headstyle3);
+                HSSFCell celll_25 = rown.createCell(cellInIndex++);
+                celll_25.setCellValue(new HSSFRichTextString(app.getComment()));
+                celll_25.setCellStyle(headstyle3);
+            }
+            if (list.size() < 20) {
+                break;
+            }
         }
+
         //自动筛选
-        CellRangeAddress c = CellRangeAddress.valueOf("A4:Z4");
+        CellRangeAddress c = CellRangeAddress.valueOf("A3:V3");
         sheet.setAutoFilter(c);
         //冻结行   (前一个参数代表列；后一个参数代表行。)
-        sheet.createFreezePane(3, 4);
+        sheet.createFreezePane(3, 3);
 
         double suofang = 0.3;
         HSSFPrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setPaperSize(HSSFPrintSetup.A4_PAPERSIZE); // 设置默认打印纸张为A4
         printSetup.setLandscape(true);  //设置横向打印
-        printSetup.setScale((short) 89);//缩放比例
+        printSetup.setScale((short) 97);//缩放比例
         sheet.setMargin(HSSFSheet.TopMargin, 1.5 * suofang); // 上边距
         sheet.setMargin(HSSFSheet.BottomMargin, (double) 1 * suofang); // 下边距
         sheet.setMargin(HSSFSheet.LeftMargin, (double) 0.5 * suofang); // 左边距
