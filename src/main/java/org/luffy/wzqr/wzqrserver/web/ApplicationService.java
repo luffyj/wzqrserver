@@ -86,7 +86,17 @@ public class ApplicationService {
 
     //导出报表和汇总表
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
-    public HttpEntity<byte[]> exportSome(@RequestParam("ids") String ids) throws IOException, WriteException {
+    public HttpEntity<byte[]> exportSome(
+            @RequestParam("ids") String ids,
+            @RequestParam(value = "batch", required = false) String batch,
+            @RequestParam(value = "realName", required = false) String realName,
+            @RequestParam(value = "appOrgName", required = false) String appOrgName,
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "specialty", required = false) String specialty,
+            @RequestParam(value = "appOrgType", required = false) String appOrgType,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "subName", required = false) String subName
+    ) throws IOException, WriteException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
             return null;
@@ -104,8 +114,56 @@ public class ApplicationService {
 
                 StringBuilder jql = new StringBuilder("select u from Application u");
                 handleResponseableApplicationJQL(jql);
+                if (batch != null) {
+                    jql.append(" and u.batch like :batch");
+                }
+                if (realName != null) {
+                    jql.append(" and u.realName like :realName");
+                }
+                if (appOrgName != null) {
+                    jql.append(" and u.appOrgName like :appOrgName");
+                }
+                if (type != null) {
+                    jql.append(" and u.type like :type");
+                }
+                if (specialty != null) {
+                    jql.append(" and u.specialty like :specialty");
+                }
+                if (appOrgType != null) {
+                    jql.append(" and u.myorg.superOrg.type like :appOrgType");
+                }
+                if (status != null) {
+                    jql.append(" and u.status like :status");
+                }
+                if (subName != null) {
+                    jql.append(" and u.myorg.superOrg.name like :subName");
+                }
                 apps = handleResponseableApplicationQuery(entityManager.createQuery(jql.toString()));
 
+                if (batch != null) {
+                    apps.setParameter("batch", "%"+batch+"%");
+                }
+                if (realName != null) {
+                    apps.setParameter("realName", "%"+realName+"%");
+                }
+                if (appOrgName != null) {
+                    apps.setParameter("appOrgName", "%"+appOrgName+"%");
+                }
+                if (type != null) {
+                    apps.setParameter("type", "%"+type+"%");
+                }
+                if (specialty != null) {
+                    apps.setParameter("specialty", "%"+specialty+"%");
+                }
+                if (appOrgType != null) {
+                    apps.setParameter("appOrgType", "%"+appOrgType+"%");
+                }
+                if (status != null) {
+                    apps.setParameter("status", "%"+status+"%");
+                }
+                if (subName != null) {
+                    apps.setParameter("subName", "%"+subName+"%");
+                }
             } else {
                 String[] ida = ids.split(",");
                 ArrayList<Long> lids = new ArrayList();
@@ -115,16 +173,15 @@ public class ApplicationService {
                     }
                     lids.add(Long.parseLong(id));
                 }
-                
+
                 apps = entityManager.createQuery("select u from Application u where u.id in ?1")
                         .setParameter(1, lids);
-                
+
             }
 
 //            if (apps.isEmpty()) {
 //                return null;
 //            }
-
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             this.documentHandler.exportExcel(apps, out);
 
@@ -328,9 +385,10 @@ public class ApplicationService {
             entityManager.close();
         }
     }
-    
-    interface WorkingData{
-        void setValues(Application app,MultipartFile file) throws IOException;
+
+    interface WorkingData {
+
+        void setValues(Application app, MultipartFile file) throws IOException;
 
         public byte[] getValue(Application app);
 
@@ -338,8 +396,8 @@ public class ApplicationService {
 
         public String getFileName(Application app);
     }
-    
-    private WorkingData attachment = new WorkingData(){
+
+    private WorkingData attachment = new WorkingData() {
 
         @Override
         public void setValues(Application app, MultipartFile file) throws IOException {
@@ -359,12 +417,12 @@ public class ApplicationService {
         @Override
         public String getFileName(Application app) {
             return new StringBuilder().append(app.getBatch())
-                .append(app.getRealName())
-                .append("的申请附件.pdf").toString();
+                    .append(app.getRealName())
+                    .append("的申请附件.pdf").toString();
         }
     };
-    
-    private WorkingData picture = new WorkingData(){
+
+    private WorkingData picture = new WorkingData() {
 
         @Override
         public void setValues(Application app, MultipartFile file) throws IOException {
@@ -387,13 +445,13 @@ public class ApplicationService {
         @Override
         public String getFileName(Application app) {
             return new StringBuilder().append(app.getBatch())
-                .append(app.getRealName())
-                .append(".png").toString();
+                    .append(app.getRealName())
+                    .append(".png").toString();
         }
-        
+
     };
-    
-    private HttpEntity<byte[]> downloadData(Long appid,WorkingData data) throws UnsupportedEncodingException {
+
+    private HttpEntity<byte[]> downloadData(Long appid, WorkingData data) throws UnsupportedEncodingException {
         if (appid == null) {
             return null;
         }
@@ -402,7 +460,7 @@ public class ApplicationService {
             return null;
         }
         byte[] documentBody = data.getValue(app);
-        
+
         if (documentBody == null) {
             return null;
         }
@@ -418,8 +476,8 @@ public class ApplicationService {
         header.setContentLength(documentBody.length);
         return new HttpEntity<>(documentBody, header);
     }
-    
-    private HttpEntity uploadData(MultipartFile pdf, Long appid,WorkingData data) throws IOException {
+
+    private HttpEntity uploadData(MultipartFile pdf, Long appid, WorkingData data) throws IOException {
         //{"code":200,"originalMessage":"上传成功！"}
         System.out.println(pdf.getOriginalFilename() + " uploaded!");
         int errorBase = 590;
@@ -431,12 +489,12 @@ public class ApplicationService {
         if (app == null) {
             return new ErrorResponse(errorBase + 1, "找不到指定的申报信息").toHttpEntity();
         }
-        
+
         data.setValues(app, pdf);
 
         this.applicationRepository.save(app);
 
-        return new JsonResponse(200,"上传成功！").toHttpEntity();
+        return new JsonResponse(200, "上传成功！").toHttpEntity();
     }
 
     // 附件上传和下载
@@ -450,7 +508,7 @@ public class ApplicationService {
     public HttpEntity<byte[]> downloadPDF(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
         return this.downloadData(appid, attachment);
     }
-    
+
     @RequestMapping(value = "/uploadpicture", method = RequestMethod.POST)
     public HttpEntity uploadPicture(@RequestParam("file") MultipartFile pdf, @RequestParam("id") Long appid) throws IOException {
         return this.uploadData(pdf, appid, picture);
@@ -460,7 +518,7 @@ public class ApplicationService {
     public HttpEntity<byte[]> downloadPicture(@PathVariable("appid") Long appid) throws UnsupportedEncodingException {
         return this.downloadData(appid, picture);
     }
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -514,9 +572,9 @@ public class ApplicationService {
                 if (!user.getOrg().getId().equals(cuser.getOrg().getId())) {
                     return new ErrorResponse(errorBase + 5, "用户已存在，且非" + cuser.getOrg().getName() + "申报人");
                 }
-                
+
                 user.setPassword(passwordEncoder.encode(password));
-                userRepository.save(user);                
+                userRepository.save(user);
             }
 
             app.setOwner(user);

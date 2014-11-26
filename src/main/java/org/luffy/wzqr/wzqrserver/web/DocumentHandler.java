@@ -285,7 +285,8 @@ public class DocumentHandler implements ServletContextAware {
         headstyle4.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
         headstyle4.setWrapText(true);// 自动换行
 
-        query.setMaxResults(20);
+        int maxResults = 10;
+        query.setMaxResults(maxResults);
         int firstResult = 0;
         int icount = 0;
         while (true) {
@@ -359,10 +360,10 @@ public class DocumentHandler implements ServletContextAware {
 //                celll_17.setCellValue(new HSSFRichTextString(""));
 //                celll_17.setCellStyle(headstyle3);
                 HSSFCell celll_18 = rown.createCell(cellInIndex++);
-                celll_18.setCellValue(new HSSFRichTextString(app.getWdate()));
+                celll_18.setCellValue(new HSSFRichTextString(app.getBorderDate()));
                 celll_18.setCellStyle(headstyle3);
                 HSSFCell celll_19 = rown.createCell(cellInIndex++);
-                celll_19.setCellValue(new HSSFRichTextString(""));
+                celll_19.setCellValue(new HSSFRichTextString(app.getWdate()));
                 celll_19.setCellStyle(headstyle3);
 //            HSSFCell celll_20 = rown.createCell(cellInIndex++);
 //            celll_20.setCellValue(new HSSFRichTextString(app.getPlatform()));
@@ -383,7 +384,7 @@ public class DocumentHandler implements ServletContextAware {
                 celll_25.setCellValue(new HSSFRichTextString(app.getComment()));
                 celll_25.setCellStyle(headstyle3);
             }
-            if (list.size() < 20) {
+            if (list.size() < maxResults) {
                 break;
             }
         }
