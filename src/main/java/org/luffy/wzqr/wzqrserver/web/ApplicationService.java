@@ -785,13 +785,13 @@ public class ApplicationService {
             app.setReturnOrg("未知");
         }
         String newStatus = type + "退回";
-        switch (type) {
-            case "形审":
-                app.setUnitApproveReason(reason);
-                break;
-            default:
-                app.setOrgApproveReason(reason);
-        }
+//        switch (type) {
+//            case "形审":
+//                app.setUnitApproveReason(reason);
+//                break;
+//            default:
+//                app.setOrgApproveReason(reason);
+//        }
         boolean CS = app.getStatus().contains(type);
         if (app.getStatus().contains("评审") && type.equals("复审")) {
             CS = true;
@@ -818,16 +818,16 @@ public class ApplicationService {
 
     private JsonResponse noApp(Application app, User oper, String reason, String type, String other, HttpServletRequest request) {
         String newStatus = type + "未过";
-        switch (type) {
-            case "形审":
-                app.setUnitApproveReason(reason);
-                break;
-            case "评审":
-                app.setManagerReason(reason);
-                break;
-            default:
-                app.setOrgApproveReason(reason);
-        }
+//        switch (type) {
+//            case "形审":
+//                app.setUnitApproveReason(reason);
+//                break;
+//            case "评审":
+//                app.setManagerReason(reason);
+//                break;
+//            default:
+//                app.setOrgApproveReason(reason);
+//        }
         boolean CS = app.getStatus().contains(type);
         if (app.getStatus().contains("评审") && type.equals("复审")) {
             CS = true;
@@ -854,16 +854,16 @@ public class ApplicationService {
 
     private JsonResponse yesApp(Application app, User oper, String reason, String type, String other, HttpServletRequest request) {
         String newStatus = type + "通过";
-        switch (type) {
-            case "形审":
-                app.setUnitApproveReason(reason);
-                break;
-            case "评审":
-                app.setManagerReason(reason);
-                break;
-            default:
-                app.setOrgApproveReason(reason);
-        }
+//        switch (type) {
+//            case "形审":
+//                app.setUnitApproveReason(reason);
+//                break;
+//            case "评审":
+//                app.setManagerReason(reason);
+//                break;
+//            default:
+//                app.setOrgApproveReason(reason);
+//        }
         boolean CS = app.getStatus().contains(type);
         if (app.getStatus().contains("评审") && type.equals("复审")) {
             CS = true;
