@@ -458,7 +458,12 @@ public class DocumentHandler implements ServletContextAware {
             cell16.setCellStyle(headstyle2);
 
             HSSFCell cell18 = row2.createCell(18);
-            cell18.setCellValue(new HSSFRichTextString("2013年1月1日"));
+            Date date = null;
+            if (date == null) {
+                date = new Date();
+            }
+            cell18.setCellValue(new HSSFRichTextString(yearFormat.format(date)+"年"+monthFormat.format(date)+"月"+dayFormat.format(date)+"日"));
+//            cell18.setCellValue(new HSSFRichTextString("2013年1月1日"));
             cell18.setCellStyle(headstyle2);
 
             // 设置字体
