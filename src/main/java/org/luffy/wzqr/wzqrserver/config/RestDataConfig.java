@@ -29,8 +29,8 @@ public class RestDataConfig extends RepositoryRestMvcConfiguration{
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         super.configureRepositoryRestConfiguration(config);
-        if(environment.acceptsProfiles("test"))
-            config.setBaseUri(URI.create("api/"));
+//        if(environment.acceptsProfiles("test"))
+//            config.setBaseUri(URI.create("/api/"));
     }
 
     @Override
