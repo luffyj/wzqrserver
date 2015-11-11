@@ -3,6 +3,7 @@ package org.luffy.wzqr.wzqrserver.web;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,12 +12,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.Query;
 import javax.servlet.ServletContext;
+
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.UnderlineStyle;
@@ -27,6 +30,7 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -409,9 +413,7 @@ public class DocumentHandler implements ServletContextAware {
     }
 
     /**
-     * @see #exportExcel(java.util.List, java.io.OutputStream)
      * @deprecated
-     *
      */
     public InputStream exportExcel(List list) {
         try {
@@ -462,7 +464,7 @@ public class DocumentHandler implements ServletContextAware {
             if (date == null) {
                 date = new Date();
             }
-            cell18.setCellValue(new HSSFRichTextString(yearFormat.format(date)+"年"+monthFormat.format(date)+"月"+dayFormat.format(date)+"日"));
+            cell18.setCellValue(new HSSFRichTextString(yearFormat.format(date) + "年" + monthFormat.format(date) + "月" + dayFormat.format(date) + "日"));
 //            cell18.setCellValue(new HSSFRichTextString("2013年1月1日"));
             cell18.setCellStyle(headstyle2);
 
@@ -667,9 +669,7 @@ public class DocumentHandler implements ServletContextAware {
     }
 
     /**
-     * @see #exportExcel(java.util.List, java.io.OutputStream)
      * @deprecated
-     *
      */
     public void exportExcelOld(List<Application> list, OutputStream out) throws WriteException, IOException {
         // 创建工作薄
@@ -792,6 +792,8 @@ public class DocumentHandler implements ServletContextAware {
 
         t.setEncoding("utf-8");
 
+        escapeData(dataMap);
+
         t.process(dataMap, new OutputStreamWriter(out, "UTF-8"));
     }
 
@@ -815,13 +817,71 @@ public class DocumentHandler implements ServletContextAware {
 
         t.setEncoding("utf-8");
 
+        escapeData(dataMap);
+
         t.process(dataMap, new OutputStreamWriter(out, "UTF-8"));
     }
 
+    private void escapeData(Map map) {
+        for (Object key : map.keySet()) {
+            Object value = map.get(key);
+            if (value != null) {
+                if (value instanceof String) {
+                    map.put(key, StringEscapeUtils.escapeXml((String) value));
+                } else if (value instanceof Collection) {
+                    Collection oldValues = (Collection) value;
+                    List list = new ArrayList();
+                    for (Object realValue : oldValues) {
+                        if (realValue instanceof String) {
+                            list.add(StringEscapeUtils.escapeXml((String) realValue));
+                        } else if (realValue instanceof Datadto) {
+                            Datadto datadto = (Datadto) realValue;
+                            if (datadto.getCol1() != null) {
+                                datadto.setCol1(StringEscapeUtils.escapeXml(datadto.getCol1()));
+                            }
+                            if (datadto.getCol2() != null) {
+                                datadto.setCol2(StringEscapeUtils.escapeXml(datadto.getCol2()));
+                            }
+                            if (datadto.getCol3() != null) {
+                                datadto.setCol3(StringEscapeUtils.escapeXml(datadto.getCol3()));
+                            }
+                            if (datadto.getCol4() != null) {
+                                datadto.setCol4(StringEscapeUtils.escapeXml(datadto.getCol4()));
+                            }
+                            if (datadto.getCol5() != null) {
+                                datadto.setCol5(StringEscapeUtils.escapeXml(datadto.getCol5()));
+                            }
+                            if (datadto.getCol6() != null) {
+                                datadto.setCol6(StringEscapeUtils.escapeXml(datadto.getCol6()));
+                            }
+                            if (datadto.getCol7() != null) {
+                                datadto.setCol7(StringEscapeUtils.escapeXml(datadto.getCol7()));
+                            }
+                            if (datadto.getCol8() != null) {
+                                datadto.setCol8(StringEscapeUtils.escapeXml(datadto.getCol8()));
+                            }
+                            if (datadto.getCol9() != null) {
+                                datadto.setCol9(StringEscapeUtils.escapeXml(datadto.getCol9()));
+                            }
+                            if (datadto.getCol10() != null) {
+                                datadto.setCol10(StringEscapeUtils.escapeXml(datadto.getCol10()));
+                            }
+                            list.add(datadto);
+                        } else{
+                            System.out.println("Error for " + realValue);
+                        }
+                    }
+                    map.put(key, list);
+                } else {
+                    System.out.println("Error for " + value);
+                }
+            }
+        }
+    }
+
     /**
-     *
      * 注意dataMap里存放的数据Key值要与模板中的参数相对应
-     *
+     * <p>
      * 温州市“580海外精英引进计划”创新类申报书
      *
      * @param dataMap
@@ -877,18 +937,18 @@ public class DocumentHandler implements ServletContextAware {
         }
         dataMap.put("str4_16", app.getZip());// 邮编                
         dataMap.put("str4_17", beanHelper.toString(app, new String[]{
-            "degree",
-            "time",
-            "country",
-            "university",
-            "major"
+                "degree",
+                "time",
+                "country",
+                "university",
+                "major"
         }, " ", "\n"));// 教育经历
         dataMap.put("str4_18",
                 beanHelper.toString(app, new String[]{
-                    "jobPosition",
-                    "jobTime",
-                    "jobCountry",
-                    "jobOrg"
+                        "jobPosition",
+                        "jobTime",
+                        "jobCountry",
+                        "jobOrg"
                 }, " ", "\n"));// 工作经历
 
         dataMap.put("str5_1", beanHelper.escapeToWord(app.getExpertTo()));// 个人专长
@@ -1032,26 +1092,26 @@ public class DocumentHandler implements ServletContextAware {
         }
         dataMap.put("str4_16", app.getZip());// 邮编
         dataMap.put("str4_17", beanHelper.toString(app, new String[]{
-            "degree",
-            "time",
-            "country",
-            "university",
-            "major"
+                "degree",
+                "time",
+                "country",
+                "university",
+                "major"
         }, " ", "\n"));// 教育经历
         dataMap.put("str4_18", beanHelper.toString(app, new String[]{
-            "jobPosition",
-            "jobTime",
-            "jobCountry",
-            "jobOrg"
+                "jobPosition",
+                "jobTime",
+                "jobCountry",
+                "jobOrg"
         }, " ", "\n"));// 工作经历
 
         dataMap.put("str5_1", beanHelper.escapeToWord(app.getEntInfo()));// 企业基本情况
         dataMap.put("str5_2", beanHelper.toString(app, new String[]{
-            "partnerName",
-            "partnerContent",
-            "partnerType",
-            "partnerPer",
-            "partnerPosition"
+                "partnerName",
+                "partnerContent",
+                "partnerType",
+                "partnerPer",
+                "partnerPosition"
         }, " ", "\n"));// 资本构成和股权结构
         dataMap.put("str5_3", beanHelper.escapeToWord(app.getEntTeam()));// 技术团队和管理团队
         dataMap.put("str5_4", beanHelper.escapeToWord(app.getEntProject()));// 创业项目

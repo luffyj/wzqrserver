@@ -183,6 +183,7 @@ public class ApplicationServiceTest extends WebTest {
     @Test
     public void reportTest() throws IOException, TemplateException {
         for (Application app : this.applicationRepository.findAll()) {
+            app.setSubmitReason("推荐里哟&");
             FileOutputStream out = new FileOutputStream("target/1.doc");
             try {
                 documentHandler.export1(app, out);

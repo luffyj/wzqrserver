@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.luffy.wzqr.wzqrserver.entity.ContactWay;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author luffy
  */
 @Component
-public class App implements ApplicationListener<ContextRefreshedEvent> {
+public class App{
 
     private final int version = 10001;
 
@@ -60,23 +61,24 @@ public class App implements ApplicationListener<ContextRefreshedEvent> {
         this.dbtype = dbtype;
     }
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (event.getApplicationContext().getParent() == null) {
-            try {
-                System.out.println("init App");
-                databaseInit();
-            } catch (SQLException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
+//    @Override
+//    public void onApplicationEvent(ContextRefreshedEvent event) {
+//        if (event.getApplicationContext().getParent() == null) {
+//            try {
+//                System.out.println("init App");
+//                databaseInit();
+//            } catch (SQLException ex) {
+//                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//    }
 
     /**
      * 数据初始化
      *
      */
-    private void databaseInit() throws SQLException {
+    @PostConstruct
+    public void databaseInit() throws SQLException {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         Connection con = em.unwrap(Connection.class);
